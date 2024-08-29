@@ -1,0 +1,7 @@
+{
+  "extends": "@across-toolkit/eslint-config/next.json",
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": true
+  }
+}
