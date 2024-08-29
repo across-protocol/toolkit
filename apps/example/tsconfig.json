@@ -1,20 +1,11 @@
 {
-  "exclude": [
-    "node_modules"
-  ],
   "extends": "@across-toolkit/typescript-config/next.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
-  },
   "include": [
     "next-env.d.ts",
-    ".next/types/**/*.ts",
+    "next.config.mjs",
     "**/*.ts",
-    "**/*.tsx"
-  ]
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
 }

@@ -18,8 +18,8 @@
     "wagmi": "^2.12.7"
   },
   "devDependencies": {
-    "@across-toolkit/typescript-config": "workspace:*",
     "@across-toolkit/eslint-config": "workspace:*",
+    "@across-toolkit/typescript-config": "workspace:*",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
