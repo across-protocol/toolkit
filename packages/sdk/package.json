@@ -10,8 +10,8 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --external",
-    "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
     "lint": "eslint \"src/**/*.ts*\"",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
