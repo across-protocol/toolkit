@@ -1,5 +1,5 @@
 {
-  "name": "@acme/eslint-config",
+  "name": "@across-toolkit/eslint-config",
   "version": "0.0.0",
   "private": true,
   "files": [

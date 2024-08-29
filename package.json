@@ -20,5 +20,5 @@
   "engines": {
     "node": ">=18"
   },
-  "name": "with-changesets"
+  "name": "across-toolkit"
 }
