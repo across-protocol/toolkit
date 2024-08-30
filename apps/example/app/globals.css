@@ -3,31 +3,42 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background: 0 0% 98%;
+  --foreground: 0 0% 100%;
+  --text-color: 93 17% 10%;
+
+  /* across teal */
+  --accent: 166 92% 70%;
+  /* gray */
+  --border: 220 14% 96%;
+
+  --ring: 0 100% 65%;
+
+  --black: 93 17% 10%;
+  --white: 0, 0%, 100%;
+
+  /* Leaving this here if we want to have different status colors for light/dark */
+  --success: 119 90% 35%;
+  --fail: 0 100% 65%;
+  --loading: 50 52% 66%;
+  --idle: 0 0% 68%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+.dark {
+  --background: 0 0% 12%;
+  --foreground: 0 0% 16%;
+  --text-color: 0 0% 100%;
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+  /* gray */
+  --border: 0 0% 21%;
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  --chainlink-blue: #2a5ada;
+
+  --ring: 0 100% 65%;
+
+  /* Leaving this here if we want to have different status colors for light/dark */
+  --success: 133 56% 55%;
+  --fail: 0 95% 66%;
+  --loading: 50 52% 66%;
+  --idle: 0 0 68%;
 }
