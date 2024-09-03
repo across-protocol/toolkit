@@ -5,8 +5,7 @@ export const LogLevels = {
   WARN: 1,
   ERROR: 0,
 } as const;
-// level: LogLevel, configLevel: LogLevel, )
-// eslint-disable-next-line no-redeclare
+
 export type LogLevel = keyof typeof LogLevels;
 
 export class Logger {
