@@ -16,13 +16,21 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@across-toolkit/typescript-config": "workspace:*",
-    "eslint": "^8.57.0",
     "@across-toolkit/eslint-config": "workspace:*",
+    "@across-toolkit/typescript-config": "workspace:*",
+    "@types/node": "^20",
+    "eslint": "^8.57.0",
     "tsup": "^8.0.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "viem": "^2.20.1"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "peerDependencies": {
+    "viem": "^2.20.1"
+  },
+  "dependencies": {
+    "@across-protocol/constants": "^3.1.15"
   }
 }

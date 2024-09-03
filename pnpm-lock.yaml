@@ -23,6 +23,9 @@ importers:
 
   apps/example:
     dependencies:
+      '@across-toolkit/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@radix-ui/react-popover':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
@@ -131,6 +134,10 @@ importers:
         version: 5.3.3
 
   packages/sdk:
+    dependencies:
+      '@across-protocol/constants':
+        specifier: ^3.1.15
+        version: 3.1.15
     devDependencies:
       '@across-toolkit/eslint-config':
         specifier: workspace:*
@@ -138,6 +145,9 @@ importers:
       '@across-toolkit/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/node':
+        specifier: ^20
+        version: 20.16.2
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -147,8 +157,15 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      viem:
+        specifier: ^2.20.1
+        version: 2.20.1(typescript@5.3.3)
 
-  packages/typescript-config: {}
+  packages/typescript-config:
+    devDependencies:
+      '@total-typescript/ts-reset':
+        specifier: ^0.6.0
+        version: 0.6.0
 
 packages:
 
@@ -157,9 +174,12 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /@across-protocol/constants@3.1.15:
+    resolution: {integrity: sha512-3BECNOWQReC/IIuI0a7GenYfdiZv9EyzWFK8n7y3SddcMZ2zW5TQHobfzjuccxOJ9nh+0ogrRw1gXFfESs00fg==}
+    dev: false
+
   /@adraffy/ens-normalize@1.10.0:
     resolution: {integrity: sha512-nA9XHtlAkYfJxY7bce8DcN7eKxWWCWkU+1GR9d+U6MbNpfwQp8TI7vqOsBsMcHoT4mBu2kypKoSKnghEzOOq5Q==}
-    dev: false
 
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -2742,18 +2762,15 @@ packages:
     resolution: {integrity: sha512-p+4cb332SFCrReJkCYe8Xzm0OWi4Jji5jVdIZRL/PmacmDkFNw6MrrV+gGpiPxLHbV+zKFRywUWbaseT+tZRXg==}
     dependencies:
       '@noble/hashes': 1.4.0
-    dev: false
 
   /@noble/curves@1.4.2:
     resolution: {integrity: sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw==}
     dependencies:
       '@noble/hashes': 1.4.0
-    dev: false
 
   /@noble/hashes@1.4.0:
     resolution: {integrity: sha512-V1JJ1WTRUqHHrOSh597hURcMqVKVGL/ea3kv0gSnEdsEZ0/+VyPghM1lMNGc00z7CIQorSvbKpuJkxvuHbvdbg==}
     engines: {node: '>= 16'}
-    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -3868,7 +3885,6 @@ packages:
 
   /@scure/base@1.1.7:
     resolution: {integrity: sha512-PPNYBslrLNNUQ/Yad37MHYsNQtK67EhWb6WtSvNLLPo7SdVZgkUjD6Dg+5On7zNwmskf8OX7I7Nx5oN+MIWE0g==}
-    dev: false
 
   /@scure/bip32@1.4.0:
     resolution: {integrity: sha512-sVUpc0Vq3tXCkDGYVWGIZTRfnvu8LoTDaev7vbwh0omSvVORONr960MQWdKqJDCReIEmTj3PAr73O3aoxz7OPg==}
@@ -3876,14 +3892,12 @@ packages:
       '@noble/curves': 1.4.2
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.7
-    dev: false
 
   /@scure/bip39@1.3.0:
     resolution: {integrity: sha512-disdg7gHuTDZtY+ZdkmLpPCk7fxZSu3gBiEGuoC1XYxv9cGx3Z6cpTggCgW6odSOOIXCiDjuGejW+aJKCY/pIQ==}
     dependencies:
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.7
-    dev: false
 
   /@sideway/address@4.1.5:
     resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
@@ -4058,6 +4072,10 @@ packages:
       '@tanstack/query-core': 5.52.2
       react: 18.3.1
     dev: false
+
+  /@total-typescript/ts-reset@0.6.0:
+    resolution: {integrity: sha512-HWZnkM+5z3INAUZMohVXvX8/vm9sjmfmV2NRAswvv5WsU2m+OZsHAVZ0fl8xf2QH9kyPkinghVW6g3DOQ2xt5Q==}
+    dev: true
 
   /@types/debug@4.1.12:
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
@@ -5033,7 +5051,6 @@ packages:
         optional: true
     dependencies:
       typescript: 5.3.3
-    dev: false
 
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -7935,7 +7952,6 @@ packages:
       ws: '*'
     dependencies:
       ws: 8.17.1
-    dev: false
 
   /iterator.prototype@1.1.2:
     resolution: {integrity: sha512-DR33HMMr8EzwuRL8Y9D3u2BMj8+RqSE850jfGu59kS7tbmPLzGkZmVSfyCFSDxuZiEY6Rzt3T2NA/qU+NwVj1w==}
@@ -11428,7 +11444,6 @@ packages:
       - bufferutil
       - utf-8-validate
       - zod
-    dev: false
 
   /vlq@1.0.1:
     resolution: {integrity: sha512-gQpnTgkubC6hQgdIcRdYGDSDc+SaujOdyesZQMv6JlfQee/9Mp0Qhnys6WxDWvQnL5WZdT7o2Ul187aSt0Rq+w==}
@@ -11496,7 +11511,6 @@ packages:
     dependencies:
       '@noble/curves': 1.4.2
       '@noble/hashes': 1.4.0
-    dev: false
 
   /webextension-polyfill@0.10.0:
     resolution: {integrity: sha512-c5s35LgVa5tFaHhrZDnr3FpQpjj1BB+RXhLTYUxGqBVN460HkbM8TBtEqdXWbpTKfzwCcjAZVF7zXCYSKtcp9g==}
@@ -11673,7 +11687,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dev: false
 
   /xmlhttprequest-ssl@2.0.0:
     resolution: {integrity: sha512-QKxVRxiRACQcVuQEYFsI1hhkrMlrXHPegbbd1yn9UHOmRxY+si12nQYzri3vbzt8VdTTRviqcKxcyllFas5z2A==}
