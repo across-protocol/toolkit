@@ -1,1 +1,3 @@
-export * from "./getQuote";
+export * from "./getSuggestedFees";
+export * from "./getAvailableRoutes";
+export * from "./getOriginChains";
