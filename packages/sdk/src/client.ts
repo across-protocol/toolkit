@@ -1,6 +1,6 @@
 import { getQuote } from "./actions";
 import { MAINNET_API_URL, TESTNET_API_URL } from "./constants";
-import { LogLevel, Logger } from "./utils";
+import { LogLevel, ConsoleLogger } from "./utils";
 
 export type AcrossClientOptions = {
   integratorId: string;
@@ -18,7 +18,7 @@ export class AcrossClient {
 
   apiUrl: string;
   integratorId: string;
-  log: Logger;
+  log: ConsoleLogger;
 
   public actions: {
     getQuote: typeof getQuote;
@@ -28,7 +28,7 @@ export class AcrossClient {
   private constructor(args: AcrossClientOptions) {
     this.apiUrl = args?.useTestnet === true ? TESTNET_API_URL : MAINNET_API_URL;
     this.integratorId = args.integratorId;
-    this.log = new Logger(args?.logLevel ?? "INFO");
+    this.log = new ConsoleLogger(args?.logLevel ?? "INFO");
 
     // bind methods
     this.actions = {

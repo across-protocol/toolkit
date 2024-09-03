@@ -8,7 +8,7 @@ export const LogLevels = {
 
 export type LogLevel = keyof typeof LogLevels;
 
-export class Logger {
+export class ConsoleLogger {
   logLevel: LogLevel;
 
   constructor(logLevel: LogLevel) {
