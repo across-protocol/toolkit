@@ -8,7 +8,7 @@ export const LogLevels = {
 
 export type LogLevel = keyof typeof LogLevels;
 
-export class ConsoleLogger {
+export class DefaultLogger implements LoggerT {
   logLevel: LogLevel;
 
   constructor(logLevel: LogLevel) {
@@ -64,3 +64,12 @@ type ColorCode = (typeof COLORS)[keyof typeof COLORS];
 const resetControl = "\x1b[0m";
 
 const setColor = (color: ColorCode) => `\x1b[${color}m`;
+
+type LoggerArgs = Parameters<typeof console.log>;
+
+export type LoggerT = {
+  debug(...args: LoggerArgs): void;
+  info(...args: LoggerArgs): void;
+  warn(...args: LoggerArgs): void;
+  error(...args: LoggerArgs): void;
+};
