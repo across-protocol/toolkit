@@ -1,4 +1,9 @@
-import { getAvailableRoutes, getSuggestedFees } from "./actions";
+import {
+  getAvailableRoutes,
+  getSuggestedFees,
+  getLimits,
+  getOriginChains,
+} from "./actions";
 import { MAINNET_API_URL, TESTNET_API_URL } from "./constants";
 import { LogLevel, DefaultLogger, LoggerT } from "./utils";
 
@@ -23,6 +28,9 @@ export class AcrossClient {
 
   public actions: {
     getSuggestedFees: typeof getSuggestedFees;
+    getAvailableRoutes: typeof getAvailableRoutes;
+    getLimits: typeof getLimits;
+    getOriginChains: typeof getOriginChains;
     // ... actions go here
   };
 
@@ -34,6 +42,9 @@ export class AcrossClient {
     // bind methods
     this.actions = {
       getSuggestedFees: getSuggestedFees.bind(this),
+      getAvailableRoutes: getAvailableRoutes.bind(this),
+      getLimits: getLimits.bind(this),
+      getOriginChains: getOriginChains.bind(this),
     };
 
     this.log.debug(
