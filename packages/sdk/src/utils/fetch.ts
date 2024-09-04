@@ -12,7 +12,7 @@ export const fetchAcross = globalThis.fetch.bind(globalThis);
  */
 
 export function buildSearchParams(
-  params: Record<string, number | string | Array<number | string>>,
+  params: Record<string, number | bigint | string | Array<number | string>>,
 ): string {
   const searchParams = new URLSearchParams();
   for (const key in params) {
