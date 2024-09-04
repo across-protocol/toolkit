@@ -1,9 +1,25 @@
 {
   "name": "@across-toolkit/sdk",
   "version": "0.0.0",
-  "main": "./dist/index.js",
+  "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
+  "description": "The official SDK for integrating Across bridge into your dapp.",
+  "keywords": [
+    "bridge",
+    "sdk",
+    "crypto",
+    "blockchain"
+  ],
+  "homepage": "https://github.com/across-protocol/toolkit",
+  "bugs": {
+    "url": "https://github.com/across-protocol/toolkit/issues"
+  },
+  "author": "Across Protocol <engineering@across.to> (https://across.to)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/across-protocol/toolkit.git"
+  },
   "sideEffects": false,
   "license": "MIT",
   "files": [
@@ -13,20 +29,28 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts --format esm --watch --dts",
     "lint": "pnpm run type-check && eslint \"src/**/*.ts*\"",
+    "format": "prettier --write .",
+    "check-format": "prettier --check .",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc",
+    "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
+    "test": "vitest run",
+    "ci": "pnpm run build && pnpm run check-exports pnpm npm run lint && pnpm run test"
   },
   "devDependencies": {
     "@across-toolkit/eslint-config": "workspace:*",
     "@across-toolkit/typescript-config": "workspace:*",
+    "@arethetypeswrong/cli": "^0.15.4",
     "@types/node": "^20",
     "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
-    "viem": "^2.20.1"
+    "viem": "^2.20.1",
+    "vitest": "^2.0.5"
   },
   "publishConfig": {
     "access": "public"

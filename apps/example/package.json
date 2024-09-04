@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sdk": "tsx ./scripts/sdk.ts"
+    "sdk": "tsx ./scripts/sdk.ts",
+    "ci": "pnpm run build && pnpm run lint"
   },
   "dependencies": {
     "@across-toolkit/sdk": "workspace:*",
@@ -37,6 +38,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
     "postcss": "^8",
+    "prettier": "^3.2.5",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.0",
     "typescript": "^5"

@@ -10,14 +10,16 @@
     "allowImportingTsExtensions": true,
     "inlineSources": false,
     "isolatedModules": true,
-    "module": "ESNext",
+    "module": "NodeNext",
+    "sourceMap": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true
   },
   "exclude": ["node_modules"]
 }

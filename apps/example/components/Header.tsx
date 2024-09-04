@@ -10,7 +10,7 @@ export const Header = ({
     <div
       className={cn(
         "fixed top-0 z-20 flex w-full items-center justify-between bg-transparent p-4 md:p-5",
-        className
+        className,
       )}
       {...props}
     >

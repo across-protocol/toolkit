@@ -21,12 +21,12 @@ export async function getSuggestedFees(params: SuggestedFeesParams) {
     depositMethod: "depositExclusive",
   });
   const res = await fetchAcross(
-    `${client.apiUrl}/suggested-fees?${searchParams}`
+    `${client.apiUrl}/suggested-fees?${searchParams}`,
   );
 
   if (!res.ok) {
     throw new Error(
-      `Failed to fetch suggested fees: ${res.status}, ${await res.text()}`
+      `Failed to fetch suggested fees: ${res.status}, ${await res.text()}`,
     );
   }
 
