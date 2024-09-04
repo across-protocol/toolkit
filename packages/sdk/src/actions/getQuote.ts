@@ -1,24 +1,121 @@
+import { Address, Hex } from "viem";
 import { getClient } from "../client";
+import { Amount, CrossChainAction } from "../types";
+import {
+  getMultiCallHandlerAddress,
+  buildMulticallHandlerMessage,
+} from "../utils";
 
 export type QuoteParams = {
-  token: string;
+  inputToken: Address;
+  outputToken: Address;
   originChainId: number;
   destinationChainId: number;
-  amount: string; // bignumber string
+  inputAmount: Amount;
+  outputAmount?: Amount; // @todo add support for outputAmount
+  recipient?: Address;
+  crossChainMessage?:
+    | {
+        actions: CrossChainAction[];
+        fallbackRecipient: Address;
+      }
+    | Hex;
 };
 
-// @todo add support for "message" for Across+ integrations
 export async function getQuote(params: QuoteParams) {
   const client = getClient();
-  try {
-    const suggestedFees = await client.actions.getSuggestedFees(params);
-    if (!suggestedFees) {
-      client.log.error("suggested fees failed with params: \n", params);
+
+  const {
+    inputToken,
+    outputToken,
+    originChainId,
+    destinationChainId,
+    recipient: _recipient,
+    inputAmount,
+    crossChainMessage,
+  } = params;
+
+  let message = "0x";
+  let recipient = _recipient;
+
+  if (crossChainMessage && typeof crossChainMessage === "object") {
+    if (crossChainMessage.actions.length === 0) {
+      throw new Error("No 'crossChainMessage.actions' provided");
     }
-    return suggestedFees;
-  } catch (error) {
-    client.log.error(error);
+
+    message = buildMulticallHandlerMessage({
+      actions: crossChainMessage.actions,
+      fallbackRecipient: crossChainMessage.fallbackRecipient,
+    });
+    recipient = getMultiCallHandlerAddress(destinationChainId);
   }
+
+  const { outputAmount, ...fees } = await client.actions.getSuggestedFees({
+    inputToken,
+    outputToken,
+    originChainId,
+    destinationChainId,
+    amount: inputAmount,
+    recipient,
+    message,
+  });
+
+  // If a given cross-chain message is dependent on the outputAmount, update it
+  if (crossChainMessage && typeof crossChainMessage === "object") {
+    for (const action of crossChainMessage.actions) {
+      if (action.updateCallData) {
+        action.callData = action.updateCallData(outputAmount);
+      }
+    }
+    message = buildMulticallHandlerMessage({
+      actions: crossChainMessage.actions,
+      fallbackRecipient: crossChainMessage.fallbackRecipient,
+    });
+  }
+
+  const {
+    // partial deposit args
+    timestamp,
+    exclusiveRelayer,
+    exclusivityDeadline,
+    spokePoolAddress,
+    // limits
+    isAmountTooLow,
+    limits,
+    // fees
+    lpFee,
+    relayerGasFee,
+    relayerCapitalFee,
+    totalRelayFee,
+    // misc
+    estimatedFillTimeSec,
+  } = fees;
+
+  return {
+    deposit: {
+      inputAmount,
+      outputAmount,
+      originChainId,
+      destinationChainId,
+      recipient,
+      message,
+      quoteTimestamp: timestamp,
+      exclusiveRelayer,
+      exclusivityDeadline,
+      spokePoolAddress,
+      inputToken,
+      outputToken,
+    },
+    limits,
+    fees: {
+      lpFee,
+      relayerGasFee,
+      relayerCapitalFee,
+      totalRelayFee,
+    },
+    isAmountTooLow,
+    estimatedFillTimeSec,
+  };
 }
 
 export type QuoteResponse = {};
