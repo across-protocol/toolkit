@@ -1,10 +1,5 @@
-export const fetch = globalThis.fetch.bind(globalThis);
+export const fetchAcross = globalThis.fetch.bind(globalThis);
 // enforce usage of Node v18+ if this sdk is to be used in Node
-
-//  @todo create useful fetcher
-export async function get(url: string) {
-  return await fetch(url);
-}
 
 //  @todo unify error handling
 

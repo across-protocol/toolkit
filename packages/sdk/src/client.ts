@@ -1,4 +1,9 @@
-import { getQuote } from "./actions";
+import {
+  getAvailableRoutes,
+  getSuggestedFees,
+  getLimits,
+  getOriginChains,
+} from "./actions";
 import { MAINNET_API_URL, TESTNET_API_URL } from "./constants";
 import { LogLevel, DefaultLogger, LoggerT } from "./utils";
 
@@ -22,18 +27,24 @@ export class AcrossClient {
   log: LoggerT;
 
   public actions: {
-    getQuote: typeof getQuote;
+    getSuggestedFees: typeof getSuggestedFees;
+    getAvailableRoutes: typeof getAvailableRoutes;
+    getLimits: typeof getLimits;
+    getOriginChains: typeof getOriginChains;
     // ... actions go here
   };
 
   private constructor(args: AcrossClientOptions) {
     this.apiUrl = args?.useTestnet === true ? TESTNET_API_URL : MAINNET_API_URL;
     this.integratorId = args.integratorId;
-    this.log = args?.logger ?? new DefaultLogger(args?.logLevel ?? "INFO");
+    this.log = args?.logger ?? new DefaultLogger(args?.logLevel ?? "ERROR");
 
     // bind methods
     this.actions = {
-      getQuote: getQuote.bind(this),
+      getSuggestedFees: getSuggestedFees.bind(this),
+      getAvailableRoutes: getAvailableRoutes.bind(this),
+      getLimits: getLimits.bind(this),
+      getOriginChains: getOriginChains.bind(this),
     };
 
     this.log.debug(
@@ -42,20 +53,20 @@ export class AcrossClient {
     );
   }
 
-  static create(options: AcrossClientOptions): AcrossClient {
-    if (AcrossClient.instance === null) {
-      AcrossClient.instance = new AcrossClient(options);
+  public static create(options: AcrossClientOptions): AcrossClient {
+    if (this.instance === null) {
+      this.instance = new AcrossClient(options);
     }
-    return AcrossClient.instance;
+    return this.instance;
   }
 
-  static getInstance(): AcrossClient {
-    if (AcrossClient.instance === null) {
+  public static getInstance(): AcrossClient {
+    if (this.instance === null) {
       throw new Error(
         "AcrossClient has not been initialized. Call create() first."
       );
     }
-    return AcrossClient.instance;
+    return this.instance;
   }
 }
 
