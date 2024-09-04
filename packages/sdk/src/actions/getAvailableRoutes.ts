@@ -2,12 +2,12 @@ import { Address } from "viem";
 import { buildSearchParams, fetchAcross } from "../utils";
 import { getClient } from "../client";
 
-export type AvailableRoutesParams = {
+export type AvailableRoutesParams = Partial<{
   originToken: Address;
   destinationToken: Address;
   destinationChainId: number;
   originChainId: number;
-};
+}>;
 
 export type AvailableRoutesResponse = {
   originChainId: number;
