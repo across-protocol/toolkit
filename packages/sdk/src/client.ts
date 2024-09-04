@@ -3,6 +3,7 @@ import {
   getSuggestedFees,
   getLimits,
   getOriginChains,
+  getQuote,
 } from "./actions";
 import { MAINNET_API_URL, TESTNET_API_URL } from "./constants";
 import { LogLevel, DefaultLogger, LoggerT } from "./utils";
@@ -31,6 +32,7 @@ export class AcrossClient {
     getAvailableRoutes: typeof getAvailableRoutes;
     getLimits: typeof getLimits;
     getOriginChains: typeof getOriginChains;
+    getQuote: typeof getQuote;
     // ... actions go here
   };
 
@@ -45,6 +47,7 @@ export class AcrossClient {
       getAvailableRoutes: getAvailableRoutes.bind(this),
       getLimits: getLimits.bind(this),
       getOriginChains: getOriginChains.bind(this),
+      getQuote: getQuote.bind(this),
     };
 
     this.log.debug(

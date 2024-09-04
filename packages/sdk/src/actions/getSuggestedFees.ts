@@ -1,24 +1,43 @@
+import { Address } from "viem";
+
 import { getClient } from "../client";
 import { buildSearchParams, fetchAcross } from "../utils";
+import { Amount } from "../types";
 
 export type SuggestedFeesParams = {
-  token: string;
+  inputToken: Address;
+  outputToken: Address;
   originChainId: number;
   destinationChainId: number;
-  amount: string; // bignumber string
+  amount: Amount;
+  recipient?: Address;
+  message?: string;
 };
 
 export async function getSuggestedFees(params: SuggestedFeesParams) {
   const client = getClient();
-  try {
-    const searchParams = buildSearchParams(params);
-    const res = await fetchAcross(
-      `${client.apiUrl}/suggested-fees?${searchParams}`
+  const searchParams = buildSearchParams({
+    ...params,
+    depositMethod: "depositExclusive",
+  });
+  const res = await fetchAcross(
+    `${client.apiUrl}/suggested-fees?${searchParams}`
+  );
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to fetch suggested fees: ${res.status}, ${await res.text()}`
     );
-    return (await res.json()) as SuggestedFeesResponse;
-  } catch (error) {
-    client.log.error(error);
   }
+
+  const data = (await res.json()) as SuggestedFeesResponse;
+
+  const outputAmount = BigInt(params.amount) - BigInt(data.totalRelayFee.total);
+  return {
+    // @todo: more data transformations for easier consumptions
+    ...data,
+    outputAmount,
+  };
 }
 
 export type SuggestedFeesResponse = {

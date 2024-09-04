@@ -20,14 +20,21 @@ export type AvailableRoutesResponse = {
 
 export async function getAvailableRoutes(params?: AvailableRoutesParams) {
   const client = getClient();
-  try {
-    const searchParams = params ? buildSearchParams(params) : "";
 
-    const res = await fetchAcross(
-      `${client.apiUrl}/available-routes?${searchParams}`
-    );
-    return (await res.json()) as AvailableRoutesResponse;
-  } catch (error) {
-    client.log.error(error);
-  }
+  const searchParams = params ? buildSearchParams(params) : "";
+
+  const res = await fetchAcross(
+    `${client.apiUrl}/available-routes?${searchParams}`
+  );
+  const data = (await res.json()) as AvailableRoutesResponse;
+
+  // Transform to internal type consistency
+  return data.map((route) => ({
+    originChainId: route.originChainId,
+    inputToken: route.originToken as Address,
+    destinationChainId: route.destinationChainId,
+    outputToken: route.destinationToken as Address,
+    inputTokenSymbol: route.originTokenSymbol,
+    outputTokenSymbol: route.destinationTokenSymbol,
+  }));
 }
