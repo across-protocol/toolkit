@@ -24,7 +24,7 @@ export async function getAvailableRoutes(params?: AvailableRoutesParams) {
     const searchParams = params ? buildSearchParams(params) : "";
 
     const res = await fetchAcross(
-      `${client.apiUrl}/available-routes?${searchParams}`
+      `${client.apiUrl}/available-routes?${searchParams}`,
     );
     return (await res.json()) as AvailableRoutesResponse;
   } catch (error) {

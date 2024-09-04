@@ -49,7 +49,7 @@ export class AcrossClient {
 
     this.log.debug(
       "Client created with args: \n",
-      JSON.stringify(args, null, 2)
+      JSON.stringify(args, null, 2),
     );
   }
 
@@ -63,7 +63,7 @@ export class AcrossClient {
   public static getInstance(): AcrossClient {
     if (this.instance === null) {
       throw new Error(
-        "AcrossClient has not been initialized. Call create() first."
+        "AcrossClient has not been initialized. Call create() first.",
       );
     }
     return this.instance;

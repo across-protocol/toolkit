@@ -13,7 +13,7 @@ export async function getSuggestedFees(params: SuggestedFeesParams) {
   try {
     const searchParams = buildSearchParams(params);
     const res = await fetchAcross(
-      `${client.apiUrl}/suggested-fees?${searchParams}`
+      `${client.apiUrl}/suggested-fees?${searchParams}`,
     );
     return (await res.json()) as SuggestedFeesResponse;
   } catch (error) {

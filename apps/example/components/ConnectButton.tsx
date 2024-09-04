@@ -27,7 +27,7 @@ export const ConnectButton = ({ className }: ConnectButton) => {
           <div
             className={cn(
               !ready && "pointer-events-none hidden select-none opacity-0",
-              className
+              className,
             )}
             aria-hidden={ready ? "false" : "true"}
           >
