@@ -16,6 +16,7 @@ export type AvailableRoutesResponse = {
   destinationToken: string;
   originTokenSymbol: string;
   destinationTokenSymbol: string;
+  isNative: boolean;
 }[];
 
 export async function getAvailableRoutes(params?: AvailableRoutesParams) {
@@ -30,6 +31,7 @@ export async function getAvailableRoutes(params?: AvailableRoutesParams) {
 
   // Transform to internal type consistency
   return data.map((route) => ({
+    isNative: route.isNative,
     originChainId: route.originChainId,
     inputToken: route.originToken as Address,
     destinationChainId: route.destinationChainId,

@@ -4,6 +4,8 @@ import {
   getLimits,
   getOriginChains,
   getQuote,
+  simulateDepositTx,
+  SimulateDepositTxParams,
 } from "./actions";
 import { MAINNET_API_URL, TESTNET_API_URL } from "./constants";
 import { LogLevel, DefaultLogger, LoggerT } from "./utils";
@@ -33,6 +35,7 @@ export class AcrossClient {
     getLimits: typeof getLimits;
     getOriginChains: typeof getOriginChains;
     getQuote: typeof getQuote;
+    simulateDepositTx: AcrossClient["simulateDepositTx"];
     // ... actions go here
   };
 
@@ -48,6 +51,7 @@ export class AcrossClient {
       getLimits: getLimits.bind(this),
       getOriginChains: getOriginChains.bind(this),
       getQuote: getQuote.bind(this),
+      simulateDepositTx: this.simulateDepositTx.bind(this),
     };
 
     this.log.debug(
@@ -70,6 +74,12 @@ export class AcrossClient {
       );
     }
     return this.instance;
+  }
+
+  async simulateDepositTx(
+    params: Omit<SimulateDepositTxParams, "integratorId">,
+  ) {
+    return simulateDepositTx({ ...params, integratorId: this.integratorId });
   }
 }
 
