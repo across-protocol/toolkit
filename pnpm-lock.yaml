@@ -154,6 +154,9 @@ importers:
       '@arethetypeswrong/cli':
         specifier: ^0.15.4
         version: 0.15.4
+      '@total-typescript/ts-reset':
+        specifier: ^0.6.0
+        version: 0.6.0
       '@types/node':
         specifier: ^20
         version: 20.16.2
@@ -176,11 +179,7 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5(@types/node@20.16.2)
 
-  packages/typescript-config:
-    devDependencies:
-      '@total-typescript/ts-reset':
-        specifier: ^0.6.0
-        version: 0.6.0
+  packages/typescript-config: {}
 
 packages:
 
@@ -366,7 +365,7 @@ packages:
       '@babel/core': 7.23.3
       '@babel/helper-compilation-targets': 7.25.2
       '@babel/helper-plugin-utils': 7.24.8
-      debug: 4.3.4
+      debug: 4.3.6
       lodash.debounce: 4.0.8
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -3026,7 +3025,7 @@ packages:
     dependencies:
       '@ethereumjs/tx': 4.2.0
       '@types/debug': 4.1.12
-      debug: 4.3.4
+      debug: 4.3.6
       semver: 7.5.4
       superstruct: 1.0.4
     transitivePeerDependencies:
@@ -6755,7 +6754,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /decamelize-keys@1.1.1:
     resolution: {integrity: sha512-WiPxgEirIV0/eIOMcnFBA3/IJZAZqKnwAwWyvvdi4lsr1WCN22nhdf/3db3DoZcUjTV2SqfzIwNyp6y2xs3nmg==}

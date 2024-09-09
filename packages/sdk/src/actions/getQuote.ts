@@ -1,16 +1,13 @@
 import { Address, Hex } from "viem";
 import { getClient } from "../client";
-import { Amount, CrossChainAction } from "../types";
+import { Amount, CrossChainAction, Route } from "../types";
 import {
   getMultiCallHandlerAddress,
   buildMulticallHandlerMessage,
 } from "../utils";
 
 export type QuoteParams = {
-  inputToken: Address;
-  outputToken: Address;
-  originChainId: number;
-  destinationChainId: number;
+  route: Route;
   inputAmount: Amount;
   outputAmount?: Amount; // @todo add support for outputAmount
   recipient?: Address;
@@ -26,10 +23,7 @@ export async function getQuote(params: QuoteParams) {
   const client = getClient();
 
   const {
-    inputToken,
-    outputToken,
-    originChainId,
-    destinationChainId,
+    route,
     recipient: _recipient,
     inputAmount,
     crossChainMessage,
@@ -47,14 +41,11 @@ export async function getQuote(params: QuoteParams) {
       actions: crossChainMessage.actions,
       fallbackRecipient: crossChainMessage.fallbackRecipient,
     });
-    recipient = getMultiCallHandlerAddress(destinationChainId);
+    recipient = getMultiCallHandlerAddress(route.destinationChainId);
   }
 
   const { outputAmount, ...fees } = await client.actions.getSuggestedFees({
-    inputToken,
-    outputToken,
-    originChainId,
-    destinationChainId,
+    ...route,
     amount: inputAmount,
     recipient,
     message,
@@ -95,16 +86,13 @@ export async function getQuote(params: QuoteParams) {
     deposit: {
       inputAmount,
       outputAmount,
-      originChainId,
-      destinationChainId,
       recipient,
       message,
       quoteTimestamp: timestamp,
       exclusiveRelayer,
       exclusivityDeadline,
       spokePoolAddress,
-      inputToken,
-      outputToken,
+      ...route,
     },
     limits,
     fees: {
@@ -118,4 +106,4 @@ export async function getQuote(params: QuoteParams) {
   };
 }
 
-export type QuoteResponse = {};
+export type QuoteResponse = Awaited<ReturnType<typeof getQuote>>;

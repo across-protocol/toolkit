@@ -1,10 +1,12 @@
 import { expect, test, vi } from "vitest";
 import { AcrossClient } from "../../src/client";
+import { hardhat } from "viem/chains";
 
 const client = AcrossClient.create({
   useTestnet: true,
   integratorId: "TEST_ID",
   logLevel: "WARN",
+  chains: [hardhat],
 });
 
 const consoleErrorSpy = vi.spyOn(console, "error");

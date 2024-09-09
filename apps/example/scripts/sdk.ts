@@ -1,17 +1,28 @@
 import { AcrossClient } from "@across-toolkit/sdk";
-import { encodeFunctionData, parseAbiItem, Address, Hex } from "viem";
+import { encodeFunctionData, parseAbiItem, Address } from "viem";
+import { arbitrum, mainnet } from "viem/chains";
+
+const chains = [mainnet, arbitrum];
+
+const rpcUrls = {
+  [mainnet.id]: "https://mainnet.infura.io/v3/3f0ba4bb677d4bbbae9fdd888796a955",
+  [arbitrum.id]:
+    "https://arbitrum-mainnet.infura.io/v3/3f0ba4bb677d4bbbae9fdd888796a955",
+};
+
+const client = AcrossClient.create({
+  useTestnet: false,
+  integratorId: "TEST",
+  chains,
+  rpcUrls,
+});
 
 //  test using client with node
-(async function main() {
-  const client = AcrossClient.create({
-    useTestnet: false,
-    integratorId: "TEST",
-  });
-
+async function main() {
   // available routes
   const routes = await client.actions.getAvailableRoutes({
-    originChainId: 42161,
-    destinationChainId: 1,
+    originChainId: arbitrum.id,
+    destinationChainId: mainnet.id,
   })!;
   const route = routes.find((r) => r.inputTokenSymbol === "DAI")!;
   console.log(route);
@@ -26,7 +37,7 @@ import { encodeFunctionData, parseAbiItem, Address, Hex } from "viem";
   const aaveReferralCode = 0;
 
   const quoteRes = await client.actions.getQuote({
-    ...route,
+    route,
     inputAmount,
     recipient: "0x924a9f036260DdD5808007E1AA95f08eD08aA569",
     crossChainMessage: {
@@ -66,7 +77,8 @@ import { encodeFunctionData, parseAbiItem, Address, Hex } from "viem";
     },
   });
   console.log(quoteRes);
-})();
+}
+main();
 
 function generateApproveCallData({
   aaveAddress,
@@ -97,7 +109,7 @@ function generateDepositCallDataForAave({
   return encodeFunctionData({
     abi: [
       parseAbiItem(
-        "function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)"
+        "function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)",
       ),
     ],
     args: [depositCurrency, depositAmount, userAddress, aaveReferralCode],

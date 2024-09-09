@@ -1,27 +1,21 @@
 import { Address } from "viem";
-import { getClient } from "../client";
 import { buildSearchParams, fetchAcross } from "../utils";
+import assert from "assert";
 
-export type LimitsParams = {
+export type GetLimitsParams = {
   destinationChainId: number;
   inputToken: Address;
   outputToken: Address;
   originChainId: number;
+  apiUrl: string;
 };
 
 //  might not be necessary if this is part of suggested fees response???
-export async function getLimits(params: LimitsParams) {
-  const client = getClient();
-  try {
-    const searchParams = buildSearchParams(params);
-    const limits = await fetchAcross(`${client.apiUrl}/limits?${searchParams}`);
-    if (!limits) {
-      client.log.error("limits failed with params: \n", params);
-    }
-    return (await limits.json()) as LimitsResponse;
-  } catch (error) {
-    client.log.error(error);
-  }
+export async function getLimits(params: GetLimitsParams) {
+  const searchParams = buildSearchParams(params);
+  const limits = await fetchAcross(`${params.apiUrl}/limits?${searchParams}`);
+  assert(limits, `limits failed with params: \n${JSON.stringify(params)}"`);
+  return (await limits.json()) as LimitsResponse;
 }
 
 export type LimitsResponse = {

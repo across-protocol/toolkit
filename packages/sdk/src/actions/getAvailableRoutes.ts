@@ -1,32 +1,28 @@
 import { Address } from "viem";
 import { buildSearchParams, fetchAcross } from "../utils";
-import { getClient } from "../client";
+import { Route } from "../types";
 
-export type AvailableRoutesParams = Partial<{
+export type GetAvailableRoutesParams = Partial<{
   originToken: Address;
   destinationToken: Address;
   destinationChainId: number;
   originChainId: number;
-}>;
+}> & {
+  apiUrl: string;
+};
 
-export type AvailableRoutesResponse = {
-  originChainId: number;
-  originToken: string;
-  destinationChainId: number;
-  destinationToken: string;
-  originTokenSymbol: string;
-  destinationTokenSymbol: string;
-}[];
+export type AvailableRoutesResponse = Route[];
 
-export async function getAvailableRoutes(params?: AvailableRoutesParams) {
-  const client = getClient();
-
+export async function getAvailableRoutes(
+  params: GetAvailableRoutesParams,
+): Promise<AvailableRoutesResponse> {
   const searchParams = params ? buildSearchParams(params) : "";
 
   const res = await fetchAcross(
-    `${client.apiUrl}/available-routes?${searchParams}`,
+    `${params.apiUrl}/available-routes?${searchParams}`,
   );
-  const data = (await res.json()) as AvailableRoutesResponse;
+
+  const data = (await res.json()) as AvailableRoutesApiResponse;
 
   // Transform to internal type consistency
   return data.map((route) => ({
@@ -38,3 +34,12 @@ export async function getAvailableRoutes(params?: AvailableRoutesParams) {
     outputTokenSymbol: route.destinationTokenSymbol,
   }));
 }
+
+type AvailableRoutesApiResponse = {
+  originChainId: number;
+  originToken: string;
+  destinationChainId: number;
+  destinationToken: string;
+  originTokenSymbol: string;
+  destinationTokenSymbol: string;
+}[];

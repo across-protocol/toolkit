@@ -1,27 +1,21 @@
 import { Address } from "viem";
-
-import { getClient } from "../client";
 import { buildSearchParams, fetchAcross } from "../utils";
-import { Amount } from "../types";
+import { Amount, Route } from "../types";
 
-export type SuggestedFeesParams = {
-  inputToken: Address;
-  outputToken: Address;
-  originChainId: number;
-  destinationChainId: number;
+export type GetSuggestedFeesParams = Route & {
   amount: Amount;
+  apiUrl: string;
   recipient?: Address;
   message?: string;
 };
 
-export async function getSuggestedFees(params: SuggestedFeesParams) {
-  const client = getClient();
+export async function getSuggestedFees(params: GetSuggestedFeesParams) {
   const searchParams = buildSearchParams({
     ...params,
     depositMethod: "depositExclusive",
   });
   const res = await fetchAcross(
-    `${client.apiUrl}/suggested-fees?${searchParams}`,
+    `${params.apiUrl}/suggested-fees?${searchParams}`,
   );
 
   if (!res.ok) {
@@ -54,7 +48,7 @@ export type SuggestedFeesResponse = {
   quoteBlock: string;
   exclusiveRelayer: string;
   exclusivityDeadline: number;
-  spokePoolAddress: string;
+  spokePoolAddress: Address;
   totalRelayFee: {
     pct: string;
     total: string;
