@@ -35,9 +35,7 @@ export class AcrossClient {
     getLimits: typeof getLimits;
     getOriginChains: typeof getOriginChains;
     getQuote: typeof getQuote;
-    simulateDepositTx: (
-      params: Omit<SimulateDepositTxParams, "integratorId">,
-    ) => ReturnType<typeof simulateDepositTx>;
+    simulateDepositTx: AcrossClient["simulateDepositTx"];
     // ... actions go here
   };
 
@@ -53,9 +51,7 @@ export class AcrossClient {
       getLimits: getLimits.bind(this),
       getOriginChains: getOriginChains.bind(this),
       getQuote: getQuote.bind(this),
-      simulateDepositTx: (
-        params: Omit<SimulateDepositTxParams, "integratorId">,
-      ) => simulateDepositTx({ ...params, integratorId: this.integratorId }),
+      simulateDepositTx: this.simulateDepositTx.bind(this),
     };
 
     this.log.debug(
@@ -78,6 +74,12 @@ export class AcrossClient {
       );
     }
     return this.instance;
+  }
+
+  async simulateDepositTx(
+    params: Omit<SimulateDepositTxParams, "integratorId">,
+  ) {
+    return simulateDepositTx({ ...params, integratorId: this.integratorId });
   }
 }
 

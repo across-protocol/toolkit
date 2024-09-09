@@ -61,13 +61,15 @@ loadEnvConfig(projectDir);
   });
   console.log("Simulation result:", request);
 
-  // 3. sign and send tx
-  const hash = await walletClient.writeContract(request);
-  console.log("Tx hash:", hash);
+  if (process.env.SEND_DEPOSIT_TX === "true") {
+    // 3. sign and send tx
+    const hash = await walletClient.writeContract(request);
+    console.log("Tx hash:", hash);
 
-  // 4. wait for tx to be mined
-  const receipt = await publicClient.waitForTransactionReceipt({ hash });
-  console.log("Tx receipt", receipt);
+    // 4. wait for tx to be mined
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+    console.log("Tx receipt", receipt);
+  }
 
   // 5. check fill status
   // TODO
