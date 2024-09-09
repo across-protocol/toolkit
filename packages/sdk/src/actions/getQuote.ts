@@ -7,6 +7,7 @@ import {
 } from "../utils";
 
 export type QuoteParams = {
+  isNative?: boolean;
   inputToken: Address;
   outputToken: Address;
   originChainId: number;
@@ -14,6 +15,11 @@ export type QuoteParams = {
   inputAmount: Amount;
   outputAmount?: Amount; // @todo add support for outputAmount
   recipient?: Address;
+  /**
+   * A cross-chain message to be executed on the destination chain. Can either
+   * be a pre-constructed hex string or an object containing the actions to be
+   * executed and the fallback recipient.
+   */
   crossChainMessage?:
     | {
         actions: CrossChainAction[];
@@ -22,10 +28,13 @@ export type QuoteParams = {
     | Hex;
 };
 
+export type Quote = Awaited<ReturnType<typeof getQuote>>;
+
 export async function getQuote(params: QuoteParams) {
   const client = getClient();
 
   const {
+    isNative,
     inputToken,
     outputToken,
     originChainId,
@@ -35,7 +44,7 @@ export async function getQuote(params: QuoteParams) {
     crossChainMessage,
   } = params;
 
-  let message = "0x";
+  let message: Hex = "0x";
   let recipient = _recipient;
 
   if (crossChainMessage && typeof crossChainMessage === "object") {
@@ -93,16 +102,17 @@ export async function getQuote(params: QuoteParams) {
 
   return {
     deposit: {
+      isNative,
       inputAmount,
       outputAmount,
       originChainId,
       destinationChainId,
       recipient,
       message,
-      quoteTimestamp: timestamp,
-      exclusiveRelayer,
+      quoteTimestamp: Number(timestamp),
+      exclusiveRelayer: exclusiveRelayer as Address,
       exclusivityDeadline,
-      spokePoolAddress,
+      spokePoolAddress: spokePoolAddress as Address,
       inputToken,
       outputToken,
     },
@@ -117,5 +127,3 @@ export async function getQuote(params: QuoteParams) {
     estimatedFillTimeSec,
   };
 }
-
-export type QuoteResponse = {};

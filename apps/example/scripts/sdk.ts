@@ -1,8 +1,34 @@
 import { AcrossClient } from "@across-toolkit/sdk";
-import { encodeFunctionData, parseAbiItem, Address, Hex } from "viem";
+import {
+  encodeFunctionData,
+  parseAbiItem,
+  Address,
+  Hex,
+  createPublicClient,
+  http,
+  createWalletClient,
+  parseEther,
+} from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { arbitrum } from "viem/chains";
+import { loadEnvConfig } from "@next/env";
+
+const projectDir = process.cwd();
+loadEnvConfig(projectDir);
 
 //  test using client with node
 (async function main() {
+  const publicClient = createPublicClient({
+    chain: arbitrum,
+    transport: http(),
+  });
+  const account = privateKeyToAccount(process.env.DEV_PK as Hex);
+  const walletClient = createWalletClient({
+    account,
+    chain: arbitrum,
+    transport: http(),
+  });
+
   const client = AcrossClient.create({
     useTestnet: false,
     integratorId: "TEST",
@@ -13,8 +39,43 @@ import { encodeFunctionData, parseAbiItem, Address, Hex } from "viem";
     originChainId: 42161,
     destinationChainId: 1,
   })!;
-  const route = routes.find((r) => r.inputTokenSymbol === "DAI")!;
-  console.log(route);
+
+  /* --------------------------- test normal bridge --------------------------- */
+  console.log("Testing normal bridge...");
+  const bridgeRoute = routes.find((r) => r.inputTokenSymbol === "ETH")!;
+  console.log("Using route:", bridgeRoute);
+
+  // 1. get quote
+  const bridgeQuoteRes = await client.actions.getQuote({
+    ...bridgeRoute,
+    inputAmount: parseEther("0.01"),
+    recipient: account.address,
+  });
+  console.log("Got quote:", bridgeQuoteRes);
+
+  // 2. simulate/prep deposit tx
+  const { request } = await client.actions.simulateDepositTx({
+    walletClient,
+    publicClient,
+    deposit: bridgeQuoteRes.deposit,
+  });
+  console.log("Simulation result:", request);
+
+  // 3. sign and send tx
+  const hash = await walletClient.writeContract(request);
+  console.log("Tx hash:", hash);
+
+  // 4. wait for tx to be mined
+  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+  console.log("Tx receipt", receipt);
+
+  // 5. check fill status
+  // TODO
+
+  /* ------------------------ test cross-chain message ------------------------ */
+  console.log("\nTesting cross-chain message...");
+  const crossChainRoute = routes.find((r) => r.inputTokenSymbol === "DAI")!;
+  console.log(crossChainRoute);
 
   // quote
   const inputAmount = 1000000000000000000000n;
@@ -26,7 +87,7 @@ import { encodeFunctionData, parseAbiItem, Address, Hex } from "viem";
   const aaveReferralCode = 0;
 
   const quoteRes = await client.actions.getQuote({
-    ...route,
+    ...crossChainRoute,
     inputAmount,
     recipient: "0x924a9f036260DdD5808007E1AA95f08eD08aA569",
     crossChainMessage: {
@@ -97,7 +158,7 @@ function generateDepositCallDataForAave({
   return encodeFunctionData({
     abi: [
       parseAbiItem(
-        "function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)"
+        "function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)",
       ),
     ],
     args: [depositCurrency, depositAmount, userAddress, aaveReferralCode],
