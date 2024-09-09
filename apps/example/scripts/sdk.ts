@@ -10,18 +10,21 @@ import {
   parseEther,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { arbitrum } from "viem/chains";
+import { arbitrum, mainnet } from "viem/chains";
 import { loadEnvConfig } from "@next/env";
 
 const projectDir = process.cwd();
 loadEnvConfig(projectDir);
 
 //  test using client with node
-(async function main() {
+async function main() {
+  const chains = [mainnet, arbitrum];
+
   const publicClient = createPublicClient({
     chain: arbitrum,
     transport: http(),
   });
+
   const account = privateKeyToAccount(process.env.DEV_PK as Hex);
   const walletClient = createWalletClient({
     account,
@@ -30,12 +33,13 @@ loadEnvConfig(projectDir);
   });
 
   const client = AcrossClient.create({
+    chains,
     useTestnet: false,
     integratorId: "TEST",
   });
 
-//  test using client with node
-async function main() {
+  console.log(client);
+
   // available routes
   const routes = await client.actions.getAvailableRoutes({
     originChainId: arbitrum.id,
@@ -44,12 +48,12 @@ async function main() {
 
   /* --------------------------- test normal bridge --------------------------- */
   console.log("Testing normal bridge...");
-  const bridgeRoute = routes.find((r) => r.inputTokenSymbol === "ETH")!;
-  console.log("Using route:", bridgeRoute);
+  const route = routes.find((r) => r.inputTokenSymbol === "ETH")!;
+  console.log("Using route:", route);
 
   // 1. get quote
   const bridgeQuoteRes = await client.actions.getQuote({
-    ...bridgeRoute,
+    route,
     inputAmount: parseEther("0.01"),
     recipient: account.address,
   });
@@ -58,7 +62,6 @@ async function main() {
   // 2. simulate/prep deposit tx
   const { request } = await client.actions.simulateDepositTx({
     walletClient,
-    publicClient,
     deposit: bridgeQuoteRes.deposit,
   });
   console.log("Simulation result:", request);
@@ -91,7 +94,7 @@ async function main() {
   const aaveReferralCode = 0;
 
   const quoteRes = await client.actions.getQuote({
-    ...crossChainRoute,
+    route: crossChainRoute,
     inputAmount,
     recipient: "0x924a9f036260DdD5808007E1AA95f08eD08aA569",
     crossChainMessage: {

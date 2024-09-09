@@ -11,8 +11,9 @@ export const fetchAcross = globalThis.fetch;
  * @returns queryString - A properly formatted query string for use in URLs, (without the leading '?').
  */
 
+type ParamBaseValue = number | bigint | string | boolean;
 export function buildSearchParams(
-  params: Record<string, number | bigint | string | Array<number | string>>,
+  params: Record<string, ParamBaseValue | Array<ParamBaseValue>>,
 ): string {
   const searchParams = new URLSearchParams();
   for (const key in params) {

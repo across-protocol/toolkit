@@ -90,11 +90,11 @@ export class AcrossClient {
       new DefaultLogger(args?.logLevel ?? CLIENT_DEFAULTS.logLevel);
     // bind methods
     this.actions = {
-      getSuggestedFees: this.getSuggestedFees,
-      getAvailableRoutes: this.getAvailableRoutes,
-      getDepositStatus: this.getDepositStatus,
-      getFillStatus: this.getFillStatus,
-      getLimits: this.getLimits,
+      getSuggestedFees: this.getSuggestedFees.bind(this),
+      getAvailableRoutes: this.getAvailableRoutes.bind(this),
+      getDepositStatus: this.getDepositStatus.bind(this),
+      getFillStatus: this.getFillStatus.bind(this),
+      getLimits: this.getLimits.bind(this),
       getDepositLogs: getDepositLogs.bind(this),
       getOriginChains: getOriginChains.bind(this),
       getQuote: getQuote.bind(this),
@@ -125,13 +125,13 @@ export class AcrossClient {
     return this.instance;
   }
 
-  public getPublicClient(chainId: number): PublicClient {
+  getPublicClient(chainId: number): PublicClient {
     const client = this.publicClients[chainId];
     assert(client, `SDK not configured for chain with id ${chainId}.`);
     return client;
   }
 
-  public async getDepositStatus(
+  async getDepositStatus(
     params: Omit<GetDepositStatusParams, "publicClient">,
     chainId: number,
   ) {
@@ -141,7 +141,7 @@ export class AcrossClient {
     });
   }
 
-  public async getFillStatus({
+  async getFillStatus({
     chainId,
     ...params
   }: Omit<GetFillStatusParams, "destinationChainClient" | "indexerUrl"> & {
@@ -154,26 +154,26 @@ export class AcrossClient {
     });
   }
 
-  public async getAvailableRoutes(
-    params: Omit<GetAvailableRoutesParams, "apiUrl">,
-  ) {
+  async getAvailableRoutes(params: Omit<GetAvailableRoutesParams, "apiUrl">) {
     return getAvailableRoutes({ ...params, apiUrl: this.apiUrl });
   }
 
-  public async getSuggestedFees(
-    params: Omit<GetSuggestedFeesParams, "apiUrl">,
-  ) {
+  async getSuggestedFees(params: Omit<GetSuggestedFeesParams, "apiUrl">) {
     return getSuggestedFees({ ...params, apiUrl: this.apiUrl });
   }
 
-  public async getLimits(params: Omit<GetLimitsParams, "apiUrl">) {
+  async getLimits(params: Omit<GetLimitsParams, "apiUrl">) {
     return getLimits({ ...params, apiUrl: this.apiUrl });
   }
 
   async simulateDepositTx(
-    params: Omit<SimulateDepositTxParams, "integratorId">,
+    params: Omit<SimulateDepositTxParams, "integratorId" | "publicClient">,
   ) {
-    return simulateDepositTx({ ...params, integratorId: this.integratorId });
+    return simulateDepositTx({
+      ...params,
+      integratorId: this.integratorId,
+      publicClient: this.getPublicClient(params.deposit.originChainId),
+    });
   }
 }
 

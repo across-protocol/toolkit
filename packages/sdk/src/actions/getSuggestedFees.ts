@@ -14,6 +14,7 @@ export async function getSuggestedFees(params: GetSuggestedFeesParams) {
     ...params,
     depositMethod: "depositExclusive",
   });
+
   const res = await fetchAcross(
     `${params.apiUrl}/suggested-fees?${searchParams}`,
   );
