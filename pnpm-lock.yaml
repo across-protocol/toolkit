@@ -26,6 +26,9 @@ importers:
       '@across-toolkit/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+      '@next/env':
+        specifier: ^14.2.8
+        version: 14.2.8
       '@radix-ui/react-popover':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
@@ -3143,6 +3146,10 @@ packages:
 
   /@next/env@14.2.7:
     resolution: {integrity: sha512-OTx9y6I3xE/eih+qtthppwLytmpJVPM5PPoJxChFsbjIEFXIayG0h/xLzefHGJviAa3Q5+Fd+9uYojKkHDKxoQ==}
+    dev: false
+
+  /@next/env@14.2.8:
+    resolution: {integrity: sha512-L44a+ynqkolyNBnYfF8VoCiSrjSZWgEHYKkKLGcs/a80qh7AkfVUD/MduVPgdsWZ31tgROR+yJRA0PZjSVBXWQ==}
     dev: false
 
   /@next/eslint-plugin-next@14.1.4:

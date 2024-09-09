@@ -26,6 +26,7 @@ export async function getAvailableRoutes(
 
   // Transform to internal type consistency
   return data.map((route) => ({
+    isNative: route.isNative,
     originChainId: route.originChainId,
     inputToken: route.originToken as Address,
     destinationChainId: route.destinationChainId,
@@ -42,4 +43,5 @@ type AvailableRoutesApiResponse = {
   destinationToken: string;
   originTokenSymbol: string;
   destinationTokenSymbol: string;
+  isNative: boolean;
 }[];

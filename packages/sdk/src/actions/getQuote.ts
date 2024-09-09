@@ -11,6 +11,11 @@ export type QuoteParams = {
   inputAmount: Amount;
   outputAmount?: Amount; // @todo add support for outputAmount
   recipient?: Address;
+  /**
+   * A cross-chain message to be executed on the destination chain. Can either
+   * be a pre-constructed hex string or an object containing the actions to be
+   * executed and the fallback recipient.
+   */
   crossChainMessage?:
     | {
         actions: CrossChainAction[];
@@ -18,6 +23,8 @@ export type QuoteParams = {
       }
     | Hex;
 };
+
+export type Quote = Awaited<ReturnType<typeof getQuote>>;
 
 export async function getQuote(params: QuoteParams) {
   const client = getClient();
@@ -29,7 +36,7 @@ export async function getQuote(params: QuoteParams) {
     crossChainMessage,
   } = params;
 
-  let message = "0x";
+  let message: Hex = "0x";
   let recipient = _recipient;
 
   if (crossChainMessage && typeof crossChainMessage === "object") {
@@ -88,10 +95,10 @@ export async function getQuote(params: QuoteParams) {
       outputAmount,
       recipient,
       message,
-      quoteTimestamp: timestamp,
-      exclusiveRelayer,
+      quoteTimestamp: Number(timestamp),
+      exclusiveRelayer: exclusiveRelayer as Address,
       exclusivityDeadline,
-      spokePoolAddress,
+      spokePoolAddress: spokePoolAddress as Address,
       ...route,
     },
     limits,

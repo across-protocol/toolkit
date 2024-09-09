@@ -13,6 +13,8 @@ import {
   GetAvailableRoutesParams,
   GetSuggestedFeesParams,
   GetLimitsParams,
+  simulateDepositTx,
+  SimulateDepositTxParams,
 } from "./actions";
 import {
   MAINNET_API_URL,
@@ -65,6 +67,7 @@ export class AcrossClient {
     getQuote: typeof getQuote;
 
     getDepositLogs: typeof getDepositLogs;
+    simulateDepositTx: AcrossClient["simulateDepositTx"];
     // ... actions go here
   };
 
@@ -95,6 +98,7 @@ export class AcrossClient {
       getDepositLogs: getDepositLogs.bind(this),
       getOriginChains: getOriginChains.bind(this),
       getQuote: getQuote.bind(this),
+      simulateDepositTx: this.simulateDepositTx.bind(this),
     };
     // bind utils
     this.utils = {};
@@ -164,6 +168,12 @@ export class AcrossClient {
 
   public async getLimits(params: Omit<GetLimitsParams, "apiUrl">) {
     return getLimits({ ...params, apiUrl: this.apiUrl });
+  }
+
+  async simulateDepositTx(
+    params: Omit<SimulateDepositTxParams, "integratorId">,
+  ) {
+    return simulateDepositTx({ ...params, integratorId: this.integratorId });
   }
 }
 

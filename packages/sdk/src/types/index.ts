@@ -19,4 +19,5 @@ export type Route = {
   outputToken: Address;
   inputTokenSymbol: string;
   outputTokenSymbol: string;
+  isNative: boolean;
 };
