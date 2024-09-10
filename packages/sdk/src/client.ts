@@ -66,6 +66,7 @@ export class AcrossClient {
     getFillByDepositTx: AcrossClient["getFillByDepositTx"];
     getSuggestedFees: AcrossClient["getSuggestedFees"];
     getLimits: AcrossClient["getLimits"];
+    waitForFillTx: AcrossClient["waitForFillTx"];
     getOriginChains: typeof getOriginChains;
     getQuote: typeof getQuote;
 
@@ -97,6 +98,7 @@ export class AcrossClient {
       getAvailableRoutes: this.getAvailableRoutes,
       waitForDepositTx: this.waitForDepositTx,
       getFillByDepositTx: this.getFillByDepositTx,
+      waitForFillTx: this.waitForFillTx,
       getLimits: this.getLimits.bind(this),
       getDepositLogs: getDepositLogs.bind(this),
       getOriginChains: getOriginChains.bind(this),
@@ -128,72 +130,73 @@ export class AcrossClient {
     return this.instance;
   }
 
-  getPublicClient(chainId: number): ConfiguredPublicClient {
+  getPublicClient = (chainId: number): ConfiguredPublicClient => {
     const client = this.publicClients[chainId];
     if (!client) {
       throw new ConfigError(`SDK not configured for chain with id ${chainId}.`);
     }
     return client;
-  }
+  };
 
-  async waitForDepositTx({
+  waitForDepositTx = async ({
     chainId,
     ...params
   }: Omit<WaitForDepositTxParams, "publicClient"> & {
     chainId: number;
-  }) {
+  }) => {
     return waitForDepositTx({
       ...params,
       publicClient: this.getPublicClient(chainId),
     });
-  }
+  };
 
-  async getFillByDepositTx({
-    chainId,
+  getFillByDepositTx = async ({
+    destinationChainId,
     ...params
   }: Omit<GetFillByDepositTxParams, "destinationChainClient" | "indexerUrl"> & {
-    chainId: number;
-  }) {
+    destinationChainId: number;
+  }) => {
     return getFillByDepositTx({
       ...params,
-      destinationChainClient: this.getPublicClient(chainId),
+      destinationChainClient: this.getPublicClient(destinationChainId),
       indexerUrl: this.indexerUrl,
     });
-  }
+  };
 
-  async getAvailableRoutes(params: Omit<GetAvailableRoutesParams, "apiUrl">) {
+  getAvailableRoutes = async (
+    params: Omit<GetAvailableRoutesParams, "apiUrl">,
+  ) => {
     return getAvailableRoutes({ ...params, apiUrl: this.apiUrl });
-  }
+  };
 
-  async getSuggestedFees(params: Omit<GetSuggestedFeesParams, "apiUrl">) {
+  getSuggestedFees = async (params: Omit<GetSuggestedFeesParams, "apiUrl">) => {
     return getSuggestedFees({ ...params, apiUrl: this.apiUrl });
-  }
+  };
 
-  async getLimits(params: Omit<GetLimitsParams, "apiUrl">) {
+  getLimits = async (params: Omit<GetLimitsParams, "apiUrl">) => {
     return getLimits({ ...params, apiUrl: this.apiUrl });
-  }
+  };
 
-  async simulateDepositTx(
+  simulateDepositTx = async (
     params: Omit<SimulateDepositTxParams, "integratorId" | "publicClient">,
-  ) {
+  ) => {
     return simulateDepositTx({
       ...params,
       integratorId: this.integratorId,
       publicClient: this.getPublicClient(params.deposit.originChainId),
     });
-  }
+  };
 
-  async waitForFillTx({
-    chainId,
-    ...params
-  }: Omit<WaitForFillTxParams, "destinationPublicClient"> & {
-    chainId: number;
-  }) {
+  waitForFillTx = async (
+    params: Omit<WaitForFillTxParams, "destinationPublicClient">,
+  ) => {
     return waitForFillTx({
       ...params,
-      destinationPublicClient: this.getPublicClient(chainId),
+      destinationPublicClient: this.getPublicClient(
+        params.deposit.destinationChainId,
+      ),
     });
-  }
+  };
 }
 
 export function getClient() {

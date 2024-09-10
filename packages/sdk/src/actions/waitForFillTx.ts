@@ -1,4 +1,4 @@
-import { Address, parseAbiItem, parseEventLogs } from "viem";
+import { parseAbiItem, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { FillStatus } from "./getFillByDepositTx";
@@ -6,27 +6,31 @@ import { QuoteResponse } from "./getQuote";
 
 export type WaitForFillTxParams = Pick<QuoteResponse, "deposit"> & {
   depositId: number;
-  destinationSpokePoolAddress: Address;
   destinationPublicClient: ConfiguredPublicClient; // destination client
+  fromBlock: bigint;
 };
 
 export async function waitForFillTx(
   params: WaitForFillTxParams,
 ): Promise<FillStatus> {
-  const {
-    depositId,
-    destinationPublicClient,
-    destinationSpokePoolAddress,
-    deposit,
-  } = params;
+  const { depositId, destinationPublicClient, deposit, fromBlock } = params;
 
   return new Promise<FillStatus>((resolve, reject) => {
     const unwatch = destinationPublicClient.watchContractEvent({
-      address: destinationSpokePoolAddress,
+      address: deposit.destinationSpokePoolAddress,
       abi: spokePoolAbi,
       eventName: "FilledV3Relay",
-      args: { depositId },
-      onLogs: async ([fillLog]) => {
+      args: { depositId, originChainId: BigInt(deposit.originChainId) },
+      pollingInterval: 3_000,
+      fromBlock,
+      onError: (error) => {
+        console.log("Watch FilledV3Relay event error", error);
+      },
+      onLogs: async (fillLogs) => {
+        if (fillLogs.length) {
+          console.log("Fill events found in block", fillLogs);
+        }
+        const [fillLog] = fillLogs;
         if (fillLog) {
           try {
             // Retrieve the transaction receipt and block information

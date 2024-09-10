@@ -18,6 +18,15 @@ export class HttpError extends Error {
   }
 }
 
+export class IndexerError extends Error {
+  public readonly url: string;
+  constructor(url: string, message?: string, error?: string) {
+    super(message);
+    this.name = error ?? "Indexer Error";
+    this.url = url;
+  }
+}
+
 export class ConfigError extends Error {
   constructor(message?: string) {
     super(message);

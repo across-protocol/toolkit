@@ -2,6 +2,7 @@ import {
   Account,
   Address,
   Chain,
+  Hash,
   Hex,
   PublicClient,
   Transport,
@@ -23,6 +24,13 @@ export type CrossChainAction = {
   callData: Hex;
   value: Amount;
   updateCallData?: (outputAmount: bigint) => Hex;
+};
+
+export type IndexerStatusResponse = {
+  error?: string;
+  message?: string;
+  status: "pending" | "filled";
+  fillTx: null | Hash;
 };
 
 export type Route = {

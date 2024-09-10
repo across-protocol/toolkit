@@ -10,25 +10,25 @@ import {
 import { QuoteResponse } from "./getQuote";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { MAINNET_INDEXER_API } from "../constants";
-import { HttpError, NoFillLogError } from "../errors";
+import { HttpError, IndexerError, NoFillLogError } from "../errors";
+import { IndexerStatusResponse } from "../types";
 
-export type GetFillByDepositTxParams = DepositStatus &
-  Pick<QuoteResponse, "deposit"> & {
-    fromBlock: bigint;
-    toBlock: bigint;
-    destinationChainClient: PublicClient;
-    indexerUrl?: string;
-  };
+export type GetFillByDepositTxParams = Pick<QuoteResponse, "deposit"> & {
+  depositId: DepositStatus["depositId"];
+  depositTransactionHash: Hash;
+  fromBlock: bigint;
+  destinationChainClient: PublicClient;
+  indexerUrl?: string;
+};
 
 export async function getFillByDepositTx(
   params: GetFillByDepositTxParams,
 ): Promise<FillStatus> {
   const {
-    depositTxReceipt,
+    depositTransactionHash,
     depositId,
     deposit,
     fromBlock,
-    toBlock,
     destinationChainClient,
     indexerUrl = MAINNET_INDEXER_API,
   } = params;
@@ -38,17 +38,26 @@ export async function getFillByDepositTx(
       depositId,
       originChainId: deposit.originChainId,
     })}`;
+
+    console.log("Fetching from indexer with url: ", url);
     const res = await fetch(url);
 
-    if (res.status !== 200) {
+    // sometimes 304 as these responses get cached
+    if (res.status < 200 || res.status >= 400) {
       throw new HttpError(res.status, url);
     }
 
-    const data = (await res.json()) as {
-      status: "filled" | "pending";
-      fillTx: Hash | null;
-    };
-    if (data?.status === "filled" && data.fillTx) {
+    const data = (await res.json()) as IndexerStatusResponse;
+
+    console.log("Indexer Response: ", data);
+
+    if (data?.error) {
+      throw new IndexerError(url, data?.message, data?.error);
+    }
+
+    if (data?.status === "filled" && data?.fillTx) {
+      console.log("Fill tx found via Indexer  API!");
+
       const fillTxReceipt = await destinationChainClient.getTransactionReceipt({
         hash: data.fillTx,
       });
@@ -56,11 +65,30 @@ export async function getFillByDepositTx(
         blockNumber: fillTxReceipt.blockNumber,
       });
 
+      // if message in deposit, check for CallsFailed event
+      if (deposit.message !== "0x") {
+        const [callsFailedLog] = parseEventLogs({
+          abi: [
+            parseAbiItem(
+              "event CallsFailed(Call[] calls, address indexed fallbackRecipient)",
+            ),
+          ],
+          logs: fillTxReceipt.logs,
+        });
+
+        return {
+          actionSuccess: !callsFailedLog,
+          fillTxReceipt: fillTxReceipt,
+          fillTxTimestamp: fillTxBlock.timestamp,
+        };
+      }
+
       return {
         fillTxReceipt,
         fillTxTimestamp: fillTxBlock.timestamp,
       };
     }
+    // TODO: do we want to handle pending states?
   } catch (e) {
     console.error(e);
   }
@@ -72,8 +100,8 @@ export async function getFillByDepositTx(
       eventName: "FilledV3Relay",
       args: {
         depositId,
+        originChainId: BigInt(deposit.originChainId),
       },
-      toBlock,
       fromBlock,
     });
 
@@ -81,11 +109,15 @@ export async function getFillByDepositTx(
     filter: fillEventFilter,
   });
 
+  if (fillEvent) {
+    console.log("Fill tx found via RPC!");
+  }
+
   if (!fillEvent) {
     throw new NoFillLogError(
       depositId,
-      depositTxReceipt.transactionHash,
-      deposit.originChainId,
+      depositTransactionHash,
+      deposit.destinationChainId,
     );
   }
 

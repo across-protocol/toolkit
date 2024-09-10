@@ -8,9 +8,5 @@ export function getDepositLogs(receipt: TransactionReceipt) {
     logs: receipt.logs,
   });
 
-  const depositEvent = parsedLogs.find(
-    (log) => log.args.depositor === receipt.from,
-  );
-
-  return depositEvent;
+  return parsedLogs?.[0];
 }

@@ -12,6 +12,7 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum, mainnet } from "viem/chains";
 import { loadEnvConfig } from "@next/env";
+import { sleep } from "@/lib/utils";
 
 const projectDir = process.cwd();
 loadEnvConfig(projectDir);
@@ -19,6 +20,12 @@ loadEnvConfig(projectDir);
 //  test using client with node
 async function main() {
   const chains = [mainnet, arbitrum];
+
+  const rpcUrls = {
+    [mainnet.id]:
+      "https://mainnet.infura.io/v3/b9391a0b1d3e49959292a9be88760218",
+    [arbitrum.id]: "https://arb1.arbitrum.io/rpc",
+  };
 
   const publicClient = createPublicClient({
     chain: arbitrum,
@@ -35,6 +42,7 @@ async function main() {
 
   const client = AcrossClient.create({
     chains,
+    rpcUrls,
     useTestnet: false,
     integratorId: "TEST",
   });
@@ -68,7 +76,13 @@ async function main() {
   if (process.env.SEND_DEPOSIT_TX === "true") {
     // 3. sign and send tx
     const transactionHash = await walletClient.writeContract(request);
+
     console.log("Tx hash:", transactionHash);
+
+    // get current block on destination chain
+    const destinationBlock = await client
+      .getPublicClient(bridgeQuoteRes.deposit.destinationChainId)
+      .getBlockNumber();
 
     // 4. wait for tx to be mined
     const { depositTxReceipt, depositId } = await client.waitForDepositTx({
@@ -76,9 +90,55 @@ async function main() {
       chainId: bridgeQuoteRes.deposit.originChainId,
     });
 
+    console.log("Deposit receipt: ", depositTxReceipt);
     console.log(`Deposit id #${depositId}`);
-    console.log("Tx receipt", depositTxReceipt);
-    // 5. check fill status
+
+    console.log("Waiting for fill tx with args: ", {
+      depositId,
+      deposit: bridgeQuoteRes.deposit,
+      fromBlock: destinationBlock,
+    });
+
+    // 5. OPTION 1 - watch events on destination chain
+
+    const result = await client.actions.waitForFillTx({
+      depositId,
+      deposit: bridgeQuoteRes.deposit,
+      fromBlock: destinationBlock,
+    });
+
+    if (result) {
+      console.log("Fill tx timestamp", result.fillTxTimestamp);
+      console.log("Fill Tx receipt", result.fillTxReceipt);
+    }
+
+    // 5. OPTION 2 - poll indexer and rpc, this method is better for historical lookups
+    // ? This works as expected, usually rpc wins
+    const pollIndexerAndRpc = async () => {
+      let res = undefined;
+      while (!res) {
+        try {
+          const result = await client.actions.getFillByDepositTx({
+            depositId,
+            depositTransactionHash: depositTxReceipt.transactionHash,
+            deposit: bridgeQuoteRes.deposit,
+            destinationChainId: bridgeQuoteRes.deposit.destinationChainId,
+            fromBlock: destinationBlock,
+          });
+          if (!result.fillTxReceipt) {
+            continue;
+          }
+          console.log("Fill tx timestamp", result.fillTxTimestamp);
+          console.log("Fill Tx receipt", result.fillTxReceipt);
+          res = result;
+          break;
+        } catch (e) {
+          console.log(e);
+          await sleep(3000);
+        }
+      }
+    };
+    // getFillOnLoop()
   }
 
   /* ------------------------ test cross-chain message ------------------------ */
