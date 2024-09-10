@@ -4,3 +4,7 @@ export * from "./getOriginChains";
 export * from "./getLimits";
 export * from "./getQuote";
 export * from "./simulateDepositTx";
+export * from "./waitForDepositTx";
+export * from "./getFillByDepositTx";
+export * from "./getDepositLogs";
+export * from "./waitForFillTx";

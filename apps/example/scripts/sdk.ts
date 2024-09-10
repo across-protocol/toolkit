@@ -10,19 +10,24 @@ import {
   parseEther,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { arbitrum } from "viem/chains";
+import { arbitrum, mainnet } from "viem/chains";
 import { loadEnvConfig } from "@next/env";
+import { sleep } from "@/lib/utils";
 
 const projectDir = process.cwd();
 loadEnvConfig(projectDir);
 
 //  test using client with node
-(async function main() {
+async function main() {
+  const chains = [mainnet, arbitrum];
+
   const publicClient = createPublicClient({
     chain: arbitrum,
     transport: http(),
   });
+
   const account = privateKeyToAccount(process.env.DEV_PK as Hex);
+
   const walletClient = createWalletClient({
     account,
     chain: arbitrum,
@@ -30,24 +35,25 @@ loadEnvConfig(projectDir);
   });
 
   const client = AcrossClient.create({
+    chains,
     useTestnet: false,
     integratorId: "TEST",
   });
 
   // available routes
   const routes = await client.actions.getAvailableRoutes({
-    originChainId: 42161,
-    destinationChainId: 1,
+    originChainId: arbitrum.id,
+    destinationChainId: mainnet.id,
   })!;
 
   /* --------------------------- test normal bridge --------------------------- */
   console.log("Testing normal bridge...");
-  const bridgeRoute = routes.find((r) => r.inputTokenSymbol === "ETH")!;
-  console.log("Using route:", bridgeRoute);
+  const route = routes.find((r) => r.inputTokenSymbol === "ETH")!;
+  console.log("Using route:", route);
 
   // 1. get quote
   const bridgeQuoteRes = await client.actions.getQuote({
-    ...bridgeRoute,
+    route,
     inputAmount: parseEther("0.01"),
     recipient: account.address,
   });
@@ -56,23 +62,77 @@ loadEnvConfig(projectDir);
   // 2. simulate/prep deposit tx
   const { request } = await client.actions.simulateDepositTx({
     walletClient,
-    publicClient,
     deposit: bridgeQuoteRes.deposit,
   });
   console.log("Simulation result:", request);
 
   if (process.env.SEND_DEPOSIT_TX === "true") {
     // 3. sign and send tx
-    const hash = await walletClient.writeContract(request);
-    console.log("Tx hash:", hash);
+    const transactionHash = await walletClient.writeContract(request);
+
+    console.log("Tx hash:", transactionHash);
+
+    // get current block on destination chain
+    const destinationBlock = await client
+      .getPublicClient(bridgeQuoteRes.deposit.destinationChainId)
+      .getBlockNumber();
 
     // 4. wait for tx to be mined
-    const receipt = await publicClient.waitForTransactionReceipt({ hash });
-    console.log("Tx receipt", receipt);
-  }
+    const { depositTxReceipt, depositId } = await client.waitForDepositTx({
+      transactionHash,
+      chainId: bridgeQuoteRes.deposit.originChainId,
+    });
 
-  // 5. check fill status
-  // TODO
+    console.log("Deposit receipt: ", depositTxReceipt);
+    console.log(`Deposit id #${depositId}`);
+
+    console.log("Waiting for fill tx with args: ", {
+      depositId,
+      deposit: bridgeQuoteRes.deposit,
+      fromBlock: destinationBlock,
+    });
+
+    // 5. OPTION 1 - watch events on destination chain
+
+    const result = await client.actions.waitForFillTx({
+      depositId,
+      deposit: bridgeQuoteRes.deposit,
+      fromBlock: destinationBlock,
+    });
+
+    if (result) {
+      console.log("Fill tx timestamp", result.fillTxTimestamp);
+      console.log("Fill Tx receipt", result.fillTxReceipt);
+    }
+
+    // 5. OPTION 2 - poll indexer and rpc, this method is better for historical lookups
+    // ? This works as expected, usually rpc wins
+    const pollIndexerAndRpc = async () => {
+      let res = undefined;
+      while (!res) {
+        try {
+          const result = await client.actions.getFillByDepositTx({
+            depositId,
+            depositTransactionHash: depositTxReceipt.transactionHash,
+            deposit: bridgeQuoteRes.deposit,
+            destinationChainId: bridgeQuoteRes.deposit.destinationChainId,
+            fromBlock: destinationBlock,
+          });
+          if (!result.fillTxReceipt) {
+            continue;
+          }
+          console.log("Fill tx timestamp", result.fillTxTimestamp);
+          console.log("Fill Tx receipt", result.fillTxReceipt);
+          res = result;
+          break;
+        } catch (e) {
+          console.log(e);
+          await sleep(3000);
+        }
+      }
+    };
+    // getFillOnLoop()
+  }
 
   /* ------------------------ test cross-chain message ------------------------ */
   console.log("\nTesting cross-chain message...");
@@ -89,7 +149,7 @@ loadEnvConfig(projectDir);
   const aaveReferralCode = 0;
 
   const quoteRes = await client.actions.getQuote({
-    ...crossChainRoute,
+    route: crossChainRoute,
     inputAmount,
     recipient: "0x924a9f036260DdD5808007E1AA95f08eD08aA569",
     crossChainMessage: {
@@ -129,7 +189,8 @@ loadEnvConfig(projectDir);
     },
   });
   console.log(quoteRes);
-})();
+}
+main();
 
 function generateApproveCallData({
   aaveAddress,

@@ -1,28 +1,25 @@
 import { Address } from "viem";
+import { buildSearchParams } from "../utils";
+import { Amount, Route } from "../types";
+import { MAINNET_API_URL } from "../constants";
 
-import { getClient } from "../client";
-import { buildSearchParams, fetchAcross } from "../utils";
-import { Amount } from "../types";
-
-export type SuggestedFeesParams = {
-  inputToken: Address;
-  outputToken: Address;
-  originChainId: number;
-  destinationChainId: number;
+export type GetSuggestedFeesParams = Route & {
   amount: Amount;
   recipient?: Address;
   message?: string;
+  apiUrl?: string;
 };
 
-export async function getSuggestedFees(params: SuggestedFeesParams) {
-  const client = getClient();
+export async function getSuggestedFees({
+  apiUrl = MAINNET_API_URL,
+  ...params
+}: GetSuggestedFeesParams) {
   const searchParams = buildSearchParams({
     ...params,
     depositMethod: "depositExclusive",
   });
-  const res = await fetchAcross(
-    `${client.apiUrl}/suggested-fees?${searchParams}`,
-  );
+
+  const res = await fetch(`${apiUrl}/suggested-fees?${searchParams}`);
 
   if (!res.ok) {
     throw new Error(
@@ -54,7 +51,8 @@ export type SuggestedFeesResponse = {
   quoteBlock: string;
   exclusiveRelayer: string;
   exclusivityDeadline: number;
-  spokePoolAddress: string;
+  spokePoolAddress: Address;
+  destinationSpokePoolAddress: Address;
   totalRelayFee: {
     pct: string;
     total: string;
