@@ -77,6 +77,7 @@ export async function getQuote(params: QuoteParams) {
     exclusiveRelayer,
     exclusivityDeadline,
     spokePoolAddress,
+    destinationSpokePoolAddress,
     // limits
     isAmountTooLow,
     limits,
@@ -99,6 +100,7 @@ export async function getQuote(params: QuoteParams) {
       exclusiveRelayer: exclusiveRelayer as Address,
       exclusivityDeadline,
       spokePoolAddress: spokePoolAddress as Address,
+      destinationSpokePoolAddress: destinationSpokePoolAddress as Address,
       ...route,
     },
     limits,

@@ -52,6 +52,7 @@ export type SuggestedFeesResponse = {
   exclusiveRelayer: string;
   exclusivityDeadline: number;
   spokePoolAddress: Address;
+  destinationSpokePoolAddress: Address;
   totalRelayFee: {
     pct: string;
     total: string;

@@ -67,7 +67,7 @@ export async function getFillByDepositTx(
 
   const fillEventFilter =
     await destinationChainClient.createContractEventFilter({
-      address: deposit.spokePoolAddress, // TODO get destination spokePool Address
+      address: deposit.destinationSpokePoolAddress,
       abi: spokePoolAbi,
       eventName: "FilledV3Relay",
       args: {
