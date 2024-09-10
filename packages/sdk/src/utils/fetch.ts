@@ -1,8 +1,3 @@
-export const fetchAcross = globalThis.fetch;
-// enforce usage of Node v18+ if this sdk is to be used in Node
-
-//  @todo unify error handling
-
 /**
  * Builds a URL search string from an object of query parameters.
  *

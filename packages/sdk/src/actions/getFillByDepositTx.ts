@@ -1,4 +1,4 @@
-import { buildSearchParams, fetchAcross } from "../utils";
+import { buildSearchParams } from "../utils";
 import { DepositStatus } from "./waitForDepositTx";
 import {
   Hash,
@@ -38,7 +38,7 @@ export async function getFillByDepositTx(
       depositId,
       originChainId: deposit.originChainId,
     })}`;
-    const res = await fetchAcross(url);
+    const res = await fetch(url);
 
     if (res.status !== 200) {
       throw new HttpError(res.status, url);

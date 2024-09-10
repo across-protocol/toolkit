@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { buildSearchParams, fetchAcross } from "../utils";
+import { buildSearchParams } from "../utils";
 import assert from "assert";
 import { MAINNET_API_URL } from "../constants";
 
@@ -17,7 +17,7 @@ export async function getLimits({
   ...params
 }: GetLimitsParams) {
   const searchParams = buildSearchParams(params);
-  const limits = await fetchAcross(`${apiUrl}/limits?${searchParams}`);
+  const limits = await fetch(`${apiUrl}/limits?${searchParams}`);
   assert(limits, `limits failed with params: \n${JSON.stringify(params)}"`);
   return (await limits.json()) as LimitsResponse;
 }

@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { buildSearchParams, fetchAcross } from "../utils";
+import { buildSearchParams } from "../utils";
 import { Amount, Route } from "../types";
 import { MAINNET_API_URL } from "../constants";
 
@@ -19,7 +19,7 @@ export async function getSuggestedFees({
     depositMethod: "depositExclusive",
   });
 
-  const res = await fetchAcross(`${apiUrl}/suggested-fees?${searchParams}`);
+  const res = await fetch(`${apiUrl}/suggested-fees?${searchParams}`);
 
   if (!res.ok) {
     throw new Error(
