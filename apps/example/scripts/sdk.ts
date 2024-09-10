@@ -21,12 +21,6 @@ loadEnvConfig(projectDir);
 async function main() {
   const chains = [mainnet, arbitrum];
 
-  const rpcUrls = {
-    [mainnet.id]:
-      "https://mainnet.infura.io/v3/b9391a0b1d3e49959292a9be88760218",
-    [arbitrum.id]: "https://arb1.arbitrum.io/rpc",
-  };
-
   const publicClient = createPublicClient({
     chain: arbitrum,
     transport: http(),
@@ -42,7 +36,6 @@ async function main() {
 
   const client = AcrossClient.create({
     chains,
-    rpcUrls,
     useTestnet: false,
     integratorId: "TEST",
   });
