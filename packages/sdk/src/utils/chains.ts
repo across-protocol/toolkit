@@ -1,5 +1,5 @@
 import { Chain, createPublicClient, http } from "viem";
-import { AcrossClient } from "../client";
+import { ConfiguredPublicClientMap } from "../types";
 
 // creates a mapping chainId => publicClient
 export function createPublicClients(
@@ -8,7 +8,7 @@ export function createPublicClients(
   rpcUrls?: {
     [key: number]: string;
   },
-): AcrossClient["publicClients"] {
+): ConfiguredPublicClientMap {
   return Object.fromEntries(
     chains.map((chain) => {
       // get custom rpc if one is specified, or use default

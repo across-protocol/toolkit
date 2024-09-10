@@ -1,5 +1,5 @@
 import { parseEventLogs, TransactionReceipt } from "viem";
-import { spokePoolAbi } from "../constants/abi/SpokePool";
+import { spokePoolAbi } from "../abis/SpokePool";
 
 export function getDepositLogs(receipt: TransactionReceipt) {
   const parsedLogs = parseEventLogs({

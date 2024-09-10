@@ -1,23 +1,25 @@
 import { Address } from "viem";
 import { buildSearchParams, fetchAcross } from "../utils";
 import { Amount, Route } from "../types";
+import { MAINNET_API_URL } from "../constants";
 
 export type GetSuggestedFeesParams = Route & {
   amount: Amount;
-  apiUrl: string;
   recipient?: Address;
   message?: string;
+  apiUrl?: string;
 };
 
-export async function getSuggestedFees(params: GetSuggestedFeesParams) {
+export async function getSuggestedFees({
+  apiUrl = MAINNET_API_URL,
+  ...params
+}: GetSuggestedFeesParams) {
   const searchParams = buildSearchParams({
     ...params,
     depositMethod: "depositExclusive",
   });
 
-  const res = await fetchAcross(
-    `${params.apiUrl}/suggested-fees?${searchParams}`,
-  );
+  const res = await fetchAcross(`${apiUrl}/suggested-fees?${searchParams}`);
 
   if (!res.ok) {
     throw new Error(

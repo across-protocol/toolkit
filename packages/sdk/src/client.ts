@@ -1,20 +1,22 @@
-import { Chain, PublicClient } from "viem";
+import { Chain } from "viem";
 import {
   getAvailableRoutes,
   getSuggestedFees,
   getLimits,
   getOriginChains,
   getQuote,
-  getDepositStatus,
-  getFillStatus,
+  waitForDepositTx,
+  getFillByDepositTx,
   getDepositLogs,
-  GetDepositStatusParams,
-  GetFillStatusParams,
+  WaitForDepositTxParams,
+  GetFillByDepositTxParams,
   GetAvailableRoutesParams,
   GetSuggestedFeesParams,
   GetLimitsParams,
   simulateDepositTx,
   SimulateDepositTxParams,
+  waitForFillTx,
+  WaitForFillTxParams,
 } from "./actions";
 import {
   MAINNET_API_URL,
@@ -24,7 +26,8 @@ import {
 } from "./constants";
 import { LogLevel, DefaultLogger, LoggerT } from "./utils";
 import { createPublicClients } from "./utils/chains";
-import assert from "assert";
+import { ConfigError } from "./errors";
+import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
 
 const CLIENT_DEFAULTS = {
   pollingIntervalSec: 2,
@@ -49,18 +52,18 @@ export type AcrossClientOptions = {
 };
 
 export class AcrossClient {
-  private static instance: AcrossClient | null;
+  private static instance: AcrossClient | null = null;
 
   integratorId: string;
-  publicClients: Record<string, PublicClient>;
+  publicClients: ConfiguredPublicClientMap;
   apiUrl: string;
   indexerUrl: string;
   log: LoggerT;
 
   public actions: {
     getAvailableRoutes: AcrossClient["getAvailableRoutes"];
-    getDepositStatus: AcrossClient["getDepositStatus"];
-    getFillStatus: AcrossClient["getFillStatus"];
+    waitForDepositTx: AcrossClient["waitForDepositTx"];
+    getFillByDepositTx: AcrossClient["getFillByDepositTx"];
     getSuggestedFees: AcrossClient["getSuggestedFees"];
     getLimits: AcrossClient["getLimits"];
     getOriginChains: typeof getOriginChains;
@@ -90,10 +93,10 @@ export class AcrossClient {
       new DefaultLogger(args?.logLevel ?? CLIENT_DEFAULTS.logLevel);
     // bind methods
     this.actions = {
-      getSuggestedFees: this.getSuggestedFees.bind(this),
-      getAvailableRoutes: this.getAvailableRoutes.bind(this),
-      getDepositStatus: this.getDepositStatus.bind(this),
-      getFillStatus: this.getFillStatus.bind(this),
+      getSuggestedFees: this.getSuggestedFees,
+      getAvailableRoutes: this.getAvailableRoutes,
+      waitForDepositTx: this.waitForDepositTx,
+      getFillByDepositTx: this.getFillByDepositTx,
       getLimits: this.getLimits.bind(this),
       getDepositLogs: getDepositLogs.bind(this),
       getOriginChains: getOriginChains.bind(this),
@@ -125,29 +128,33 @@ export class AcrossClient {
     return this.instance;
   }
 
-  getPublicClient(chainId: number): PublicClient {
+  getPublicClient(chainId: number): ConfiguredPublicClient {
     const client = this.publicClients[chainId];
-    assert(client, `SDK not configured for chain with id ${chainId}.`);
+    if (!client) {
+      throw new ConfigError(`SDK not configured for chain with id ${chainId}.`);
+    }
     return client;
   }
 
-  async getDepositStatus(
-    params: Omit<GetDepositStatusParams, "publicClient">,
-    chainId: number,
-  ) {
-    return getDepositStatus({
+  async waitForDepositTx({
+    chainId,
+    ...params
+  }: Omit<WaitForDepositTxParams, "publicClient"> & {
+    chainId: number;
+  }) {
+    return waitForDepositTx({
       ...params,
       publicClient: this.getPublicClient(chainId),
     });
   }
 
-  async getFillStatus({
+  async getFillByDepositTx({
     chainId,
     ...params
-  }: Omit<GetFillStatusParams, "destinationChainClient" | "indexerUrl"> & {
+  }: Omit<GetFillByDepositTxParams, "destinationChainClient" | "indexerUrl"> & {
     chainId: number;
   }) {
-    return getFillStatus({
+    return getFillByDepositTx({
       ...params,
       destinationChainClient: this.getPublicClient(chainId),
       indexerUrl: this.indexerUrl,
@@ -173,6 +180,18 @@ export class AcrossClient {
       ...params,
       integratorId: this.integratorId,
       publicClient: this.getPublicClient(params.deposit.originChainId),
+    });
+  }
+
+  async waitForFillTx({
+    chainId,
+    ...params
+  }: Omit<WaitForFillTxParams, "destinationPublicClient"> & {
+    chainId: number;
+  }) {
+    return waitForFillTx({
+      ...params,
+      destinationPublicClient: this.getPublicClient(chainId),
     });
   }
 }

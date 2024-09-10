@@ -26,6 +26,7 @@ async function main() {
   });
 
   const account = privateKeyToAccount(process.env.DEV_PK as Hex);
+
   const walletClient = createWalletClient({
     account,
     chain: arbitrum,
@@ -37,8 +38,6 @@ async function main() {
     useTestnet: false,
     integratorId: "TEST",
   });
-
-  console.log(client);
 
   // available routes
   const routes = await client.actions.getAvailableRoutes({
@@ -68,16 +67,19 @@ async function main() {
 
   if (process.env.SEND_DEPOSIT_TX === "true") {
     // 3. sign and send tx
-    const hash = await walletClient.writeContract(request);
-    console.log("Tx hash:", hash);
+    const transactionHash = await walletClient.writeContract(request);
+    console.log("Tx hash:", transactionHash);
 
     // 4. wait for tx to be mined
-    const receipt = await publicClient.waitForTransactionReceipt({ hash });
-    console.log("Tx receipt", receipt);
-  }
+    const { depositTxReceipt, depositId } = await client.waitForDepositTx({
+      transactionHash,
+      chainId: bridgeQuoteRes.deposit.originChainId,
+    });
 
-  // 5. check fill status
-  // TODO
+    console.log(`Deposit id #${depositId}`);
+    console.log("Tx receipt", depositTxReceipt);
+    // 5. check fill status
+  }
 
   /* ------------------------ test cross-chain message ------------------------ */
   console.log("\nTesting cross-chain message...");

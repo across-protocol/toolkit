@@ -1,19 +1,23 @@
 import { Address } from "viem";
 import { buildSearchParams, fetchAcross } from "../utils";
 import assert from "assert";
+import { MAINNET_API_URL } from "../constants";
 
 export type GetLimitsParams = {
   destinationChainId: number;
   inputToken: Address;
   outputToken: Address;
   originChainId: number;
-  apiUrl: string;
+  apiUrl?: string;
 };
 
 //  might not be necessary if this is part of suggested fees response???
-export async function getLimits(params: GetLimitsParams) {
+export async function getLimits({
+  apiUrl = MAINNET_API_URL,
+  ...params
+}: GetLimitsParams) {
   const searchParams = buildSearchParams(params);
-  const limits = await fetchAcross(`${params.apiUrl}/limits?${searchParams}`);
+  const limits = await fetchAcross(`${apiUrl}/limits?${searchParams}`);
   assert(limits, `limits failed with params: \n${JSON.stringify(params)}"`);
   return (await limits.json()) as LimitsResponse;
 }
