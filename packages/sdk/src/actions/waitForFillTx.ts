@@ -21,7 +21,6 @@ export async function waitForFillTx(
       abi: spokePoolAbi,
       eventName: "FilledV3Relay",
       args: { depositId, originChainId: BigInt(deposit.originChainId) },
-      pollingInterval: 3_000,
       fromBlock,
       onError: (error) => {
         console.log("Watch FilledV3Relay event error", error);

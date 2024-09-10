@@ -39,25 +39,20 @@ export async function getFillByDepositTx(
       originChainId: deposit.originChainId,
     })}`;
 
-    console.log("Fetching from indexer with url: ", url);
     const res = await fetch(url);
 
-    // sometimes 304 as these responses get cached
+    // accept cached responses
     if (res.status < 200 || res.status >= 400) {
       throw new HttpError(res.status, url);
     }
 
     const data = (await res.json()) as IndexerStatusResponse;
 
-    console.log("Indexer Response: ", data);
-
     if (data?.error) {
       throw new IndexerError(url, data?.message, data?.error);
     }
 
     if (data?.status === "filled" && data?.fillTx) {
-      console.log("Fill tx found via Indexer  API!");
-
       const fillTxReceipt = await destinationChainClient.getTransactionReceipt({
         hash: data.fillTx,
       });
@@ -108,10 +103,6 @@ export async function getFillByDepositTx(
   const [fillEvent] = await destinationChainClient.getFilterLogs({
     filter: fillEventFilter,
   });
-
-  if (fillEvent) {
-    console.log("Fill tx found via RPC!");
-  }
 
   if (!fillEvent) {
     throw new NoFillLogError(
