@@ -142,6 +142,30 @@ export class AcrossClient {
     return client;
   };
 
+  getAvailableRoutes = async (
+    params: Omit<GetAvailableRoutesParams, "apiUrl">,
+  ) => {
+    return getAvailableRoutes({ ...params, apiUrl: this.apiUrl });
+  };
+
+  getSuggestedFees = async (params: Omit<GetSuggestedFeesParams, "apiUrl">) => {
+    return getSuggestedFees({ ...params, apiUrl: this.apiUrl });
+  };
+
+  getLimits = async (params: Omit<GetLimitsParams, "apiUrl">) => {
+    return getLimits({ ...params, apiUrl: this.apiUrl });
+  };
+
+  simulateDepositTx = async (
+    params: Omit<SimulateDepositTxParams, "integratorId" | "publicClient">,
+  ) => {
+    return simulateDepositTx({
+      ...params,
+      integratorId: this.integratorId,
+      publicClient: this.getPublicClient(params.deposit.originChainId),
+    });
+  };
+
   waitForDepositTx = async ({
     chainId,
     ...params
@@ -164,30 +188,6 @@ export class AcrossClient {
       ...params,
       destinationChainClient: this.getPublicClient(destinationChainId),
       indexerUrl: this.indexerUrl,
-    });
-  };
-
-  getAvailableRoutes = async (
-    params: Omit<GetAvailableRoutesParams, "apiUrl">,
-  ) => {
-    return getAvailableRoutes({ ...params, apiUrl: this.apiUrl });
-  };
-
-  getSuggestedFees = async (params: Omit<GetSuggestedFeesParams, "apiUrl">) => {
-    return getSuggestedFees({ ...params, apiUrl: this.apiUrl });
-  };
-
-  getLimits = async (params: Omit<GetLimitsParams, "apiUrl">) => {
-    return getLimits({ ...params, apiUrl: this.apiUrl });
-  };
-
-  simulateDepositTx = async (
-    params: Omit<SimulateDepositTxParams, "integratorId" | "publicClient">,
-  ) => {
-    return simulateDepositTx({
-      ...params,
-      integratorId: this.integratorId,
-      publicClient: this.getPublicClient(params.deposit.originChainId),
     });
   };
 
