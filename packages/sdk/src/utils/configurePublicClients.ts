@@ -2,24 +2,23 @@ import { Chain, createPublicClient, http } from "viem";
 import { ConfiguredPublicClientMap } from "../types";
 
 // creates a mapping chainId => publicClient
-export function createPublicClients(
+export function configurePublicClients(
   chains: Chain[],
   pollingInterval: number,
   rpcUrls?: {
     [key: number]: string;
   },
 ): ConfiguredPublicClientMap {
-  return Object.fromEntries(
+  return new Map(
     chains.map((chain) => {
       // get custom rpc if one is specified, or use default
       const rpcUrl = rpcUrls?.[chain.id];
-      const key = chain.id.toString();
       return [
-        key,
+        chain.id,
         createPublicClient({
           chain,
           pollingInterval,
-          key,
+          key: chain.id.toString(),
           transport: http(rpcUrl),
           batch: {
             multicall: true,

@@ -17,7 +17,7 @@ export type Amount = string | bigint;
 export type ConfiguredWalletClient = WalletClient<Transport, Chain, Account>;
 export type ConfiguredPublicClient = PublicClient<Transport, Chain>;
 
-export type ConfiguredPublicClientMap = Record<string, ConfiguredPublicClient>;
+export type ConfiguredPublicClientMap = Map<number, ConfiguredPublicClient>;
 
 export type CrossChainAction = {
   target: Address;

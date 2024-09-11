@@ -24,8 +24,12 @@ import {
   TESTNET_API_URL,
   TESTNET_INDEXER_API,
 } from "./constants";
-import { LogLevel, DefaultLogger, LoggerT } from "./utils";
-import { createPublicClients } from "./utils/chains";
+import {
+  LogLevel,
+  DefaultLogger,
+  LoggerT,
+  configurePublicClients,
+} from "./utils";
 import { ConfigError } from "./errors";
 import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
 
@@ -81,7 +85,7 @@ export class AcrossClient {
 
   private constructor(args: AcrossClientOptions) {
     this.integratorId = args.integratorId;
-    this.publicClients = createPublicClients(
+    this.publicClients = configurePublicClients(
       args.chains,
       args.pollingIntervalSec ?? CLIENT_DEFAULTS.pollingIntervalSec,
       args?.rpcUrls,
@@ -131,7 +135,7 @@ export class AcrossClient {
   }
 
   getPublicClient = (chainId: number): ConfiguredPublicClient => {
-    const client = this.publicClients[chainId];
+    const client = this.publicClients.get(chainId);
     if (!client) {
       throw new ConfigError(`SDK not configured for chain with id ${chainId}.`);
     }
