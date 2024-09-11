@@ -5,6 +5,109 @@ export const spokePoolAbi = [
     inputs: [
       {
         indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalFilledAmount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "fillAmount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "repaymentChainId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "originChainId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "destinationChainId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "int64",
+        name: "relayerFeePct",
+        type: "int64",
+      },
+      {
+        indexed: false,
+        internalType: "int64",
+        name: "realizedLpFeePct",
+        type: "int64",
+      },
+      {
+        indexed: true,
+        internalType: "uint32",
+        name: "depositId",
+        type: "uint32",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "destinationToken",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "relayer",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "depositor",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      { indexed: false, internalType: "bytes", name: "message", type: "bytes" },
+      {
+        components: [
+          { internalType: "address", name: "recipient", type: "address" },
+          { internalType: "bytes", name: "message", type: "bytes" },
+          { internalType: "int64", name: "relayerFeePct", type: "int64" },
+          { internalType: "bool", name: "isSlowRelay", type: "bool" },
+          {
+            internalType: "int256",
+            name: "payoutAdjustmentPct",
+            type: "int256",
+          },
+        ],
+        indexed: false,
+        internalType: "struct SpokePool.RelayExecutionInfo",
+        name: "updatableRelayData",
+        type: "tuple",
+      },
+    ],
+    name: "FilledRelay",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: "address",
         name: "inputToken",
         type: "address",
@@ -110,7 +213,6 @@ export const spokePoolAbi = [
     name: "FilledV3Relay",
     type: "event",
   },
-
   {
     anonymous: false,
     inputs: [
@@ -179,6 +281,49 @@ export const spokePoolAbi = [
     inputs: [
       {
         indexed: false,
+        internalType: "int64",
+        name: "newRelayerFeePct",
+        type: "int64",
+      },
+      {
+        indexed: true,
+        internalType: "uint32",
+        name: "depositId",
+        type: "uint32",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "depositor",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "updatedRecipient",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "bytes",
+        name: "updatedMessage",
+        type: "bytes",
+      },
+      {
+        indexed: false,
+        internalType: "bytes",
+        name: "depositorSignature",
+        type: "bytes",
+      },
+    ],
+    name: "RequestedSpeedUpDeposit",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: "uint256",
         name: "updatedOutputAmount",
         type: "uint256",
@@ -217,7 +362,6 @@ export const spokePoolAbi = [
     name: "RequestedSpeedUpV3Deposit",
     type: "event",
   },
-
   {
     anonymous: false,
     inputs: [
@@ -292,7 +436,38 @@ export const spokePoolAbi = [
     name: "RequestedV3SlowFill",
     type: "event",
   },
-
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amountToReturn",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "chainId",
+        type: "uint256",
+      },
+      { indexed: true, internalType: "uint32", name: "leafId", type: "uint32" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "l2TokenAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "caller",
+        type: "address",
+      },
+    ],
+    name: "TokensBridged",
+    type: "event",
+  },
   {
     anonymous: false,
     inputs: [
@@ -373,7 +548,48 @@ export const spokePoolAbi = [
     name: "V3FundsDeposited",
     type: "event",
   },
-
+  {
+    inputs: [],
+    name: "EMPTY_RELAYER",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "EMPTY_REPAYMENT_CHAIN_ID",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "INFINITE_FILL_DEADLINE",
+    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "MAX_TRANSFER_SIZE",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "UPDATE_V3_DEPOSIT_DETAILS_HASH",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "chainId",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
   {
     inputs: [
       { internalType: "address", name: "recipient", type: "address" },
@@ -390,7 +606,6 @@ export const spokePoolAbi = [
     stateMutability: "payable",
     type: "function",
   },
-
   {
     inputs: [
       { internalType: "address", name: "depositor", type: "address" },
@@ -415,7 +630,6 @@ export const spokePoolAbi = [
     stateMutability: "payable",
     type: "function",
   },
-
   {
     inputs: [
       { internalType: "address", name: "depositor", type: "address" },
@@ -433,7 +647,6 @@ export const spokePoolAbi = [
     stateMutability: "payable",
     type: "function",
   },
-
   {
     inputs: [],
     name: "depositQuoteTimeBuffer",
@@ -461,7 +674,6 @@ export const spokePoolAbi = [
     stateMutability: "payable",
     type: "function",
   },
-
   {
     inputs: [
       { internalType: "address", name: "depositor", type: "address" },
@@ -481,7 +693,6 @@ export const spokePoolAbi = [
     stateMutability: "payable",
     type: "function",
   },
-
   {
     inputs: [
       { internalType: "address", name: "", type: "address" },
@@ -494,13 +705,109 @@ export const spokePoolAbi = [
   },
 
   {
+    inputs: [],
+    name: "fillDeadlineBuffer",
+    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     name: "fillStatuses",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
-
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "depositor", type: "address" },
+          { internalType: "address", name: "recipient", type: "address" },
+          {
+            internalType: "address",
+            name: "exclusiveRelayer",
+            type: "address",
+          },
+          { internalType: "address", name: "inputToken", type: "address" },
+          { internalType: "address", name: "outputToken", type: "address" },
+          { internalType: "uint256", name: "inputAmount", type: "uint256" },
+          { internalType: "uint256", name: "outputAmount", type: "uint256" },
+          { internalType: "uint256", name: "originChainId", type: "uint256" },
+          { internalType: "uint32", name: "depositId", type: "uint32" },
+          { internalType: "uint32", name: "fillDeadline", type: "uint32" },
+          {
+            internalType: "uint32",
+            name: "exclusivityDeadline",
+            type: "uint32",
+          },
+          { internalType: "bytes", name: "message", type: "bytes" },
+        ],
+        internalType: "struct V3SpokePoolInterface.V3RelayData",
+        name: "relayData",
+        type: "tuple",
+      },
+      { internalType: "uint256", name: "repaymentChainId", type: "uint256" },
+    ],
+    name: "fillV3Relay",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "depositor", type: "address" },
+          { internalType: "address", name: "recipient", type: "address" },
+          {
+            internalType: "address",
+            name: "exclusiveRelayer",
+            type: "address",
+          },
+          { internalType: "address", name: "inputToken", type: "address" },
+          { internalType: "address", name: "outputToken", type: "address" },
+          { internalType: "uint256", name: "inputAmount", type: "uint256" },
+          { internalType: "uint256", name: "outputAmount", type: "uint256" },
+          { internalType: "uint256", name: "originChainId", type: "uint256" },
+          { internalType: "uint32", name: "depositId", type: "uint32" },
+          { internalType: "uint32", name: "fillDeadline", type: "uint32" },
+          {
+            internalType: "uint32",
+            name: "exclusivityDeadline",
+            type: "uint32",
+          },
+          { internalType: "bytes", name: "message", type: "bytes" },
+        ],
+        internalType: "struct V3SpokePoolInterface.V3RelayData",
+        name: "relayData",
+        type: "tuple",
+      },
+      { internalType: "uint256", name: "repaymentChainId", type: "uint256" },
+      { internalType: "uint256", name: "updatedOutputAmount", type: "uint256" },
+      { internalType: "address", name: "updatedRecipient", type: "address" },
+      { internalType: "bytes", name: "updatedMessage", type: "bytes" },
+      { internalType: "bytes", name: "depositorSignature", type: "bytes" },
+    ],
+    name: "fillV3RelayWithUpdatedDeposit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getCurrentTime",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "bytes[]", name: "data", type: "bytes[]" }],
+    name: "multicall",
+    outputs: [{ internalType: "bytes[]", name: "results", type: "bytes[]" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
   {
     inputs: [],
     name: "numberOfDeposits",
@@ -508,7 +815,6 @@ export const spokePoolAbi = [
     stateMutability: "view",
     type: "function",
   },
-
   {
     inputs: [
       {
@@ -544,7 +850,6 @@ export const spokePoolAbi = [
     stateMutability: "nonpayable",
     type: "function",
   },
-
   {
     inputs: [
       { internalType: "address", name: "depositor", type: "address" },
@@ -559,7 +864,6 @@ export const spokePoolAbi = [
     stateMutability: "nonpayable",
     type: "function",
   },
-
   {
     inputs: [{ internalType: "bytes[]", name: "data", type: "bytes[]" }],
     name: "tryMulticall",
@@ -577,7 +881,6 @@ export const spokePoolAbi = [
     stateMutability: "nonpayable",
     type: "function",
   },
-
   {
     inputs: [],
     name: "wrappedNativeToken",
