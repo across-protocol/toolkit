@@ -17,7 +17,7 @@ export async function waitForDepositTx(
     hash: transactionHash,
   });
 
-  const depositLog = getDepositLogs(receipt);
+  const depositLog = getDepositLogs({ receipt });
 
   if (!depositLog || !depositLog.args.depositId) {
     throw new NoDepositLogError(receipt.transactionHash, publicClient.chain.id);

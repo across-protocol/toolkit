@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { buildSearchParams } from "../utils";
+import { buildSearchParams, LoggerT } from "../utils";
 import { Route } from "../types";
 import { MAINNET_API_URL } from "../constants";
 
@@ -9,12 +9,14 @@ export type GetAvailableRoutesParams = Partial<{
   destinationChainId: number;
   originChainId: number;
   apiUrl: string;
+  logger: LoggerT;
 }>;
 
 export type AvailableRoutesResponse = Route[];
 
 export async function getAvailableRoutes({
   apiUrl = MAINNET_API_URL,
+  logger,
   ...params
 }: GetAvailableRoutesParams): Promise<AvailableRoutesResponse> {
   const searchParams = params ? buildSearchParams(params) : "";

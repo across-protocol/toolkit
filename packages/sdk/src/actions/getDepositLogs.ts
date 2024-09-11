@@ -1,7 +1,11 @@
 import { parseEventLogs, TransactionReceipt } from "viem";
 import { spokePoolAbi } from "../abis/SpokePool";
 
-export function getDepositLogs(receipt: TransactionReceipt) {
+export type GetDepositLogsParams = {
+  receipt: TransactionReceipt;
+};
+
+export function getDepositLogs({ receipt }: GetDepositLogsParams) {
   const parsedLogs = parseEventLogs({
     abi: spokePoolAbi,
     eventName: "V3FundsDeposited",

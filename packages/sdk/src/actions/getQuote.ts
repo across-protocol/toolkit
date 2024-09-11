@@ -1,16 +1,19 @@
 import { Address, Hex } from "viem";
-import { getClient } from "../client";
 import { Amount, CrossChainAction, Route } from "../types";
 import {
   getMultiCallHandlerAddress,
   buildMulticallHandlerMessage,
+  LoggerT,
 } from "../utils";
+import { getSuggestedFees } from "./getSuggestedFees";
 
-export type QuoteParams = {
+export type GetQuoteParams = {
   route: Route;
   inputAmount: Amount;
+  logger: LoggerT;
   outputAmount?: Amount; // @todo add support for outputAmount
   recipient?: Address;
+
   /**
    * A cross-chain message to be executed on the destination chain. Can either
    * be a pre-constructed hex string or an object containing the actions to be
@@ -26,9 +29,7 @@ export type QuoteParams = {
 
 export type Quote = Awaited<ReturnType<typeof getQuote>>;
 
-export async function getQuote(params: QuoteParams) {
-  const client = getClient();
-
+export async function getQuote(params: GetQuoteParams) {
   const {
     route,
     recipient: _recipient,
@@ -51,7 +52,7 @@ export async function getQuote(params: QuoteParams) {
     recipient = getMultiCallHandlerAddress(route.destinationChainId);
   }
 
-  const { outputAmount, ...fees } = await client.actions.getSuggestedFees({
+  const { outputAmount, ...fees } = await getSuggestedFees({
     ...route,
     amount: inputAmount,
     recipient,
