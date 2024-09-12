@@ -1,7 +1,7 @@
 import { Address } from "viem";
-import { buildSearchParams } from "../utils";
-import assert from "assert";
+import { buildSearchParams, isOk, LoggerT } from "../utils";
 import { MAINNET_API_URL } from "../constants";
+import { HttpError } from "../errors";
 
 export type GetLimitsParams = {
   destinationChainId: number;
@@ -9,17 +9,28 @@ export type GetLimitsParams = {
   outputToken: Address;
   originChainId: number;
   apiUrl?: string;
+  logger?: LoggerT;
 };
 
 //  might not be necessary if this is part of suggested fees response???
 export async function getLimits({
   apiUrl = MAINNET_API_URL,
+  logger,
   ...params
 }: GetLimitsParams) {
   const searchParams = buildSearchParams(params);
-  const limits = await fetch(`${apiUrl}/limits?${searchParams}`);
-  assert(limits, `limits failed with params: \n${JSON.stringify(params)}"`);
-  return (await limits.json()) as LimitsResponse;
+  const url = `${apiUrl}/limits?${searchParams}`;
+
+  logger?.debug("Fetching Limits for params:", params, `URL: ${url}`);
+
+  const res = await fetch(url);
+
+  if (!isOk(res)) {
+    logger?.error("Unable to fetch limits:", `URL: ${url}`);
+    throw new HttpError(res.status, url, await res.text());
+  }
+
+  return (await res.json()) as LimitsResponse;
 }
 
 export type LimitsResponse = {

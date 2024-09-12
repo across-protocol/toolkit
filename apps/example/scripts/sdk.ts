@@ -38,18 +38,21 @@ async function main() {
     chains,
     useTestnet: false,
     integratorId: "TEST",
+    logLevel: "DEBUG",
   });
 
-  // available routes
+  client.logger.debug("Debug stuffs");
+
+  // // available routes
   const routes = await client.actions.getAvailableRoutes({
     originChainId: arbitrum.id,
     destinationChainId: mainnet.id,
   })!;
 
   /* --------------------------- test normal bridge --------------------------- */
-  console.log("Testing normal bridge...");
+  console.info("Testing normal bridge...");
   const route = routes.find((r) => r.inputTokenSymbol === "ETH")!;
-  console.log("Using route:", route);
+  console.info("Using route:", route);
 
   // 1. get quote
   const bridgeQuoteRes = await client.actions.getQuote({
@@ -57,7 +60,6 @@ async function main() {
     inputAmount: parseEther("0.01"),
     recipient: account.address,
   });
-  console.log("Got quote:", bridgeQuoteRes);
 
   // 2. simulate/prep deposit tx
   const { request } = await client.actions.simulateDepositTx({

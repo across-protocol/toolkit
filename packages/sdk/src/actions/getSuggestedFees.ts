@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { buildSearchParams } from "../utils";
+import { buildSearchParams, isOk, LoggerT } from "../utils";
 import { Amount, Route } from "../types";
 import { MAINNET_API_URL } from "../constants";
 
@@ -8,10 +8,12 @@ export type GetSuggestedFeesParams = Route & {
   recipient?: Address;
   message?: string;
   apiUrl?: string;
+  logger?: LoggerT;
 };
 
 export async function getSuggestedFees({
   apiUrl = MAINNET_API_URL,
+  logger,
   ...params
 }: GetSuggestedFeesParams) {
   const searchParams = buildSearchParams({
@@ -19,15 +21,29 @@ export async function getSuggestedFees({
     depositMethod: "depositExclusive",
   });
 
-  const res = await fetch(`${apiUrl}/suggested-fees?${searchParams}`);
+  const url = `${apiUrl}/suggested-fees?${searchParams}`;
 
-  if (!res.ok) {
+  logger?.debug(
+    "Fetching suggested fees for params:",
+    {
+      ...params,
+      depositMethod: "depositExclusive",
+    },
+    `URL: ${url}`,
+  );
+
+  const res = await fetch(url);
+
+  if (!isOk(res)) {
+    logger?.error(`Failed to fetch suggested fees`);
     throw new Error(
       `Failed to fetch suggested fees: ${res.status}, ${await res.text()}`,
     );
   }
 
   const data = (await res.json()) as SuggestedFeesResponse;
+
+  logger?.debug("Suggested Fees Data", data);
 
   const outputAmount = BigInt(params.amount) - BigInt(data.totalRelayFee.total);
   return {

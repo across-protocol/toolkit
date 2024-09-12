@@ -21,3 +21,11 @@ export function buildSearchParams(
   }
   return searchParams.toString();
 }
+
+export function isOk(res: Response) {
+  // accept cached responses
+  if ((res.status >= 200 && res.status < 300) || res.status === 304) {
+    return true;
+  }
+  return false;
+}

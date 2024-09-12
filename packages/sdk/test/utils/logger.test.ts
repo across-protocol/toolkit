@@ -9,24 +9,23 @@ const client = AcrossClient.create({
   chains: [hardhat],
 });
 
-const consoleErrorSpy = vi.spyOn(console, "error");
-const consoleWarnSpy = vi.spyOn(console, "warn");
-const consoleDebugSpy = vi.spyOn(console, "debug");
+test("Higher severity is logged", () => {
+  const consoleLogSpy = vi.spyOn(console, "log");
+  client.logger.error("Should be logged");
 
-test("Lower log level not logged", () => {
-  client.log.error("Should not be logged");
-
-  expect(consoleErrorSpy).not.toHaveBeenCalled();
+  expect(consoleLogSpy).toHaveBeenCalled();
 });
 
-test("Equal log level is logged", () => {
-  client.log.warn("Should be logged");
+test("Equal severity is logged", () => {
+  const consoleLogSpy = vi.spyOn(console, "log");
+  client.logger.warn("Should be logged");
 
-  expect(consoleWarnSpy).toHaveBeenCalled();
+  expect(consoleLogSpy).toHaveBeenCalled();
 });
 
-test("Higher log level is logged", () => {
-  client.log.debug("Should be logged");
+test("Lower severity is not logged", () => {
+  const consoleLogSpy = vi.spyOn(console, "log");
+  client.logger.debug("Should not be logged");
 
-  expect(consoleDebugSpy).toHaveBeenCalled();
+  expect(consoleLogSpy).not.toHaveBeenCalled();
 });

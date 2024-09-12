@@ -1,161 +1,19 @@
 // TODO: remove what we don't use
 export const spokePoolAbi = [
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_wrappedNativeTokenAddress",
-        type: "address",
-      },
-      {
-        internalType: "uint32",
-        name: "_depositQuoteTimeBuffer",
-        type: "uint32",
-      },
-      { internalType: "uint32", name: "_fillDeadlineBuffer", type: "uint32" },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  { inputs: [], name: "ClaimedMerkleLeaf", type: "error" },
   { inputs: [], name: "DepositsArePaused", type: "error" },
   { inputs: [], name: "DisabledRoute", type: "error" },
   { inputs: [], name: "ExpiredFillDeadline", type: "error" },
   { inputs: [], name: "FillsArePaused", type: "error" },
   { inputs: [], name: "InvalidChainId", type: "error" },
-  { inputs: [], name: "InvalidCrossDomainAdmin", type: "error" },
   { inputs: [], name: "InvalidDepositorSignature", type: "error" },
   { inputs: [], name: "InvalidExclusiveRelayer", type: "error" },
   { inputs: [], name: "InvalidExclusivityDeadline", type: "error" },
   { inputs: [], name: "InvalidFillDeadline", type: "error" },
-  { inputs: [], name: "InvalidHubPool", type: "error" },
-  { inputs: [], name: "InvalidMerkleLeaf", type: "error" },
-  { inputs: [], name: "InvalidMerkleProof", type: "error" },
-  { inputs: [], name: "InvalidPayoutAdjustmentPct", type: "error" },
   { inputs: [], name: "InvalidQuoteTimestamp", type: "error" },
   { inputs: [], name: "InvalidRelayerFeePct", type: "error" },
-  { inputs: [], name: "InvalidSlowFillRequest", type: "error" },
   { inputs: [], name: "MaxTransferSizeExceeded", type: "error" },
   { inputs: [], name: "MsgValueDoesNotMatchInputAmount", type: "error" },
-  { inputs: [], name: "NoSlowFillsInExclusivityWindow", type: "error" },
-  { inputs: [], name: "NotEOA", type: "error" },
-  { inputs: [], name: "NotExclusiveRelayer", type: "error" },
-  { inputs: [], name: "RelayFilled", type: "error" },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "previousAdmin",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "newAdmin",
-        type: "address",
-      },
-    ],
-    name: "AdminChanged",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "beacon",
-        type: "address",
-      },
-    ],
-    name: "BeaconUpgraded",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "rootBundleId",
-        type: "uint256",
-      },
-    ],
-    name: "EmergencyDeleteRootBundle",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "originToken",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "destinationChainId",
-        type: "uint256",
-      },
-      { indexed: false, internalType: "bool", name: "enabled", type: "bool" },
-    ],
-    name: "EnabledDepositRoute",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amountToReturn",
-        type: "uint256",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "chainId",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256[]",
-        name: "refundAmounts",
-        type: "uint256[]",
-      },
-      {
-        indexed: true,
-        internalType: "uint32",
-        name: "rootBundleId",
-        type: "uint32",
-      },
-      { indexed: true, internalType: "uint32", name: "leafId", type: "uint32" },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "l2TokenAddress",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address[]",
-        name: "refundAddresses",
-        type: "address[]",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "caller",
-        type: "address",
-      },
-    ],
-    name: "ExecutedRelayerRefundRoot",
-    type: "event",
-  },
+
   {
     anonymous: false,
     inputs: [
@@ -431,74 +289,7 @@ export const spokePoolAbi = [
     name: "FundsDeposited",
     type: "event",
   },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: false, internalType: "uint8", name: "version", type: "uint8" },
-    ],
-    name: "Initialized",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: false, internalType: "bool", name: "isPaused", type: "bool" },
-    ],
-    name: "PausedDeposits",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: false, internalType: "bool", name: "isPaused", type: "bool" },
-    ],
-    name: "PausedFills",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint32",
-        name: "rootBundleId",
-        type: "uint32",
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "relayerRefundRoot",
-        type: "bytes32",
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "slowRelayRoot",
-        type: "bytes32",
-      },
-    ],
-    name: "RelayedRootBundle",
-    type: "event",
-  },
+
   {
     anonymous: false,
     inputs: [
@@ -663,32 +454,6 @@ export const spokePoolAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: "address",
-        name: "newHubPool",
-        type: "address",
-      },
-    ],
-    name: "SetHubPool",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newAdmin",
-        type: "address",
-      },
-    ],
-    name: "SetXDomainAdmin",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: false,
         internalType: "uint256",
         name: "amountToReturn",
@@ -715,19 +480,6 @@ export const spokePoolAbi = [
       },
     ],
     name: "TokensBridged",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "implementation",
-        type: "address",
-      },
-    ],
-    name: "Upgraded",
     type: "event",
   },
   {
@@ -846,27 +598,9 @@ export const spokePoolAbi = [
     type: "function",
   },
   {
-    inputs: [
-      { internalType: "uint32", name: "_initialDepositId", type: "uint32" },
-      { internalType: "address", name: "_crossDomainAdmin", type: "address" },
-      { internalType: "address", name: "_hubPool", type: "address" },
-    ],
-    name: "__SpokePool_init",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "chainId",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "crossDomainAdmin",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
@@ -975,15 +709,6 @@ export const spokePoolAbi = [
   },
   {
     inputs: [
-      { internalType: "uint256", name: "rootBundleId", type: "uint256" },
-    ],
-    name: "emergencyDeleteRootBundle",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
       { internalType: "address", name: "", type: "address" },
       { internalType: "uint256", name: "", type: "uint256" },
     ],
@@ -992,95 +717,7 @@ export const spokePoolAbi = [
     stateMutability: "view",
     type: "function",
   },
-  {
-    inputs: [
-      { internalType: "uint32", name: "rootBundleId", type: "uint32" },
-      {
-        components: [
-          { internalType: "uint256", name: "amountToReturn", type: "uint256" },
-          { internalType: "uint256", name: "chainId", type: "uint256" },
-          {
-            internalType: "uint256[]",
-            name: "refundAmounts",
-            type: "uint256[]",
-          },
-          { internalType: "uint32", name: "leafId", type: "uint32" },
-          { internalType: "address", name: "l2TokenAddress", type: "address" },
-          {
-            internalType: "address[]",
-            name: "refundAddresses",
-            type: "address[]",
-          },
-        ],
-        internalType: "struct SpokePoolInterface.RelayerRefundLeaf",
-        name: "relayerRefundLeaf",
-        type: "tuple",
-      },
-      { internalType: "bytes32[]", name: "proof", type: "bytes32[]" },
-    ],
-    name: "executeRelayerRefundLeaf",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            components: [
-              { internalType: "address", name: "depositor", type: "address" },
-              { internalType: "address", name: "recipient", type: "address" },
-              {
-                internalType: "address",
-                name: "exclusiveRelayer",
-                type: "address",
-              },
-              { internalType: "address", name: "inputToken", type: "address" },
-              { internalType: "address", name: "outputToken", type: "address" },
-              { internalType: "uint256", name: "inputAmount", type: "uint256" },
-              {
-                internalType: "uint256",
-                name: "outputAmount",
-                type: "uint256",
-              },
-              {
-                internalType: "uint256",
-                name: "originChainId",
-                type: "uint256",
-              },
-              { internalType: "uint32", name: "depositId", type: "uint32" },
-              { internalType: "uint32", name: "fillDeadline", type: "uint32" },
-              {
-                internalType: "uint32",
-                name: "exclusivityDeadline",
-                type: "uint32",
-              },
-              { internalType: "bytes", name: "message", type: "bytes" },
-            ],
-            internalType: "struct V3SpokePoolInterface.V3RelayData",
-            name: "relayData",
-            type: "tuple",
-          },
-          { internalType: "uint256", name: "chainId", type: "uint256" },
-          {
-            internalType: "uint256",
-            name: "updatedOutputAmount",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct V3SpokePoolInterface.V3SlowFill",
-        name: "slowFillLeaf",
-        type: "tuple",
-      },
-      { internalType: "uint32", name: "rootBundleId", type: "uint32" },
-      { internalType: "bytes32[]", name: "proof", type: "bytes32[]" },
-    ],
-    name: "executeV3SlowRelayLeaf",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
+
   {
     inputs: [],
     name: "fillDeadlineBuffer",
@@ -1179,23 +816,6 @@ export const spokePoolAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "hubPool",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "uint32", name: "_initialDepositId", type: "uint32" },
-      { internalType: "address", name: "_hubPool", type: "address" },
-    ],
-    name: "initialize",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [{ internalType: "bytes[]", name: "data", type: "bytes[]" }],
     name: "multicall",
     outputs: [{ internalType: "bytes[]", name: "results", type: "bytes[]" }],
@@ -1207,65 +827,6 @@ export const spokePoolAbi = [
     name: "numberOfDeposits",
     outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "bool", name: "pause", type: "bool" }],
-    name: "pauseDeposits",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "bool", name: "pause", type: "bool" }],
-    name: "pauseFills",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "pausedDeposits",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "pausedFills",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "proxiableUUID",
-    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "bytes32", name: "relayerRefundRoot", type: "bytes32" },
-      { internalType: "bytes32", name: "slowRelayRoot", type: "bytes32" },
-    ],
-    name: "relayRootBundle",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -1304,43 +865,6 @@ export const spokePoolAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    name: "rootBundles",
-    outputs: [
-      { internalType: "bytes32", name: "slowRelayRoot", type: "bytes32" },
-      { internalType: "bytes32", name: "relayerRefundRoot", type: "bytes32" },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "newCrossDomainAdmin", type: "address" },
-    ],
-    name: "setCrossDomainAdmin",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "originToken", type: "address" },
-      { internalType: "uint256", name: "destinationChainId", type: "uint256" },
-      { internalType: "bool", name: "enabled", type: "bool" },
-    ],
-    name: "setEnableRoute",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "newHubPool", type: "address" }],
-    name: "setHubPool",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       { internalType: "address", name: "depositor", type: "address" },
       { internalType: "uint32", name: "depositId", type: "uint32" },
@@ -1350,13 +874,6 @@ export const spokePoolAbi = [
       { internalType: "bytes", name: "depositorSignature", type: "bytes" },
     ],
     name: "speedUpV3Deposit",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
-    name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1376,25 +893,6 @@ export const spokePoolAbi = [
       },
     ],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "newImplementation", type: "address" },
-    ],
-    name: "upgradeTo",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "newImplementation", type: "address" },
-      { internalType: "bytes", name: "data", type: "bytes" },
-    ],
-    name: "upgradeToAndCall",
-    outputs: [],
-    stateMutability: "payable",
     type: "function",
   },
   {

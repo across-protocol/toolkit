@@ -10,32 +10,58 @@ export type LogLevel = keyof typeof LogLevels;
 
 export class DefaultLogger implements LoggerT {
   logLevel: LogLevel;
+  readonly secondaryLabel = "@across-toolkit/sdk";
+  readonly logPrefix = ">";
 
   constructor(logLevel: LogLevel) {
     this.logLevel = logLevel;
   }
 
+  createLogLevelLabel = (logLevel: LogLevel) => {
+    const label = `${setColor(colorMap[logLevel].primary)} ${logLevel} ${resetControl}${setColor(colorMap[logLevel].secondary)} ${this.secondaryLabel}${resetControl}`;
+    const prefix = `${setColor(colorMap[logLevel].secondary)}${this.logPrefix}${resetControl}`;
+
+    return {
+      label,
+      prefix,
+    };
+  };
+
+  /**
+   * Description - creates an indentation group for each call to `logger.[logLevel]()`
+   */
+  log(logLevel: LogLevel, ...data: any[]) {
+    const { label, prefix } = this.createLogLevelLabel(logLevel);
+    console.log(`${label}\n`);
+    console.group();
+    data.forEach((item) => {
+      console.log(prefix, item, "\n");
+    });
+    console.groupEnd();
+  }
+
   debug(...data: any[]) {
-    if (LogLevels["DEBUG"] >= LogLevels[this.logLevel]) {
-      console.debug(setColor(COLORS.Cyan), ...data, resetControl);
+    // TODO it might be useful to show the file/function logging this data
+    if (LogLevels["DEBUG"] <= LogLevels[this.logLevel]) {
+      this.log("DEBUG", ...data);
     }
   }
 
   info(...data: any[]) {
-    if (LogLevels["INFO"] >= LogLevels[this.logLevel]) {
-      console.error(setColor(COLORS.Blue), ...data, resetControl);
+    if (LogLevels["INFO"] <= LogLevels[this.logLevel]) {
+      this.log("INFO", ...data);
     }
   }
 
   warn(...data: any[]) {
-    if (LogLevels["WARN"] >= LogLevels[this.logLevel]) {
-      console.warn(setColor(COLORS.Yellow), ...data, resetControl);
+    if (LogLevels["WARN"] <= LogLevels[this.logLevel]) {
+      this.log("WARN", ...data);
     }
   }
 
   error(...data: any[]) {
-    if (LogLevels["ERROR"] >= LogLevels[this.logLevel]) {
-      console.error(setColor(COLORS.Red), ...data, resetControl);
+    if (LogLevels["ERROR"] <= LogLevels[this.logLevel]) {
+      this.log("ERROR", ...data);
     }
   }
 }
@@ -64,6 +90,26 @@ type ColorCode = (typeof COLORS)[keyof typeof COLORS];
 const resetControl = "\x1b[0m";
 
 const setColor = (color: ColorCode) => `\x1b[${color}m`;
+
+// define colors for log levels here
+const colorMap = {
+  DEBUG: {
+    primary: COLORS.BgBlue,
+    secondary: COLORS.Blue,
+  },
+  INFO: {
+    primary: COLORS.BgCyan,
+    secondary: COLORS.Cyan,
+  },
+  WARN: {
+    primary: COLORS.BgYellow,
+    secondary: COLORS.Yellow,
+  },
+  ERROR: {
+    primary: COLORS.BgRed,
+    secondary: COLORS.Red,
+  },
+} as const;
 
 type LoggerArgs = Parameters<typeof console.log>;
 

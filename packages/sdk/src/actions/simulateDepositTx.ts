@@ -5,7 +5,11 @@ import {
   zeroAddress,
 } from "viem";
 import { Quote } from "./getQuote";
-import { getCurrentTimeSeconds, getIntegratorDataSuffix } from "../utils";
+import {
+  getCurrentTimeSeconds,
+  getIntegratorDataSuffix,
+  LoggerT,
+} from "../utils";
 import { spokePoolAbi } from "../abis/SpokePool";
 
 export type SimulateDepositTxParams = {
@@ -15,10 +19,11 @@ export type SimulateDepositTxParams = {
     fillDeadline?: number;
   };
   integratorId: string;
+  logger?: LoggerT;
 };
 
 export async function simulateDepositTx(params: SimulateDepositTxParams) {
-  const { walletClient, deposit, publicClient, integratorId } = params;
+  const { walletClient, deposit, publicClient, integratorId, logger } = params;
 
   const {
     originChainId,
@@ -51,6 +56,11 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
     );
   }
 
+  logger?.debug(
+    "simulateTransaction.ts",
+    `Simulating with address ${account.address} on chain ${connectedChainId}`,
+  );
+
   // TODO: Add support for `SpokePoolVerifier` contract
 
   let fillDeadline = _fillDeadline;
@@ -61,11 +71,18 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
       abi: spokePoolAbi,
       functionName: "fillDeadlineBuffer",
     });
+
+    logger?.debug(
+      "simulateTransaction.ts",
+      `fillDeadlineBuffer from spokePool: ${fillDeadlineBuffer}`,
+    );
     fillDeadline = getCurrentTimeSeconds() - 60 + fillDeadlineBuffer;
   }
 
   const useExclusiveRelayer =
     exclusiveRelayer !== zeroAddress && exclusivityDeadline > 0;
+
+  logger?.debug(`Using exclusive relayer ${useExclusiveRelayer}`);
 
   const result = await publicClient.simulateContract({
     account: walletClient.account,
@@ -89,6 +106,8 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
     value: isNative ? BigInt(inputAmount) : 0n,
     dataSuffix: getIntegratorDataSuffix(integratorId),
   });
+
+  logger?.debug("Simulation result", result);
 
   return result as unknown as SimulateContractReturnType;
 }

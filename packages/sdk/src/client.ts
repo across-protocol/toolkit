@@ -3,7 +3,6 @@ import {
   getAvailableRoutes,
   getSuggestedFees,
   getLimits,
-  getOriginChains,
   getQuote,
   waitForDepositTx,
   getFillByDepositTx,
@@ -17,6 +16,8 @@ import {
   SimulateDepositTxParams,
   waitForFillTx,
   WaitForFillTxParams,
+  GetQuoteParams,
+  GetDepositLogsParams,
 } from "./actions";
 import {
   MAINNET_API_URL,
@@ -24,8 +25,12 @@ import {
   TESTNET_API_URL,
   TESTNET_INDEXER_API,
 } from "./constants";
-import { LogLevel, DefaultLogger, LoggerT } from "./utils";
-import { createPublicClients } from "./utils/chains";
+import {
+  LogLevel,
+  DefaultLogger,
+  LoggerT,
+  configurePublicClients,
+} from "./utils";
 import { ConfigError } from "./errors";
 import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
 
@@ -44,10 +49,6 @@ export type AcrossClientOptions = {
   useTestnet?: boolean;
   logger?: LoggerT;
   pollingIntervalSec?: number; // seconds
-
-  // @todo: add params as needed
-
-  // pollingInterval?: number
   // tenderlyApiKey?: string
 };
 
@@ -58,7 +59,7 @@ export class AcrossClient {
   publicClients: ConfiguredPublicClientMap;
   apiUrl: string;
   indexerUrl: string;
-  log: LoggerT;
+  logger: LoggerT;
 
   public actions: {
     getAvailableRoutes: AcrossClient["getAvailableRoutes"];
@@ -67,10 +68,8 @@ export class AcrossClient {
     getSuggestedFees: AcrossClient["getSuggestedFees"];
     getLimits: AcrossClient["getLimits"];
     waitForFillTx: AcrossClient["waitForFillTx"];
-    getOriginChains: typeof getOriginChains;
-    getQuote: typeof getQuote;
-
-    getDepositLogs: typeof getDepositLogs;
+    getQuote: AcrossClient["getQuote"];
+    getDepositLogs: AcrossClient["getDepositLogs"];
     simulateDepositTx: AcrossClient["simulateDepositTx"];
     // ... actions go here
   };
@@ -81,7 +80,7 @@ export class AcrossClient {
 
   private constructor(args: AcrossClientOptions) {
     this.integratorId = args.integratorId;
-    this.publicClients = createPublicClients(
+    this.publicClients = configurePublicClients(
       args.chains,
       args.pollingIntervalSec ?? CLIENT_DEFAULTS.pollingIntervalSec,
       args?.rpcUrls,
@@ -89,29 +88,25 @@ export class AcrossClient {
     this.indexerUrl =
       args?.useTestnet === true ? TESTNET_INDEXER_API : MAINNET_INDEXER_API;
     this.apiUrl = args?.useTestnet === true ? TESTNET_API_URL : MAINNET_API_URL;
-    this.log =
+    this.logger =
       args?.logger ??
       new DefaultLogger(args?.logLevel ?? CLIENT_DEFAULTS.logLevel);
     // bind methods
     this.actions = {
-      getSuggestedFees: this.getSuggestedFees,
-      getAvailableRoutes: this.getAvailableRoutes,
-      waitForDepositTx: this.waitForDepositTx,
-      getFillByDepositTx: this.getFillByDepositTx,
-      waitForFillTx: this.waitForFillTx,
+      getSuggestedFees: this.getSuggestedFees.bind(this),
+      getAvailableRoutes: this.getAvailableRoutes.bind(this),
+      waitForDepositTx: this.waitForDepositTx.bind(this),
+      getFillByDepositTx: this.getFillByDepositTx.bind(this),
+      waitForFillTx: this.waitForFillTx.bind(this),
+      getQuote: this.getQuote.bind(this),
       getLimits: this.getLimits.bind(this),
-      getDepositLogs: getDepositLogs.bind(this),
-      getOriginChains: getOriginChains.bind(this),
-      getQuote: getQuote.bind(this),
+      getDepositLogs: this.getDepositLogs.bind(this),
       simulateDepositTx: this.simulateDepositTx.bind(this),
     };
     // bind utils
     this.utils = {};
 
-    this.log.debug(
-      "Client created with args: \n",
-      JSON.stringify(args, null, 2),
-    );
+    this.logger.debug("Client created with args: \n", args);
   }
 
   public static create(options: AcrossClientOptions): AcrossClient {
@@ -130,73 +125,96 @@ export class AcrossClient {
     return this.instance;
   }
 
-  getPublicClient = (chainId: number): ConfiguredPublicClient => {
-    const client = this.publicClients[chainId];
+  getPublicClient(chainId: number): ConfiguredPublicClient {
+    const client = this.publicClients.get(chainId);
     if (!client) {
       throw new ConfigError(`SDK not configured for chain with id ${chainId}.`);
     }
+    this.logger.debug(`Using configured public client for chain ${chainId}.`);
     return client;
-  };
+  }
 
-  waitForDepositTx = async ({
+  async getAvailableRoutes(
+    params: Omit<GetAvailableRoutesParams, "apiUrl" | "logger">,
+  ) {
+    return getAvailableRoutes({
+      ...params,
+      apiUrl: this.apiUrl,
+      logger: this.logger,
+    });
+  }
+
+  async getSuggestedFees(
+    params: Omit<GetSuggestedFeesParams, "apiUrl" | "logger">,
+  ) {
+    return getSuggestedFees({
+      ...params,
+      apiUrl: this.apiUrl,
+      logger: this.logger,
+    });
+  }
+
+  async getLimits(params: Omit<GetLimitsParams, "apiUrl" | "logger">) {
+    return getLimits({ ...params, apiUrl: this.apiUrl, logger: this.logger });
+  }
+
+  async getQuote(params: Omit<GetQuoteParams, "logger">) {
+    return getQuote({ ...params, logger: this.logger, apiUrl: this.apiUrl });
+  }
+
+  async getDepositLogs(params: GetDepositLogsParams) {
+    return getDepositLogs(params);
+  }
+
+  async simulateDepositTx(
+    params: Omit<
+      SimulateDepositTxParams,
+      "integratorId" | "publicClient" | "logger"
+    >,
+  ) {
+    return simulateDepositTx({
+      ...params,
+      integratorId: this.integratorId,
+      publicClient: this.getPublicClient(params.deposit.originChainId),
+      logger: this.logger,
+    });
+  }
+
+  async waitForDepositTx({
     chainId,
     ...params
   }: Omit<WaitForDepositTxParams, "publicClient"> & {
     chainId: number;
-  }) => {
+  }) {
     return waitForDepositTx({
       ...params,
       publicClient: this.getPublicClient(chainId),
     });
-  };
+  }
 
-  getFillByDepositTx = async ({
+  async getFillByDepositTx({
     destinationChainId,
     ...params
   }: Omit<GetFillByDepositTxParams, "destinationChainClient" | "indexerUrl"> & {
     destinationChainId: number;
-  }) => {
+  }) {
     return getFillByDepositTx({
       ...params,
       destinationChainClient: this.getPublicClient(destinationChainId),
       indexerUrl: this.indexerUrl,
     });
-  };
+  }
 
-  getAvailableRoutes = async (
-    params: Omit<GetAvailableRoutesParams, "apiUrl">,
-  ) => {
-    return getAvailableRoutes({ ...params, apiUrl: this.apiUrl });
-  };
-
-  getSuggestedFees = async (params: Omit<GetSuggestedFeesParams, "apiUrl">) => {
-    return getSuggestedFees({ ...params, apiUrl: this.apiUrl });
-  };
-
-  getLimits = async (params: Omit<GetLimitsParams, "apiUrl">) => {
-    return getLimits({ ...params, apiUrl: this.apiUrl });
-  };
-
-  simulateDepositTx = async (
-    params: Omit<SimulateDepositTxParams, "integratorId" | "publicClient">,
-  ) => {
-    return simulateDepositTx({
-      ...params,
-      integratorId: this.integratorId,
-      publicClient: this.getPublicClient(params.deposit.originChainId),
-    });
-  };
-
-  waitForFillTx = async (
+  async waitForFillTx(
     params: Omit<WaitForFillTxParams, "destinationPublicClient">,
-  ) => {
+  ) {
     return waitForFillTx({
       ...params,
       destinationPublicClient: this.getPublicClient(
         params.deposit.destinationChainId,
       ),
     });
-  };
+  }
 }
 
 export function getClient() {

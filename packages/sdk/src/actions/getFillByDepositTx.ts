@@ -1,4 +1,4 @@
-import { buildSearchParams } from "../utils";
+import { buildSearchParams, isOk } from "../utils";
 import { DepositStatus } from "./waitForDepositTx";
 import {
   Hash,
@@ -41,9 +41,8 @@ export async function getFillByDepositTx(
 
     const res = await fetch(url);
 
-    // accept cached responses
-    if (res.status < 200 || res.status >= 400) {
-      throw new HttpError(res.status, url);
+    if (!isOk(res)) {
+      throw new HttpError(res.status, url, await res.text());
     }
 
     const data = (await res.json()) as IndexerStatusResponse;
