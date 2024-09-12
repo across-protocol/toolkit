@@ -27,35 +27,41 @@ export class DefaultLogger implements LoggerT {
     };
   };
 
+  /**
+   * Description - creates an indentation group for each call to `logger.[logLevel]()`
+   */
+  log(logLevel: LogLevel, ...data: any[]) {
+    const { label, prefix } = this.createLogLevelLabel(logLevel);
+    console.log(`${label}\n`);
+    console.group();
+    data.forEach((item) => {
+      console.log(prefix, item, "\n");
+    });
+    console.groupEnd();
+  }
+
   debug(...data: any[]) {
+    // TODO it might be useful to show the file/function logging this data
     if (LogLevels["DEBUG"] <= LogLevels[this.logLevel]) {
-      const { label, prefix } = this.createLogLevelLabel("DEBUG");
-      console.log(`${label}\n`);
-      console.log(prefix, ...data, "\n");
+      this.log("DEBUG", ...data);
     }
   }
 
   info(...data: any[]) {
     if (LogLevels["INFO"] <= LogLevels[this.logLevel]) {
-      const { label, prefix } = this.createLogLevelLabel("INFO");
-      console.log(`${label}\n`);
-      console.log(prefix, ...data, "\n");
+      this.log("INFO", ...data);
     }
   }
 
   warn(...data: any[]) {
     if (LogLevels["WARN"] <= LogLevels[this.logLevel]) {
-      const { label, prefix } = this.createLogLevelLabel("WARN");
-      console.log(`${label}\n`);
-      console.log(prefix, ...data, "\n");
+      this.log("WARN", ...data);
     }
   }
 
   error(...data: any[]) {
     if (LogLevels["ERROR"] <= LogLevels[this.logLevel]) {
-      const { label, prefix } = this.createLogLevelLabel("ERROR");
-      console.log(`${label}\n`);
-      console.log(prefix, ...data, "\n");
+      this.log("ERROR", ...data);
     }
   }
 }

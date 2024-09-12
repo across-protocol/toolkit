@@ -10,7 +10,7 @@ import { getSuggestedFees } from "./getSuggestedFees";
 export type GetQuoteParams = {
   route: Route;
   inputAmount: Amount;
-  logger: LoggerT;
+  logger?: LoggerT;
   outputAmount?: Amount; // @todo add support for outputAmount
   recipient?: Address;
 
@@ -35,6 +35,7 @@ export async function getQuote(params: GetQuoteParams) {
     recipient: _recipient,
     inputAmount,
     crossChainMessage,
+    logger,
   } = params;
 
   let message: Hex = "0x";
@@ -44,12 +45,18 @@ export async function getQuote(params: GetQuoteParams) {
     if (crossChainMessage.actions.length === 0) {
       throw new Error("No 'crossChainMessage.actions' provided");
     }
+    logger?.debug(
+      "Building cross chain message for actions:",
+      crossChainMessage.actions,
+    );
 
     message = buildMulticallHandlerMessage({
       actions: crossChainMessage.actions,
       fallbackRecipient: crossChainMessage.fallbackRecipient,
     });
+    logger?.debug("Message", message);
     recipient = getMultiCallHandlerAddress(route.destinationChainId);
+    logger?.debug(`Recipient ${message}`);
   }
 
   const { outputAmount, ...fees } = await getSuggestedFees({
@@ -57,12 +64,16 @@ export async function getQuote(params: GetQuoteParams) {
     amount: inputAmount,
     recipient,
     message,
+    logger,
   });
 
   // If a given cross-chain message is dependent on the outputAmount, update it
   if (crossChainMessage && typeof crossChainMessage === "object") {
     for (const action of crossChainMessage.actions) {
       if (action.updateCallData) {
+        logger?.debug(
+          `Updating callData with new output amount ${outputAmount}`,
+        );
         action.callData = action.updateCallData(outputAmount);
       }
     }
