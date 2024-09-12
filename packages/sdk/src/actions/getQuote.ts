@@ -11,6 +11,7 @@ export type GetQuoteParams = {
   route: Route;
   inputAmount: Amount;
   logger?: LoggerT;
+  apiUrl?: string;
   outputAmount?: Amount; // @todo add support for outputAmount
   recipient?: Address;
 
@@ -36,6 +37,7 @@ export async function getQuote(params: GetQuoteParams) {
     inputAmount,
     crossChainMessage,
     logger,
+    apiUrl,
   } = params;
 
   let message: Hex = "0x";
@@ -65,6 +67,7 @@ export async function getQuote(params: GetQuoteParams) {
     recipient,
     message,
     logger,
+    apiUrl,
   });
 
   // If a given cross-chain message is dependent on the outputAmount, update it

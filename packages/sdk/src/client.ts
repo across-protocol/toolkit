@@ -159,8 +159,9 @@ export class AcrossClient {
   }
 
   async getQuote(params: Omit<GetQuoteParams, "logger">) {
-    return getQuote({ ...params, logger: this.logger });
+    return getQuote({ ...params, logger: this.logger, apiUrl: this.apiUrl });
   }
+
   async getDepositLogs(params: GetDepositLogsParams) {
     return getDepositLogs(params);
   }
