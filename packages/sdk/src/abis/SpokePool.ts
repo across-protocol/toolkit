@@ -1,5 +1,19 @@
 // TODO: remove what we don't use
 export const spokePoolAbi = [
+  { inputs: [], name: "DepositsArePaused", type: "error" },
+  { inputs: [], name: "DisabledRoute", type: "error" },
+  { inputs: [], name: "ExpiredFillDeadline", type: "error" },
+  { inputs: [], name: "FillsArePaused", type: "error" },
+  { inputs: [], name: "InvalidChainId", type: "error" },
+  { inputs: [], name: "InvalidDepositorSignature", type: "error" },
+  { inputs: [], name: "InvalidExclusiveRelayer", type: "error" },
+  { inputs: [], name: "InvalidExclusivityDeadline", type: "error" },
+  { inputs: [], name: "InvalidFillDeadline", type: "error" },
+  { inputs: [], name: "InvalidQuoteTimestamp", type: "error" },
+  { inputs: [], name: "InvalidRelayerFeePct", type: "error" },
+  { inputs: [], name: "MaxTransferSizeExceeded", type: "error" },
+  { inputs: [], name: "MsgValueDoesNotMatchInputAmount", type: "error" },
+
   {
     anonymous: false,
     inputs: [
