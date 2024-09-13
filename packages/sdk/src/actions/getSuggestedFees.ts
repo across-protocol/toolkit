@@ -3,10 +3,18 @@ import { buildSearchParams, isOk, LoggerT } from "../utils";
 import { Amount, Route } from "../types";
 import { MAINNET_API_URL } from "../constants";
 
-export type GetSuggestedFeesParams = Route & {
-  amount: Amount;
-  recipient?: Address;
-  message?: string;
+type SuggestedFeesQueryParams = Partial<Omit<Route, "originChainId">> &
+  Pick<Route, "originChainId"> & {
+    amount: Amount;
+    recipient?: Address;
+    message?: string;
+    relayer?: Address;
+    skipAmountLimit?: boolean;
+    timestamp?: number;
+    depositMethod?: string; // "depositV3" | "depositExclusive"
+  };
+
+export type GetSuggestedFeesParams = SuggestedFeesQueryParams & {
   apiUrl?: string;
   logger?: LoggerT;
 };
@@ -16,7 +24,7 @@ export async function getSuggestedFees({
   logger,
   ...params
 }: GetSuggestedFeesParams) {
-  const searchParams = buildSearchParams({
+  const searchParams = buildSearchParams<SuggestedFeesQueryParams>({
     ...params,
     depositMethod: "depositExclusive",
   });

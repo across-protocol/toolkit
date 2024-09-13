@@ -3,11 +3,14 @@ import { buildSearchParams, isOk, LoggerT } from "../utils";
 import { MAINNET_API_URL } from "../constants";
 import { HttpError } from "../errors";
 
-export type GetLimitsParams = {
+type LimitsQueryParams = {
   destinationChainId: number;
   inputToken: Address;
   outputToken: Address;
   originChainId: number;
+};
+
+export type GetLimitsParams = LimitsQueryParams & {
   apiUrl?: string;
   logger?: LoggerT;
 };
@@ -18,7 +21,7 @@ export async function getLimits({
   logger,
   ...params
 }: GetLimitsParams) {
-  const searchParams = buildSearchParams(params);
+  const searchParams = buildSearchParams<LimitsQueryParams>(params);
   const url = `${apiUrl}/limits?${searchParams}`;
 
   logger?.debug("Fetching Limits for params:", params, `URL: ${url}`);
