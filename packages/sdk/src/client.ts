@@ -1,4 +1,4 @@
-import { Chain } from "viem";
+import { Chain, WalletClient } from "viem";
 import {
   getAvailableRoutes,
   getSuggestedFees,
@@ -18,6 +18,8 @@ import {
   WaitForFillTxParams,
   GetQuoteParams,
   GetDepositLogsParams,
+  ExecuteQuoteParams,
+  executeQuote,
 } from "./actions";
 import {
   MAINNET_API_URL,
@@ -44,6 +46,7 @@ const CLIENT_DEFAULTS = {
 export type AcrossClientOptions = {
   integratorId: string;
   chains: Chain[];
+  walletClient?: WalletClient;
   rpcUrls?: {
     [key: number]: string;
   };
@@ -59,6 +62,7 @@ export class AcrossClient {
 
   integratorId: string;
   publicClients: ConfiguredPublicClientMap;
+  walletClient?: WalletClient;
   apiUrl: string;
   indexerUrl: string;
   logger: LoggerT;
@@ -73,7 +77,7 @@ export class AcrossClient {
     getQuote: AcrossClient["getQuote"];
     getDepositLogs: AcrossClient["getDepositLogs"];
     simulateDepositTx: AcrossClient["simulateDepositTx"];
-    // ... actions go here
+    executeQuote: AcrossClient["executeQuote"];
   };
 
   public utils: {
@@ -83,6 +87,7 @@ export class AcrossClient {
 
   private constructor(args: AcrossClientOptions) {
     this.integratorId = args.integratorId;
+    this.walletClient = args.walletClient;
     this.publicClients = configurePublicClients(
       args.chains,
       args.pollingIntervalSec ?? CLIENT_DEFAULTS.pollingIntervalSec,
@@ -105,6 +110,7 @@ export class AcrossClient {
       getLimits: this.getLimits.bind(this),
       getDepositLogs: this.getDepositLogs.bind(this),
       simulateDepositTx: this.simulateDepositTx.bind(this),
+      executeQuote: this.executeQuote.bind(this),
     };
     // bind utils
     this.utils = {
@@ -147,6 +153,34 @@ export class AcrossClient {
     }
     this.logger.debug(`Using configured public client for chain ${chainId}.`);
     return client;
+  }
+
+  async executeQuote(
+    params: Omit<
+      ExecuteQuoteParams,
+      | "logger"
+      | "walletClient"
+      | "originClient"
+      | "destinationClient"
+      | "integratorId"
+    >,
+  ) {
+    if (!this.walletClient) {
+      throw new ConfigError(
+        "WalletClient needs to be set to call 'executeQuote'",
+      );
+    }
+
+    return executeQuote({
+      ...params,
+      integratorId: this.integratorId,
+      logger: this.logger,
+      walletClient: this.walletClient,
+      originClient: this.getPublicClient(params.deposit.originChainId),
+      destinationClient: this.getPublicClient(
+        params.deposit.destinationChainId,
+      ),
+    });
   }
 
   async getAvailableRoutes(
