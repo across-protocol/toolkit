@@ -1,7 +1,3 @@
-"use client";
-import { useGetBalance } from "@/lib/ethers/hooks";
-import { useEthers } from "@usedapp/core";
-import { ethers } from "ethers";
 import { Providers } from "./providers";
 import { Header } from "./components/Header";
 import { Bridge } from "./components/Bridge";
@@ -15,26 +11,4 @@ export default function Ethers() {
       </main>
     </Providers>
   );
-}
-
-function Balance() {
-  const balance = useGetBalance();
-  return (
-    <h2>
-      Balance: {balance ? ethers.utils.formatEther(balance) : "No Balance"}
-    </h2>
-  );
-}
-
-function Connect() {
-  const { activateBrowserWallet, deactivate, account } = useEthers();
-  if (account) {
-    return (
-      <div>
-        <h2>Account: {account}</h2>
-        <button onClick={() => deactivate()}>Disconnect</button>
-      </div>
-    );
-  }
-  return <button onClick={() => activateBrowserWallet()}>Connect</button>;
 }

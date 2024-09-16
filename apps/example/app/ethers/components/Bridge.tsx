@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import { AcrossClient } from "@across-toolkit/sdk";
 import { useEthers } from "@usedapp/core";
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { Address, createWalletClient, custom, Hash, parseEther } from "viem";
 import { toAccount } from "viem/accounts";
@@ -19,8 +18,8 @@ const sdk = AcrossClient.create({
 
 async function getQuote(account: Address) {
   const routes = await sdk.actions.getAvailableRoutes({
-    originChainId: arbitrum.id,
-    destinationChainId: mainnet.id,
+    originChainId: mainnet.id,
+    destinationChainId: arbitrum.id,
   })!;
 
   const route = routes.find((r) => r.inputTokenSymbol === "ETH")!;
@@ -44,7 +43,7 @@ async function bridge(
 
   const walletClient = createWalletClient({
     account: toAccount(account as Address),
-    chain: arbitrum,
+    chain: mainnet,
     transport: custom(library.provider),
   });
 
@@ -62,15 +61,17 @@ async function bridge(
   return transactionHash;
 }
 
+type Quote = Awaited<ReturnType<typeof getQuote>>;
+type Deposit = Awaited<ReturnType<typeof sdk.waitForDepositTx>>;
+type Fill = Awaited<ReturnType<typeof sdk.waitForFillTx>>;
+
 export function Bridge() {
   const { account, library } = useEthers();
-  const [quote, setQuote] = useState<Awaited<ReturnType<typeof getQuote>>>();
+  const [quote, setQuote] = useState<Quote>();
   const [txHash, setTxHash] = useState<Hash>();
   const [destinationBlock, setDestinationBlock] = useState<bigint>();
-  const [depositData, setDepositData] =
-    useState<Awaited<ReturnType<typeof sdk.waitForDepositTx>>>();
-  const [fillData, setFillData] =
-    useState<Awaited<ReturnType<typeof sdk.waitForFillTx>>>();
+  const [depositData, setDepositData] = useState<Deposit>();
+  const [fillData, setFillData] = useState<Fill>();
 
   const [loadingDeposit, setLoadingDeposit] = useState(false);
   const [loadingFill, setLoadingFill] = useState(false);
@@ -93,34 +94,42 @@ export function Bridge() {
     setDestinationBlock(destinationBlock);
   }
 
+  const waitForDeposit = async (txHash: Hash, quote: Quote) => {
+    setLoadingDeposit(true);
+    //  wait for tx to be mined
+    const data = await sdk.waitForDepositTx({
+      transactionHash: txHash,
+      chainId: quote.deposit.originChainId,
+    });
+    setLoadingDeposit(false);
+    setDepositData(data);
+  };
+
   useEffect(() => {
     if (txHash && quote) {
-      (async () => {
-        setLoadingDeposit(true);
-        //  wait for tx to be mined
-        const data = await sdk.waitForDepositTx({
-          transactionHash: txHash,
-          chainId: quote.deposit.originChainId,
-        });
-        setLoadingDeposit(false);
-        setDepositData(data);
-      })();
+      waitForDeposit(txHash, quote);
     }
   }, [txHash, quote]);
 
+  const waitForFill = async (
+    deposit: Deposit,
+    quote: Quote,
+    destinationBlock: bigint,
+  ) => {
+    setLoadingFill(true);
+    //  wait for tx to be filled
+    const data = await sdk.actions.waitForFillTx({
+      depositId: deposit.depositId,
+      deposit: quote.deposit,
+      fromBlock: destinationBlock,
+    });
+    setLoadingFill(false);
+    setFillData(data);
+  };
+
   useEffect(() => {
     if (depositData && quote && destinationBlock) {
-      (async () => {
-        setLoadingFill(true);
-        //  wait for tx to be filled
-        const data = await sdk.actions.waitForFillTx({
-          depositId: depositData.depositId,
-          deposit: quote.deposit,
-          fromBlock: destinationBlock,
-        });
-        setLoadingFill(false);
-        setFillData(data);
-      })();
+      waitForFill(depositData, quote, destinationBlock);
     }
   }, [depositData, quote, destinationBlock]);
 
