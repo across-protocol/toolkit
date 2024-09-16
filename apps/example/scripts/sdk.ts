@@ -13,6 +13,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum, mainnet } from "viem/chains";
 import { loadEnvConfig } from "@next/env";
 import { sleep } from "@/lib/utils";
+import { Wallet } from "ethers";
 
 const projectDir = process.cwd();
 loadEnvConfig(projectDir);
@@ -26,7 +27,22 @@ async function main() {
     transport: http(),
   });
 
-  const account = privateKeyToAccount(process.env.DEV_PK as Hex);
+  const PRIVATE_KEY = process.env.DEV_PK
+    ? (process.env.DEV_PK as Hex)
+    : undefined;
+
+  if (!PRIVATE_KEY) {
+    throw new Error("No Private key in ENV");
+  }
+
+  // if in Node environment, running a script, we can just create a viem wallet client using the private key
+  const account = privateKeyToAccount(PRIVATE_KEY);
+
+  // for non-local accounts (eg. JsonRpcProvider in the browser) we can use this example
+
+  // const convertedEthersAccount = toAccount(
+  //   "0xD25f7e77386F9f797b64E878A3D060956de99163",
+  // );
 
   const walletClient = createWalletClient({
     account,

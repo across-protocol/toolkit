@@ -35,7 +35,7 @@ import { ConfigError } from "./errors";
 import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
 
 const CLIENT_DEFAULTS = {
-  pollingIntervalSec: 2,
+  pollingInterval: 3_000,
   logLevel: "ERROR",
 } as const;
 
@@ -48,7 +48,7 @@ export type AcrossClientOptions = {
   logLevel?: LogLevel; // for default logger
   useTestnet?: boolean;
   logger?: LoggerT;
-  pollingIntervalSec?: number; // seconds
+  pollingInterval?: number; // milliseconds seconds
   // tenderlyApiKey?: string
 };
 
@@ -82,7 +82,7 @@ export class AcrossClient {
     this.integratorId = args.integratorId;
     this.publicClients = configurePublicClients(
       args.chains,
-      args.pollingIntervalSec ?? CLIENT_DEFAULTS.pollingIntervalSec,
+      args.pollingInterval ?? CLIENT_DEFAULTS.pollingInterval,
       args?.rpcUrls,
     );
     this.indexerUrl =

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icon";
-import { ConnectButton } from "@/components/ConnectButton";
+import { ConnectButton } from "./ConnectButton";
 
 export const Header = ({
   className,
@@ -16,7 +16,7 @@ export const Header = ({
     >
       <div className="relative flex items-center justify-start gap-2">
         <Icon name="across-logo" className="h-8 w-8 text-accent" />
-        <h2 className="text-gradient-oval text-2xl">SDK Example</h2>
+        <h2 className="text-gradient-oval text-2xl">SDK Example - Ethers</h2>
       </div>
 
       <ConnectButton className="relative" />
