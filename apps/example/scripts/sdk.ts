@@ -4,13 +4,12 @@ import {
   parseAbiItem,
   Address,
   Hex,
-  createPublicClient,
   http,
   createWalletClient,
-  parseEther,
+  parseUnits,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { arbitrum, mainnet } from "viem/chains";
+import { arbitrum, mainnet, optimism } from "viem/chains";
 import { loadEnvConfig } from "@next/env";
 import { sleep } from "@/lib/utils";
 
@@ -19,18 +18,13 @@ loadEnvConfig(projectDir);
 
 //  test using client with node
 async function main() {
-  const chains = [mainnet, arbitrum];
-
-  const publicClient = createPublicClient({
-    chain: arbitrum,
-    transport: http(),
-  });
+  const chains = [mainnet, arbitrum, optimism];
 
   const account = privateKeyToAccount(process.env.DEV_PK as Hex);
 
   const walletClient = createWalletClient({
     account,
-    chain: arbitrum,
+    chain: optimism,
     transport: http(),
   });
 
@@ -41,23 +35,49 @@ async function main() {
     logLevel: "DEBUG",
   });
 
-  client.logger.debug("Debug stuffs");
+  // do call to find info for displaying input/output tokens and destination chains
+  // 1. populate UI
+  const chainDetails = await client.utils.getSupportedChains({});
 
-  // // available routes
-  const routes = await client.actions.getAvailableRoutes({
-    originChainId: arbitrum.id,
-    destinationChainId: mainnet.id,
-  })!;
+  // 2. choose origin chain, optimism in this example
+  const originChain = optimism.id;
 
+  const originChainDetails = chainDetails.find(
+    (chain) => chain.chainId === originChain,
+  );
+
+  // 3. choose destination chain, mainnet in this example
+  const destinationChainDetails = chainDetails.find(
+    (chain) => chain.chainId === mainnet.id,
+  );
+
+  // 4. select input token from dropdown
+  const inputTokens = originChainDetails?.inputTokens;
+
+  if (!inputTokens) {
+    throw new Error("No input tokens on this chain");
+  }
+  const usdc = inputTokens.find((token) => token.symbol === "USDC")!;
+
+  // 5. get routes
+  const routeInfo = await client.actions.getAvailableRoutes({
+    originChainId: originChain,
+    destinationChainId: destinationChainDetails?.chainId,
+    originToken: usdc?.address,
+  });
+
+  // 6. select route
+  const route = routeInfo[0];
+
+  if (!route) {
+    throw new Error("No routes");
+  }
   /* --------------------------- test normal bridge --------------------------- */
-  console.info("Testing normal bridge...");
-  const route = routes.find((r) => r.inputTokenSymbol === "ETH")!;
-  console.info("Using route:", route);
 
   // 1. get quote
   const bridgeQuoteRes = await client.actions.getQuote({
     route,
-    inputAmount: parseEther("0.01"),
+    inputAmount: parseUnits("10", usdc.decimals),
     recipient: account.address,
   });
 
@@ -138,16 +158,30 @@ async function main() {
 
   /* ------------------------ test cross-chain message ------------------------ */
   console.log("\nTesting cross-chain message...");
-  const crossChainRoute = routes.find((r) => r.inputTokenSymbol === "DAI")!;
-  console.log(crossChainRoute);
+
+  const arbitrumInfo = chainDetails.find(
+    (chain) => chain.chainId === arbitrum.id,
+  )!;
+
+  const inputTokenDetails = arbitrumInfo.inputTokens.find(
+    (token) => token.symbol === "DAI",
+  )!;
+  const routes = await client.actions.getAvailableRoutes({
+    originChainId: arbitrum.id,
+    destinationChainId: mainnet.id,
+  });
+
+  const crossChainRoute = routes.find(
+    (route) => route.inputTokenSymbol === "DAI",
+  )!;
 
   // quote
-  const inputAmount = 1000000000000000000000n;
+  const inputAmount = parseUnits("10", inputTokenDetails.decimals);
   const userAddress = "0x924a9f036260DdD5808007E1AA95f08eD08aA569";
   // Aave v2 Lending Pool: https://etherscan.io/address/0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9
   const aaveAddress = "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9";
   // DAI
-  const depositCurrency = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
+  const depositCurrency = inputTokenDetails.address;
   const aaveReferralCode = 0;
 
   const quoteRes = await client.actions.getQuote({

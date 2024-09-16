@@ -7,9 +7,10 @@
  */
 
 type ParamBaseValue = number | bigint | string | boolean;
-export function buildSearchParams(
-  params: Record<string, ParamBaseValue | Array<ParamBaseValue>>,
-): string {
+
+export function buildSearchParams<
+  T extends Record<string, ParamBaseValue | Array<ParamBaseValue>>,
+>(params: T): string {
   const searchParams = new URLSearchParams();
   for (const key in params) {
     const value = params[key];
