@@ -1,6 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { AcrossClient } from "@across-toolkit/sdk";
+import {
+  AcrossClient,
+  DepositStatus,
+  FillStatus,
+  Quote,
+} from "@across-toolkit/sdk";
 import { useEthers } from "@usedapp/core";
 import { useEffect, useState } from "react";
 import { Address, createWalletClient, custom, Hash, parseEther } from "viem";
@@ -52,26 +57,18 @@ async function bridge(
     deposit: quote.deposit,
   });
 
-  console.log("Tx hash:", request);
-
   const transactionHash = await walletClient.writeContract(request);
-
-  console.log("Tx hash:", transactionHash);
 
   return transactionHash;
 }
-
-type Quote = Awaited<ReturnType<typeof getQuote>>;
-type Deposit = Awaited<ReturnType<typeof sdk.waitForDepositTx>>;
-type Fill = Awaited<ReturnType<typeof sdk.waitForFillTx>>;
 
 export function Bridge() {
   const { account, library } = useEthers();
   const [quote, setQuote] = useState<Quote>();
   const [txHash, setTxHash] = useState<Hash>();
   const [destinationBlock, setDestinationBlock] = useState<bigint>();
-  const [depositData, setDepositData] = useState<Deposit>();
-  const [fillData, setFillData] = useState<Fill>();
+  const [depositData, setDepositData] = useState<DepositStatus>();
+  const [fillData, setFillData] = useState<FillStatus>();
 
   const [loadingDeposit, setLoadingDeposit] = useState(false);
   const [loadingFill, setLoadingFill] = useState(false);
@@ -112,7 +109,7 @@ export function Bridge() {
   }, [txHash, quote]);
 
   const waitForFill = async (
-    deposit: Deposit,
+    deposit: DepositStatus,
     quote: Quote,
     destinationBlock: bigint,
   ) => {

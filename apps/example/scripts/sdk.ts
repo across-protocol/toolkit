@@ -13,7 +13,6 @@ import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum, mainnet } from "viem/chains";
 import { loadEnvConfig } from "@next/env";
 import { sleep } from "@/lib/utils";
-import { Wallet } from "ethers";
 
 const projectDir = process.cwd();
 loadEnvConfig(projectDir);
