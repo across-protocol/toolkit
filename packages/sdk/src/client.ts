@@ -158,7 +158,7 @@ export class AcrossClient {
     return getLimits({ ...params, apiUrl: this.apiUrl, logger: this.logger });
   }
 
-  async getQuote(params: Omit<GetQuoteParams, "logger">) {
+  async getQuote(params: Omit<GetQuoteParams, "logger" | "apiUrl">) {
     return getQuote({ ...params, logger: this.logger, apiUrl: this.apiUrl });
   }
 
