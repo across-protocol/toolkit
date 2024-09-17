@@ -3,14 +3,18 @@ import { buildSearchParams, LoggerT } from "../utils";
 import { Route } from "../types";
 import { MAINNET_API_URL } from "../constants";
 
-export type GetAvailableRoutesParams = Partial<{
+export type RoutesQueryParams = Partial<{
   originToken: Address;
   destinationToken: Address;
   destinationChainId: number;
   originChainId: number;
-  apiUrl: string;
-  logger: LoggerT;
 }>;
+
+export type GetAvailableRoutesParams = RoutesQueryParams &
+  Partial<{
+    apiUrl: string;
+    logger: LoggerT;
+  }>;
 
 export type AvailableRoutesResponse = Route[];
 
@@ -19,7 +23,9 @@ export async function getAvailableRoutes({
   logger,
   ...params
 }: GetAvailableRoutesParams): Promise<AvailableRoutesResponse> {
-  const searchParams = params ? buildSearchParams(params) : "";
+  const searchParams = params
+    ? buildSearchParams<RoutesQueryParams>(params)
+    : "";
 
   const url = `${apiUrl}/available-routes?${searchParams}`;
 

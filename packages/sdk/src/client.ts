@@ -30,6 +30,8 @@ import {
   DefaultLogger,
   LoggerT,
   configurePublicClients,
+  GetSupportedChainsParams,
+  getSupportedChains,
 } from "./utils";
 import { ConfigError } from "./errors";
 import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
@@ -75,6 +77,7 @@ export class AcrossClient {
   };
 
   public utils: {
+    getSupportedChains: AcrossClient["getSupportedChains"];
     // ... utils go here
   };
 
@@ -104,7 +107,9 @@ export class AcrossClient {
       simulateDepositTx: this.simulateDepositTx.bind(this),
     };
     // bind utils
-    this.utils = {};
+    this.utils = {
+      getSupportedChains: this.getSupportedChains.bind(this),
+    };
 
     this.logger.debug("Client created with args: \n", args);
   }
@@ -123,6 +128,16 @@ export class AcrossClient {
       );
     }
     return this.instance;
+  }
+
+  getSupportedChains(
+    params: Omit<GetSupportedChainsParams, "apiUrl" | "logger">,
+  ) {
+    return getSupportedChains({
+      ...params,
+      logger: this.logger,
+      apiUrl: this.apiUrl,
+    });
   }
 
   getPublicClient(chainId: number): ConfiguredPublicClient {

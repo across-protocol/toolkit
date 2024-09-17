@@ -13,6 +13,11 @@ import { MAINNET_INDEXER_API } from "../constants";
 import { HttpError, IndexerError, NoFillLogError } from "../errors";
 import { IndexerStatusResponse } from "../types";
 
+type DepositStatusQueryParams = {
+  depositId: DepositStatus["depositId"];
+  originChainId: number;
+};
+
 export type GetFillByDepositTxParams = Pick<Quote, "deposit"> & {
   depositId: DepositStatus["depositId"];
   depositTransactionHash: Hash;
@@ -34,10 +39,12 @@ export async function getFillByDepositTx(
   } = params;
 
   try {
-    const url = `${indexerUrl}/deposit/status?${buildSearchParams({
-      depositId,
-      originChainId: deposit.originChainId,
-    })}`;
+    const url = `${indexerUrl}/deposit/status?${buildSearchParams<DepositStatusQueryParams>(
+      {
+        depositId,
+        originChainId: deposit.originChainId,
+      },
+    )}`;
 
     const res = await fetch(url);
 

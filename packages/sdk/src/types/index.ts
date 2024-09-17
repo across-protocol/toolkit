@@ -42,3 +42,11 @@ export type Route = {
   outputTokenSymbol: string;
   isNative: boolean;
 };
+
+export type TokenInfo = {
+  address: Address;
+  symbol: string;
+  name: string;
+  decimals: number;
+  logoUrl: string;
+};

@@ -51,14 +51,13 @@ export async function getQuote(params: GetQuoteParams) {
       "Building cross chain message for actions:",
       crossChainMessage.actions,
     );
-
     message = buildMulticallHandlerMessage({
       actions: crossChainMessage.actions,
       fallbackRecipient: crossChainMessage.fallbackRecipient,
     });
-    logger?.debug("Message", message);
+    logger?.debug("Original message:", message);
     recipient = getMultiCallHandlerAddress(route.destinationChainId);
-    logger?.debug(`Recipient ${message}`);
+    logger?.debug(`Recipient ${recipient}`);
   }
 
   const { outputAmount, ...fees } = await getSuggestedFees({
@@ -70,20 +69,24 @@ export async function getQuote(params: GetQuoteParams) {
     apiUrl,
   });
 
+  logger?.debug("fees", fees);
+
   // If a given cross-chain message is dependent on the outputAmount, update it
   if (crossChainMessage && typeof crossChainMessage === "object") {
     for (const action of crossChainMessage.actions) {
       if (action.updateCallData) {
-        logger?.debug(
-          `Updating callData with new output amount ${outputAmount}`,
-        );
         action.callData = action.updateCallData(outputAmount);
+        logger?.debug("Updated calldata:", action.callData);
       }
     }
     message = buildMulticallHandlerMessage({
       actions: crossChainMessage.actions,
       fallbackRecipient: crossChainMessage.fallbackRecipient,
     });
+    logger?.debug(
+      `Updated message with output amount ${outputAmount}`,
+      message,
+    );
   }
 
   const {
