@@ -33,6 +33,7 @@ async function main() {
     useTestnet: false,
     integratorId: "TEST",
     logLevel: "DEBUG",
+    walletClient,
   });
 
   // do call to find info for displaying input/output tokens and destination chains
@@ -48,7 +49,7 @@ async function main() {
 
   // 3. choose destination chain, mainnet in this example
   const destinationChainDetails = chainDetails.find(
-    (chain) => chain.chainId === mainnet.id,
+    (chain) => chain.chainId === arbitrum.id,
   );
 
   // 4. select input token from dropdown
@@ -77,7 +78,7 @@ async function main() {
   // 1. get quote
   const bridgeQuoteRes = await client.actions.getQuote({
     route,
-    inputAmount: parseUnits("10", usdc.decimals),
+    inputAmount: parseUnits("1", usdc.decimals),
     recipient: account.address,
   });
 
@@ -154,6 +155,19 @@ async function main() {
       }
     };
     // getFillOnLoop()
+  }
+
+  /* -------------------- test with `executeQuote` function ------------------- */
+  if (process.env.USE_EXECUTE_QUOTE === "true") {
+    console.log("\nExecuting quote via `executeQuote` function...");
+    const result = await client.actions.executeQuote({
+      deposit: bridgeQuoteRes.deposit,
+      onProgress: (progress) => {
+        console.log("Progress: ", progress);
+      },
+      infiniteApproval: true,
+    });
+    console.log("Execute quote result: ", result);
   }
 
   /* ------------------------ test cross-chain message ------------------------ */

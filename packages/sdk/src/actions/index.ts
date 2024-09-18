@@ -7,3 +7,5 @@ export * from "./waitForDepositTx";
 export * from "./getFillByDepositTx";
 export * from "./getDepositLogs";
 export * from "./waitForFillTx";
+export * from "./simulateApproveTx";
+export * from "./executeQuote";

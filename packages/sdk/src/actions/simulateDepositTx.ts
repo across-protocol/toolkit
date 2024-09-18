@@ -1,4 +1,6 @@
 import {
+  BaseError,
+  ContractFunctionRevertedError,
   PublicClient,
   SimulateContractReturnType,
   WalletClient,
@@ -84,30 +86,44 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
 
   logger?.debug(`Using exclusive relayer ${useExclusiveRelayer}`);
 
-  const result = await publicClient.simulateContract({
-    account: walletClient.account,
-    abi: spokePoolAbi,
-    address: spokePoolAddress,
-    functionName: useExclusiveRelayer ? "depositExclusive" : "depositV3",
-    args: [
-      account.address,
-      recipient ?? account.address,
-      inputToken,
-      outputToken,
-      BigInt(inputAmount),
-      outputAmount,
-      BigInt(destinationChainId),
-      exclusiveRelayer,
-      quoteTimestamp,
-      fillDeadline,
-      exclusivityDeadline,
-      message,
-    ],
-    value: isNative ? BigInt(inputAmount) : 0n,
-    dataSuffix: getIntegratorDataSuffix(integratorId),
-  });
+  try {
+    const result = await publicClient.simulateContract({
+      account: walletClient.account,
+      abi: spokePoolAbi,
+      address: spokePoolAddress,
+      functionName: useExclusiveRelayer ? "depositExclusive" : "depositV3",
+      args: [
+        account.address,
+        recipient ?? account.address,
+        inputToken,
+        outputToken,
+        BigInt(inputAmount),
+        outputAmount,
+        BigInt(destinationChainId),
+        exclusiveRelayer,
+        quoteTimestamp,
+        fillDeadline,
+        exclusivityDeadline,
+        message,
+      ],
+      value: isNative ? BigInt(inputAmount) : 0n,
+      dataSuffix: getIntegratorDataSuffix(integratorId),
+    });
 
-  logger?.debug("Simulation result", result);
+    logger?.debug("Simulation result", result);
 
-  return result as unknown as SimulateContractReturnType;
+    return result as unknown as SimulateContractReturnType;
+  } catch (err) {
+    logger?.error("Deposit tx simulation error", err);
+
+    if (err instanceof BaseError) {
+      const revertError = err.walk(
+        (err) => err instanceof ContractFunctionRevertedError,
+      );
+      if (revertError instanceof ContractFunctionRevertedError) {
+        throw revertError;
+      }
+    }
+    throw err;
+  }
 }
