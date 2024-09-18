@@ -7,7 +7,7 @@ import {
   PublicClient,
   TransactionReceipt,
 } from "viem";
-import { QuoteResponse } from "./getQuote";
+import { Quote } from "./getQuote";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { MAINNET_INDEXER_API } from "../constants";
 import { HttpError, IndexerError, NoFillLogError } from "../errors";
@@ -18,7 +18,7 @@ type DepositStatusQueryParams = {
   originChainId: number;
 };
 
-export type GetFillByDepositTxParams = Pick<QuoteResponse, "deposit"> & {
+export type GetFillByDepositTxParams = Pick<Quote, "deposit"> & {
   depositId: DepositStatus["depositId"];
   depositTransactionHash: Hash;
   fromBlock: bigint;

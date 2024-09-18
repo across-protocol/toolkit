@@ -132,5 +132,3 @@ export async function getQuote(params: GetQuoteParams) {
     estimatedFillTimeSec,
   };
 }
-
-export type QuoteResponse = Awaited<ReturnType<typeof getQuote>>;

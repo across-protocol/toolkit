@@ -2,9 +2,9 @@ import { parseAbiItem, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { FillStatus } from "./getFillByDepositTx";
-import { QuoteResponse } from "./getQuote";
+import { Quote } from "./getQuote";
 
-export type WaitForFillTxParams = Pick<QuoteResponse, "deposit"> & {
+export type WaitForFillTxParams = Pick<Quote, "deposit"> & {
   depositId: number;
   destinationPublicClient: ConfiguredPublicClient; // destination client
   fromBlock: bigint;

@@ -39,7 +39,7 @@ import { ConfigError } from "./errors";
 import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
 
 const CLIENT_DEFAULTS = {
-  pollingIntervalSec: 2,
+  pollingInterval: 3_000,
   logLevel: "ERROR",
 } as const;
 
@@ -53,7 +53,7 @@ export type AcrossClientOptions = {
   logLevel?: LogLevel; // for default logger
   useTestnet?: boolean;
   logger?: LoggerT;
-  pollingIntervalSec?: number; // seconds
+  pollingInterval?: number; // milliseconds seconds
   // tenderlyApiKey?: string
 };
 
@@ -90,7 +90,7 @@ export class AcrossClient {
     this.walletClient = args.walletClient;
     this.publicClients = configurePublicClients(
       args.chains,
-      args.pollingIntervalSec ?? CLIENT_DEFAULTS.pollingIntervalSec,
+      args.pollingInterval ?? CLIENT_DEFAULTS.pollingInterval,
       args?.rpcUrls,
     );
     this.indexerUrl =
@@ -207,7 +207,7 @@ export class AcrossClient {
     return getLimits({ ...params, apiUrl: this.apiUrl, logger: this.logger });
   }
 
-  async getQuote(params: Omit<GetQuoteParams, "logger">) {
+  async getQuote(params: Omit<GetQuoteParams, "logger" | "apiUrl">) {
     return getQuote({ ...params, logger: this.logger, apiUrl: this.apiUrl });
   }
 
