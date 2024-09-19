@@ -136,6 +136,10 @@ export class AcrossClient {
     return this.instance;
   }
 
+  update(params: Pick<AcrossClientOptions, "walletClient">) {
+    this.walletClient = params.walletClient;
+  }
+
   getSupportedChains(
     params: Omit<GetSupportedChainsParams, "apiUrl" | "logger">,
   ) {
