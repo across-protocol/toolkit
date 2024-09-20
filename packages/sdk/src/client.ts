@@ -62,7 +62,6 @@ export class AcrossClient {
 
   integratorId: string;
   publicClients: ConfiguredPublicClientMap;
-  walletClient?: WalletClient;
   apiUrl: string;
   indexerUrl: string;
   logger: LoggerT;
@@ -87,7 +86,6 @@ export class AcrossClient {
 
   private constructor(args: AcrossClientOptions) {
     this.integratorId = args.integratorId;
-    this.walletClient = args.walletClient;
     this.publicClients = configurePublicClients(
       args.chains,
       args.pollingInterval ?? CLIENT_DEFAULTS.pollingInterval,
@@ -158,14 +156,10 @@ export class AcrossClient {
   async executeQuote(
     params: Omit<
       ExecuteQuoteParams,
-      | "logger"
-      | "walletClient"
-      | "originClient"
-      | "destinationClient"
-      | "integratorId"
+      "logger" | "originClient" | "destinationClient" | "integratorId"
     >,
   ) {
-    if (!this.walletClient) {
+    if (!params.walletClient) {
       throw new ConfigError(
         "WalletClient needs to be set to call 'executeQuote'",
       );
@@ -175,7 +169,6 @@ export class AcrossClient {
       ...params,
       integratorId: this.integratorId,
       logger: this.logger,
-      walletClient: this.walletClient,
       originClient: this.getPublicClient(params.deposit.originChainId),
       destinationClient: this.getPublicClient(
         params.deposit.destinationChainId,

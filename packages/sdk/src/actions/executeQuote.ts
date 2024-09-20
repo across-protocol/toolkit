@@ -1,16 +1,10 @@
-import {
-  parseAbi,
-  SimulateContractReturnType,
-  TransactionReceipt,
-  WalletClient,
-} from "viem";
-
+import { parseAbi, SimulateContractReturnType, TransactionReceipt } from "viem";
 import { Quote } from "./getQuote";
 import { simulateDepositTx } from "./simulateDepositTx";
 import { LoggerT } from "../utils";
 import { simulateApproveTx } from "./simulateApproveTx";
 import { waitForDepositTx } from "./waitForDepositTx";
-import { ConfiguredPublicClient } from "../types";
+import { ConfiguredPublicClient, ConfiguredWalletClient } from "../types";
 import { waitForFillTx } from "./waitForFillTx";
 
 export type ExecutionProgress =
@@ -50,7 +44,7 @@ export type ExecuteQuoteParams = {
   logger?: LoggerT;
   integratorId: string;
   deposit: Quote["deposit"];
-  walletClient: WalletClient;
+  walletClient: ConfiguredWalletClient;
   originClient: ConfiguredPublicClient;
   destinationClient: ConfiguredPublicClient;
   infiniteApproval?: boolean;

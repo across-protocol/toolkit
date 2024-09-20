@@ -176,6 +176,7 @@ async function main() {
   if (process.env.USE_EXECUTE_QUOTE === "true") {
     console.log("\nExecuting quote via `executeQuote` function...");
     const result = await client.actions.executeQuote({
+      walletClient,
       deposit: bridgeQuoteRes.deposit,
       onProgress: (progress) => {
         console.log("Progress: ", progress);

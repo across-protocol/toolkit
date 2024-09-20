@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { Address, formatUnits, parseUnits } from "viem";
 import { useAccount, useChains } from "wagmi";
 import { useDebounce } from "@uidotdev/usehooks";
+import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
 
 export function Bridge() {
   const { address } = useAccount();
@@ -98,6 +99,8 @@ export function Bridge() {
 
   const { quote, isLoading: quoteLoading } = useQuote(quoteConfig);
 
+  const { executeQuote, progress } = useExecuteQuote(quote);
+
   return (
     <>
       <div className="bg-foreground border border-border-secondary p-6 w-full max-w-[600px] rounded-[10px]">
@@ -175,12 +178,25 @@ export function Bridge() {
           </p>
         )}
         <Button
+          onClick={() => executeQuote()}
           disabled={!(quote && toToken)}
           className="mt-2"
           variant="accent"
         >
           Confirm Transaction
         </Button>
+        {progress && (
+          <details>
+            <summary>Progress</summary>
+            <pre>
+              {JSON.stringify(
+                progress,
+                (_, v) => (typeof v === "bigint" ? v.toString() : v),
+                2,
+              )}
+            </pre>
+          </details>
+        )}
       </div>
     </>
   );
