@@ -24,17 +24,20 @@ const config = {
       },
       colors: {
         success: "hsl(var(--success)  / <alpha-value>)",
-        fail: "hsl(var(--fail)  / <alpha-value>)",
-        loading: "hsl(var(--loading)  / <alpha-value>)",
-        idle: "hsl(var(--idle)  / <alpha-value>)",
+        destructive: "hsl(var(--destructive)  / <alpha-value>)",
         accent: "hsl(var(--accent) / <alpha-value>)",
         accent2: "hsl(var(--accent-2) / <alpha-value>)",
-        border: "hsl(var(--border) / <alpha-value>)",
+        border: {
+          DEFAULT: "hsl(var(--border) / <alpha-value>)",
+          secondary: "hsl(var(--border-secondary) / <alpha-value>)",
+          input: "hsl(var(--border-secondary) / <alpha-value>)",
+        },
         background: "hsl(var(--background) / <alpha-value>)",
         foreground: "hsl(var(--foreground) / <alpha-value>)",
         text: "hsl(var(--text-color) / <alpha-value>)",
         ring: "hsl(var(--ring) / <alpha-value>)",
-        "chainlink-blue": "var(--chainlink-blue)",
+        popover: "hsl(var(--popover) / <alpha-value>)",
+        muted: "hsl(var(--muted) / <alpha-value>)",
       },
       keyframes: {
         "accordion-down": {

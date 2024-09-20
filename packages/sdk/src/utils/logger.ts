@@ -33,11 +33,10 @@ export class DefaultLogger implements LoggerT {
   log(logLevel: LogLevel, ...data: any[]) {
     const { label, prefix } = this.createLogLevelLabel(logLevel);
     console.log(`${label}\n`);
-    console.group();
+
     data.forEach((item) => {
       console.log(prefix, item, "\n");
     });
-    console.groupEnd();
   }
 
   debug(...data: any[]) {

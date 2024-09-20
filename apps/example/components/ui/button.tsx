@@ -5,18 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center shrink-0 justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 border",
+  "inline-flex items-center shrink-0 justify-center bg-background hover:bg-foreground whitespace-nowrap rounded-lg text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 border",
   {
     variants: {
       variant: {
         default: "border-border",
         filled:
-          "w-full shadow-md text-background hover:bg-accent hover:border-accent focus-visible:border-accent bg-text py-5 px-6 leading-6 rounded-lg",
+          "w-full shadow-md text-background hover:border-accent focus-visible:border-accent bg-text py-5 px-6 leading-6 rounded-lg",
         bordered:
-          "rounded-full border-border text-md font-normal bg-foreground text-text/75 hover:border-text/75",
+          "rounded-2xl border-border text-sm font-normal text-text/75 hover:border-text/75",
         navigation: "rounded-full shadow-md bg-gradient-primary",
         accent:
-          "text-background shadow-md focus-visible:border-accent border-transparent bg-accent py-5 px-6 leading-6 rounded-lg",
+          "text-background shadow-md hover:bg-accent/80 focus-visible:border-accent border-transparent bg-accent py-5 px-6 leading-6 rounded-lg",
         ghost:
           "border-transparent hover:border-border hover:text-text/75 text-text/75 font-medium",
       },
