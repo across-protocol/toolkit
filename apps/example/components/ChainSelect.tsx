@@ -16,12 +16,16 @@ import { SelectProps } from "@radix-ui/react-select";
 
 export type ChainSelectProps = SelectProps & {
   chains: AcrossChain[] | undefined;
+  chain: AcrossChain["chainId"] | undefined;
+  onChainChange: (_chainId: AcrossChain["chainId"]) => void;
   className?: string;
   id?: string;
 };
 
 export function ChainSelect({
   chains,
+  chain,
+  onChainChange,
   id,
   className,
   ...props
@@ -37,7 +41,11 @@ export function ChainSelect({
     );
   }
   return (
-    <Select {...props}>
+    <Select
+      onValueChange={(value) => onChainChange(parseInt(value))}
+      value={chain?.toString()}
+      {...props}
+    >
       <SelectTrigger id={id} className={cn("w-full", className)}>
         <SelectValue placeholder="Select a chain" />
       </SelectTrigger>

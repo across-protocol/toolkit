@@ -36,12 +36,7 @@ export function buildQueryKey<T extends object | undefined>(
   params: T,
 ) {
   if (!params) return [queryName];
-  return [
-    queryName,
-    ...Object.entries(params)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("="),
-  ];
+  return [queryName, ...Object.entries(params).map((entry) => entry.join("="))];
 }
 
 export type NoNullValuesOfObject<T extends object> = {

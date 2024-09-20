@@ -109,18 +109,18 @@ export function Bridge() {
               className="flex-[5]"
               id="origin-chain"
               chains={acrossChains}
-              value={originChainId?.toString()}
-              onValueChange={(chainId) => {
+              chain={originChainId}
+              onChainChange={(chainId) => {
                 setDestinationChainId(undefined);
-                setOriginChainId(parseInt(chainId));
+                setOriginChainId(chainId);
               }}
             />
 
             <TokenSelect
               className="flex-[3]"
               tokens={inputTokens}
-              onValueChange={(value) => setFromTokenAddress(value as Address)}
-              value={fromTokenAddress}
+              onTokenChange={setFromTokenAddress}
+              token={fromTokenAddress}
             />
           </div>
 
@@ -133,18 +133,16 @@ export function Bridge() {
               className="flex-[5]"
               id="destination-chain"
               chains={acrossChains}
-              value={destinationChainId?.toString()}
-              onValueChange={(chainId) =>
-                setDestinationChainId(parseInt(chainId))
-              }
+              chain={destinationChainId}
+              onChainChange={setDestinationChainId}
             />
 
             <TokenSelect
               className={cn("flex-[3]")}
               disabled={outputTokens ? !(outputTokens?.length > 1) : true}
               tokens={outputTokens}
-              onValueChange={(value) => setToTokenAddress(value as Address)}
-              value={toTokenAddress}
+              onTokenChange={setToTokenAddress}
+              token={toTokenAddress}
             />
           </div>
 
