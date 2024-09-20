@@ -89,7 +89,7 @@ export function Bridge() {
   );
 
   const quoteConfig =
-    route && address && debouncedInputAmount && inputToken
+    route && debouncedInputAmount && inputToken
       ? {
           route,
           recipient: address,
