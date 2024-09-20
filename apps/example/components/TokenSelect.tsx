@@ -15,10 +15,18 @@ import { SelectProps } from "@radix-ui/react-select";
 
 export type TokenSelectProps = SelectProps & {
   tokens: TokenInfo[] | undefined;
+  token: TokenInfo["address"] | undefined;
+  onTokenChange: (_address: TokenInfo["address"]) => void;
   className?: string;
 };
 
-export function TokenSelect({ tokens, className, ...props }: TokenSelectProps) {
+export function TokenSelect({
+  tokens,
+  token,
+  className,
+  onTokenChange,
+  ...props
+}: TokenSelectProps) {
   if (!tokens) {
     return (
       <Skeleton
@@ -31,7 +39,7 @@ export function TokenSelect({ tokens, className, ...props }: TokenSelectProps) {
   }
 
   return (
-    <Select {...props}>
+    <Select value={token} onValueChange={onTokenChange} {...props}>
       <SelectTrigger className={cn("w-full", className)}>
         <SelectValue placeholder="Select a Token" />
       </SelectTrigger>
