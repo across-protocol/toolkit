@@ -73,7 +73,7 @@ const HamburgerButton = (props: ButtonProps) => {
     <Button
       size="icon"
       variant="bordered"
-      className="h-[40px] w-[40px]"
+      className="h-[40px] w-[40px] rounded-full"
       {...props}
     >
       <Icon name="hamburger" className="h-[20px] w-[20px] text-text/75" />
