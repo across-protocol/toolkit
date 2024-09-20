@@ -56,6 +56,7 @@ export type ExecuteQuoteParams = {
   infiniteApproval?: boolean;
   skipAllowanceCheck?: boolean;
   throwOnError?: boolean;
+  forceOriginChain?: boolean;
   onProgress?: (progress: ExecutionProgress) => void;
 };
 
@@ -69,6 +70,7 @@ export async function executeQuote(params: ExecuteQuoteParams) {
     skipAllowanceCheck,
     infiniteApproval,
     throwOnError = true,
+    forceOriginChain,
     onProgress,
     logger,
   } = params;
@@ -89,6 +91,19 @@ export async function executeQuote(params: ExecuteQuoteParams) {
 
     if (!account) {
       throw new Error("Wallet account has to be set");
+    }
+
+    if (forceOriginChain) {
+      await walletClient.switchChain({
+        id: deposit.originChainId,
+      });
+    }
+
+    const connectedChainId = await walletClient.getChainId();
+    if (connectedChainId !== deposit.originChainId) {
+      throw new Error(
+        `Connected chain ${connectedChainId} does not match 'originChainId' ${deposit.originChainId}`,
+      );
     }
 
     const { inputToken, inputAmount, spokePoolAddress } = deposit;
