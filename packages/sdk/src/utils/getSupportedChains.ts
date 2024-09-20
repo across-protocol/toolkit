@@ -37,7 +37,7 @@ export async function getSupportedChains({
   return data;
 }
 
-export type ChainsQueryResponse = {
+export type AcrossChain = {
   chainId: number;
   name: string;
   publicRpcUrl: string;
@@ -46,4 +46,6 @@ export type ChainsQueryResponse = {
   spokePool: string;
   inputTokens: TokenInfo[];
   outputTokens: TokenInfo[];
-}[];
+};
+
+export type ChainsQueryResponse = AcrossChain[];

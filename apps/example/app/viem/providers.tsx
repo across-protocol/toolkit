@@ -10,6 +10,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { ThemeProvider, useTheme } from "next-themes";
 import { config } from "@/lib/wagmi";
+import { AcrossProvider } from "@/lib/across";
 
 const queryClient = new QueryClient();
 
@@ -17,13 +18,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={true}
-        >
-          <RainbowProvider>{children}</RainbowProvider>
-        </ThemeProvider>
+        <AcrossProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={true}
+          >
+            <RainbowProvider>{children}</RainbowProvider>
+          </ThemeProvider>
+        </AcrossProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
