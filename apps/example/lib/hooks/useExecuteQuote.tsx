@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAcross } from "../across";
 import { buildQueryKey } from "../utils";
 import { AcrossClient, ExecutionProgress } from "@across-toolkit/sdk";
-import { useWalletClient } from "wagmi";
+import { useChainId, useSwitchChain, useWalletClient } from "wagmi";
 import { useState } from "react";
 
 export type useExecuteQuoteParams =
@@ -12,12 +12,19 @@ export type useExecuteQuoteParams =
 export function useExecuteQuote(params: useExecuteQuoteParams) {
   const sdk = useAcross();
   const { data: walletClient } = useWalletClient();
-
+  const { switchChainAsync } = useSwitchChain();
+  const chainId = useChainId();
   const mutationKey = buildQueryKey("executeQuote", params);
 
   const [progress, setProgress] = useState<ExecutionProgress>({
     status: "idle",
   });
+
+  function resetProgress() {
+    setProgress({
+      status: "idle",
+    });
+  }
 
   const { mutate: executeQuote, ...rest } = useMutation({
     mutationKey,
@@ -25,6 +32,10 @@ export function useExecuteQuote(params: useExecuteQuoteParams) {
       if (!params || !walletClient) {
         return;
       }
+      if (chainId !== params.deposit.originChainId) {
+        await switchChainAsync({ chainId: params.deposit.originChainId });
+      }
+      resetProgress();
       await sdk.actions.executeQuote({
         ...params,
         walletClient,

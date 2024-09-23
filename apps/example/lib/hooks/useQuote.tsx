@@ -21,7 +21,7 @@ export function useQuote(params: useQuoteParams) {
       return await sdk.actions.getQuote(params);
     },
     enabled: Boolean(params),
-    refetchInterval: 20_000,
+    refetchInterval: 10_000,
     retryDelay(failureCount, error) {
       return 10_000;
     },

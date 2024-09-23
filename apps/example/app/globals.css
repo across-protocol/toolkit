@@ -44,10 +44,6 @@
   --destructive: 0 95% 66%;
 }
 
-* {
-  font-weight: 200;
-}
-
 /* remove arrows from number input */
 @layer base {
   input[type="number"]::-webkit-outer-spin-button,
@@ -55,5 +51,9 @@
   input[type="number"] {
     -webkit-appearance: none;
     -moz-appearance: textfield !important;
+  }
+
+  * {
+    @apply text-text font-light;
   }
 }

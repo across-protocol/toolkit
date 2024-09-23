@@ -14,8 +14,9 @@ import { TokenInfo } from "@across-toolkit/sdk";
 import { useEffect, useState } from "react";
 import { Address, formatUnits, parseUnits } from "viem";
 import { useAccount, useChains } from "wagmi";
-import { useDebounce } from "@uidotdev/usehooks";
+import { useDebounceValue } from "usehooks-ts";
 import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
+import { Progress } from "./Progress";
 
 export function Bridge() {
   const { address } = useAccount();
@@ -82,7 +83,7 @@ export function Bridge() {
   }, [outputTokens]);
 
   const [inputAmount, setInputAmount] = useState<string>();
-  const debouncedInputAmount = useDebounce(inputAmount, 300);
+  const [debouncedInputAmount] = useDebounceValue(inputAmount, 300);
   const route = availableRoutes?.find(
     (route) =>
       route.outputToken.toLocaleLowerCase() === toTokenAddress?.toLowerCase(),
@@ -97,9 +98,13 @@ export function Bridge() {
         }
       : undefined;
 
-  const { quote, isLoading: quoteLoading } = useQuote(quoteConfig);
+  const {
+    quote,
+    isLoading: quoteLoading,
+    isRefetching,
+  } = useQuote(quoteConfig);
 
-  const { executeQuote, progress } = useExecuteQuote(quote);
+  const { executeQuote, progress, error } = useExecuteQuote(quote);
 
   return (
     <>
@@ -179,23 +184,15 @@ export function Bridge() {
         )}
         <Button
           onClick={() => executeQuote()}
-          disabled={!(quote && toToken)}
+          disabled={!(quote && toToken) || isRefetching}
           className="mt-2"
           variant="accent"
         >
-          Confirm Transaction
+          {isRefetching ? "Updating quote..." : "Confirm Transaction"}
         </Button>
+
         {progress && (
-          <details>
-            <summary>Progress</summary>
-            <pre>
-              {JSON.stringify(
-                progress,
-                (_, v) => (typeof v === "bigint" ? v.toString() : v),
-                2,
-              )}
-            </pre>
-          </details>
+          <Progress className="mt-8" error={error} progress={progress} />
         )}
       </div>
     </>
