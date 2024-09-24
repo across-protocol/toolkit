@@ -1,4 +1,7 @@
-import { Hash } from "viem";
+import { Address, Hash, Hex } from "viem";
+import { AcrossErrorCodeType } from "./acrossApi";
+
+export type { AcrossErrorCodeType };
 
 export class DepositRevert extends Error {
   constructor(message?: string) {
@@ -9,12 +12,94 @@ export class DepositRevert extends Error {
 
 export class HttpError extends Error {
   public readonly url: string;
-  public readonly code: number;
-  constructor(code: number, url: string, message?: string, cause?: Error) {
-    super(message, { cause });
-    this.name = "HTTP Error";
-    this.code = code;
-    this.url = url;
+  public readonly status: number;
+  constructor(
+    params: {
+      status: number;
+      url: string;
+      name?: string;
+      message?: string;
+    },
+    opts?: ErrorOptions,
+  ) {
+    super(params.message, opts);
+    this.name = params.name ?? "HttpError";
+    this.url = params.url;
+    this.status = params.status;
+  }
+}
+
+export class AcrossApiError extends HttpError {
+  constructor(
+    params: {
+      name?: string;
+      status: number;
+      url: string;
+      message?: string;
+      code: AcrossErrorCodeType;
+    },
+    opts?: ErrorOptions,
+  ) {
+    super(
+      {
+        name: "AcrossApiError",
+        ...params,
+      },
+      opts,
+    );
+  }
+}
+
+export class AcrossApiSimulationError extends AcrossApiError {
+  public readonly transaction: {
+    from: Address;
+    to: Address;
+    data: Hex;
+    value?: string;
+  };
+
+  constructor(
+    params: {
+      url: string;
+      message?: string;
+      transaction: {
+        from: Address;
+        to: Address;
+        data: Hex;
+        value?: string;
+      };
+    },
+    opts?: ErrorOptions,
+  ) {
+    super(
+      {
+        ...params,
+        name: "AcrossApiSimulationError",
+        status: 400,
+        code: "SIMULATION_ERROR",
+      },
+      opts,
+    );
+    this.transaction = params.transaction;
+  }
+}
+
+export class SimulationError extends Error {
+  public readonly simulationId: string;
+  public readonly simulationUrl: string;
+
+  constructor(
+    params: {
+      message?: string;
+      simulationId: string;
+      simulationUrl: string;
+    },
+    opts?: ErrorOptions,
+  ) {
+    super(params.message, opts);
+    this.name = "SimulationError";
+    this.simulationId = params.simulationId;
+    this.simulationUrl = params.simulationUrl;
   }
 }
 

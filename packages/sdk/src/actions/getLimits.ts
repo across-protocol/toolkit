@@ -1,7 +1,6 @@
 import { Address } from "viem";
-import { buildSearchParams, isOk, LoggerT } from "../utils";
+import { fetchAcrossApi, LoggerT } from "../utils";
 import { MAINNET_API_URL } from "../constants";
-import { HttpError } from "../errors";
 
 type LimitsQueryParams = {
   destinationChainId: number;
@@ -21,19 +20,12 @@ export async function getLimits({
   logger,
   ...params
 }: GetLimitsParams) {
-  const searchParams = buildSearchParams<LimitsQueryParams>(params);
-  const url = `${apiUrl}/limits?${searchParams}`;
-
-  logger?.debug("Fetching Limits for params:", params, `URL: ${url}`);
-
-  const res = await fetch(url);
-
-  if (!isOk(res)) {
-    logger?.error("Unable to fetch limits:", `URL: ${url}`);
-    throw new HttpError(res.status, url, await res.text());
-  }
-
-  return (await res.json()) as LimitsResponse;
+  const limits = await fetchAcrossApi<LimitsResponse>(
+    `${apiUrl}/limits`,
+    params,
+    logger,
+  );
+  return limits;
 }
 
 export type LimitsResponse = {
