@@ -3,20 +3,23 @@
 import { ChainSelect } from "@/components/ChainSelect";
 import { Divider } from "@/components/Divider";
 import { TokenSelect } from "@/components/TokenSelect";
-import { Button, Input, Label, Skeleton } from "@/components/ui";
+import { Button, Label, Skeleton } from "@/components/ui";
 import { useAvailableRoutes } from "@/lib/hooks/useAvailableRoutes";
 import { useInputTokens } from "@/lib/hooks/useInputTokens";
 import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
 import { useQuote } from "@/lib/hooks/useQuote";
 import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
-import { cn, reduceAcrossChains } from "@/lib/utils";
+import { cn, getExplorerLink, reduceAcrossChains } from "@/lib/utils";
 import { TokenInfo } from "@across-toolkit/sdk";
 import { useEffect, useState } from "react";
 import { Address, formatUnits, parseUnits } from "viem";
-import { useAccount, useChains } from "wagmi";
+import { useAccount, useBalance, useChains } from "wagmi";
 import { useDebounceValue } from "usehooks-ts";
 import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
 import { Progress } from "./Progress";
+import { TokenInput } from "@/components/TokenInput";
+import Link from "next/link";
+import { Icon } from "@/components/Icon";
 
 export function Bridge() {
   const { address } = useAccount();
@@ -39,6 +42,10 @@ export function Bridge() {
   const [fromTokenAddress, setFromTokenAddress] = useState<Address | undefined>(
     inputTokens?.[2]?.address,
   );
+  const { data: balance } = useBalance({
+    address,
+    token: fromTokenAddress,
+  });
   const inputToken = inputTokens?.find(
     (token) => token.address.toLowerCase() === fromTokenAddress?.toLowerCase(),
   );
@@ -104,7 +111,47 @@ export function Bridge() {
     isRefetching,
   } = useQuote(quoteConfig);
 
-  const { executeQuote, progress, error } = useExecuteQuote(quote);
+  const {
+    executeQuote,
+    progress,
+    error,
+    isPending,
+    depositReceipt,
+    fillReceipt,
+  } = useExecuteQuote(quote);
+  const inputBalance = balance?.value
+    ? parseFloat(formatUnits(balance?.value, balance?.decimals)).toFixed(4)
+    : undefined;
+
+  function onMax() {
+    if (!balance?.value) return;
+    setInputAmount(formatUnits(balance?.value, balance?.decimals));
+  }
+  const originChain = chains.find((chain) => chain.id === originChainId);
+  const destinationChain = chains.find(
+    (chain) => chain.id === destinationChainId,
+  );
+
+  const depositTxLink =
+    depositReceipt &&
+    originChain &&
+    getExplorerLink({
+      chain: originChain,
+      type: "transaction",
+      txHash: depositReceipt.transactionHash,
+    });
+
+  const fillTxLink =
+    fillReceipt &&
+    destinationChain &&
+    getExplorerLink({
+      chain: destinationChain,
+      type: "transaction",
+      txHash: fillReceipt.transactionHash,
+    });
+
+  console.log("originChain", originChain);
+  console.log("fillReceipt", fillReceipt);
 
   return (
     <>
@@ -157,12 +204,14 @@ export function Bridge() {
           <Divider className="my-4" />
 
           <Label htmlFor="input-amount">Send</Label>
-          <Input
+          <TokenInput
             className="flex-[5]"
+            balance={inputBalance}
             id="input-amount"
             placeholder="Enter amount"
             type="number"
             value={inputAmount}
+            onMax={onMax}
             onChange={(e) => setInputAmount(e.currentTarget.value)}
           />
         </div>
@@ -184,15 +233,45 @@ export function Bridge() {
         )}
         <Button
           onClick={() => executeQuote()}
-          disabled={!(quote && toToken) || isRefetching}
+          disabled={!(quote && toToken) || isRefetching || isPending}
           className="mt-2"
           variant="accent"
         >
-          {isRefetching ? "Updating quote..." : "Confirm Transaction"}
+          {isRefetching
+            ? "Updating quote..."
+            : isPending
+              ? "Executing..."
+              : "Confirm Transaction"}
         </Button>
 
         {progress && (
           <Progress className="mt-8" error={error} progress={progress} />
+        )}
+        {depositTxLink && (
+          <Link
+            target="_blank"
+            className="text-text/75 hover:text-text border border-border-secondary rounded-md px-3 py-2 flex gap-2 items-center"
+            href={depositTxLink}
+          >
+            Deposit Tx
+            <Icon
+              className="w-[1em] h-[1em] text-inherit"
+              name="link-external"
+            />{" "}
+          </Link>
+        )}
+        {fillTxLink && (
+          <Link
+            target="_blank"
+            className="text-text/75 hover:text-text border border-border-secondary rounded-md px-3 py-2 flex gap-2 items-center"
+            href={fillTxLink}
+          >
+            Fill Tx
+            <Icon
+              className="w-[1em] h-[1em] text-inherit"
+              name="link-external"
+            />{" "}
+          </Link>
         )}
       </div>
     </>

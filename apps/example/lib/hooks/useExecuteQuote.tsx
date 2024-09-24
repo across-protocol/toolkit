@@ -4,6 +4,7 @@ import { buildQueryKey } from "../utils";
 import { AcrossClient, ExecutionProgress } from "@across-toolkit/sdk";
 import { useChainId, useSwitchChain, useWalletClient } from "wagmi";
 import { useState } from "react";
+import { TransactionReceipt } from "viem";
 
 export type useExecuteQuoteParams =
   | Omit<Parameters<AcrossClient["actions"]["executeQuote"]>[0], "walletClient">
@@ -19,6 +20,8 @@ export function useExecuteQuote(params: useExecuteQuoteParams) {
   const [progress, setProgress] = useState<ExecutionProgress>({
     status: "idle",
   });
+  const [depositReceipt, setDepositReceipt] = useState<TransactionReceipt>();
+  const [fillReceipt, setFillReceipt] = useState<TransactionReceipt>();
 
   function resetProgress() {
     setProgress({
@@ -40,7 +43,16 @@ export function useExecuteQuote(params: useExecuteQuoteParams) {
         ...params,
         walletClient,
         infiniteApproval: true,
-        onProgress: (progress) => setProgress(progress),
+        onProgress: (progress) => {
+          console.log(progress);
+          if (progress.status === "txSuccess" && progress.type === "deposit") {
+            setDepositReceipt(progress.txReceipt);
+          }
+          if (progress.status === "txSuccess" && progress.type === "fill") {
+            setFillReceipt(progress.txReceipt);
+          }
+          setProgress(progress);
+        },
       });
     },
   });
@@ -48,6 +60,8 @@ export function useExecuteQuote(params: useExecuteQuoteParams) {
   return {
     progress,
     executeQuote,
+    depositReceipt,
+    fillReceipt,
     ...rest,
   };
 }

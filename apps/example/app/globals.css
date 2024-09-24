@@ -26,12 +26,14 @@
 .dark {
   --background: 230 6% 19%;
   --foreground: 231.43 6.31% 21.76%;
-
   --muted: 231.43 6.31% 21.76%;
 
   --popover: 240 5.88% 13.33%;
 
   --text-color: 204 30% 83%;
+
+  /* across teal */
+  --accent: 166 92% 70%;
 
   /* gray */
   --border: 226.67 5.52% 31.96%;
@@ -53,7 +55,14 @@
     -moz-appearance: textfield !important;
   }
 
-  * {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  p,
+  span,
+  div {
     @apply text-text font-light;
   }
 }

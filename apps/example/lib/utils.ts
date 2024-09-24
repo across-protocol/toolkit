@@ -1,7 +1,7 @@
 import { ChainsQueryResponse } from "@across-toolkit/sdk";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Chain, Hex } from "viem";
+import { Address, Chain, Hash, Hex } from "viem";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -42,3 +42,40 @@ export function buildQueryKey<T extends object | undefined>(
 export type NoNullValuesOfObject<T extends object> = {
   [Property in keyof T]-?: NonNullable<T[Property]>;
 };
+
+type ExplorerLinkParams = {
+  chain: Chain;
+} & (
+  | {
+      type: "address";
+      address: Address;
+    }
+  | {
+      type: "transaction";
+      txHash: Hash;
+    }
+  | {
+      type: "event";
+      txHash: Hash;
+      eventIndex: number;
+    }
+);
+
+export function getExplorerLink(params: ExplorerLinkParams) {
+  const url = params.chain.blockExplorers?.default.url;
+  if (!url) {
+    return;
+  }
+
+  if (params.type === "address") {
+    return `${url}/address/${params.address}`;
+  }
+
+  if (params.type === "transaction") {
+    return `${url}/tx/${params.txHash}`;
+  }
+
+  if (params.type === "event") {
+    return `${url}/tx/${params.txHash}#eventlog#${params.eventIndex}`;
+  }
+}

@@ -41,50 +41,6 @@
         fill="#EE3535"
       />
     </symbol>
-    <!-- oracles -->
-    <symbol id="chronicle" viewBox="0 0 40 40" fill="none">
-      <g clip-path="url(#chronicle-clip)">
-        <path
-          d="M11.429 0 0 11.429V28.57h11.429V40H28.57L40 28.571V14.286H28.571V28.57H11.43V11.43h14.285V0H11.43Z"
-          fill="#2FD05B"
-        />
-      </g>
-      <defs>
-        <clipPath id="chronicle-clip">
-          <path fill="#fff" d="M0 0h40v40H0z" />
-        </clipPath>
-      </defs>
-    </symbol>
-
-    <symbol id="pyth" viewBox="0 0 32 40" fill="none">
-      <g clip-path="url(#pyth-clip)" fill="#322F33">
-        <path
-          d="M19.99 15.997c0 2.209-1.787 4-3.99 4v4c4.406 0 7.978-3.582 7.978-8s-3.572-8-7.978-8a7.912 7.912 0 0 0-3.99 1.07 7.997 7.997 0 0 0-3.988 6.93v20l3.586 3.596.403.404v-24c0-2.21 1.786-4 3.989-4a3.995 3.995 0 0 1 3.99 4Z"
-        />
-        <path
-          d="M16 0c-2.907 0-5.631.78-7.978 2.141a15.963 15.963 0 0 0-3.99 3.277A15.964 15.964 0 0 0 .044 16v12l3.99 4V16c0-3.554 1.54-6.747 3.989-8.945A11.938 11.938 0 0 1 16 3.999c6.609 0 11.967 5.374 11.967 12 0 6.627-5.358 12-11.967 12v4c8.814 0 15.957-7.164 15.957-16 0-8.835-7.143-16-15.957-16Z"
-        />
-      </g>
-      <defs>
-        <clipPath id="pyth-clip">
-          <path fill="#fff" transform="translate(.043)" d="M0 0h31.913v40H0z" />
-        </clipPath>
-      </defs>
-    </symbol>
-
-    <symbol id="chainlink" viewBox="0 0 36 40" fill="none">
-      <g clip-path="url(#chainlink-clip)">
-        <path
-          d="m18 0-3.666 2.11-9.988 5.78L.68 10v20l3.666 2.11 10.08 5.78L18.092 40l3.665-2.11 9.897-5.78L35.32 30V10l-3.666-2.11-9.988-5.78L18 0ZM8.011 25.78V14.22L18 8.44l9.989 5.78v11.56L18 31.56l-9.989-5.78Z"
-          fill="currentColor"
-        />
-      </g>
-      <defs>
-        <clipPath id="chainlink-clip">
-          <path fill="#fff" transform="translate(.68)" d="M0 0h34.64v40H0z" />
-        </clipPath>
-      </defs>
-    </symbol>
 
     <symbol id="question" viewBox="0 0 16 16" fill="none">
       <g clip-path="url(#question-clip)">

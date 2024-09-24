@@ -8,6 +8,7 @@ export type ProgressProps = {
   className?: string;
 };
 
+// TODO: make more fully featured
 export function Progress({ progress, error, className }: ProgressProps) {
   if (progress.status === "idle") {
     return;
