@@ -49,6 +49,10 @@ async function main() {
     integratorId: "TEST",
     logLevel: "DEBUG",
     walletClient,
+    tenderlyAccessKey: process.env.TENDERLY_ACCESS_KEY,
+    tenderlyAccountSlug: process.env.TENDERLY_ACCOUNT_SLUG,
+    tenderlyProjectSlug: process.env.TENDERLY_PROJECT_SLUG,
+    tenderlySimOnError: true,
   });
 
   // do call to find info for displaying input/output tokens and destination chains
@@ -196,8 +200,8 @@ async function main() {
     (token) => token.symbol === "DAI",
   )!;
   const routes = await client.actions.getAvailableRoutes({
-    originChainId: arbitrum.id,
-    destinationChainId: mainnet.id,
+    originChainId: optimism.id,
+    destinationChainId: arbitrum.id,
   });
 
   const crossChainRoute = routes.find(
@@ -205,7 +209,7 @@ async function main() {
   )!;
 
   // quote
-  const inputAmount = parseUnits("10", inputTokenDetails.decimals);
+  const inputAmount = parseUnits("200", inputTokenDetails.decimals);
   const userAddress = "0x924a9f036260DdD5808007E1AA95f08eD08aA569";
   // Aave v2 Lending Pool: https://etherscan.io/address/0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9
   const aaveAddress = "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9";
@@ -254,6 +258,14 @@ async function main() {
     },
   });
   console.log(quoteRes);
+
+  // simulate deposit tx - should fail
+  const { request: simulateDepositTxRequest } =
+    await client.actions.simulateDepositTx({
+      walletClient,
+      deposit: quoteRes.deposit,
+    });
+  console.log("Simulation result:", simulateDepositTxRequest);
 }
 main();
 
