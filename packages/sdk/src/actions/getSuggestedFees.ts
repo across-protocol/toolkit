@@ -19,7 +19,6 @@ type SuggestedFeesQueryParams = Partial<
     relayer?: Address;
     skipAmountLimit?: boolean;
     timestamp?: number;
-    depositMethod?: "depositV3" | "depositExclusive";
   };
 
 export type GetSuggestedFeesParams = SuggestedFeesQueryParams & {
