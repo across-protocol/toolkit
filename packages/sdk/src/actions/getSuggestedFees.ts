@@ -3,8 +3,16 @@ import { LoggerT, fetchAcrossApi } from "../utils";
 import { Amount, Route } from "../types";
 import { MAINNET_API_URL } from "../constants";
 
-type SuggestedFeesQueryParams = Partial<Omit<Route, "originChainId">> &
-  Pick<Route, "originChainId"> & {
+type SuggestedFeesQueryParams = Partial<
+  Omit<Route, "inputTokenSymbol" | "outputTokenSymbol" | "isNative">
+> &
+  Pick<
+    Route,
+    | "originChainId"
+    | "destinationChainId"
+    | "inputTokenSymbol"
+    | "outputTokenSymbol"
+  > & {
     amount: Amount;
     recipient?: Address;
     message?: string;

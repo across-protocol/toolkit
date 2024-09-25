@@ -1,12 +1,17 @@
-import { Address } from "viem";
+import { Address, Hex } from "viem";
 import { fetchAcrossApi, LoggerT } from "../utils";
 import { MAINNET_API_URL } from "../constants";
+import { Amount } from "../types";
 
 type LimitsQueryParams = {
   destinationChainId: number;
   inputToken: Address;
   outputToken: Address;
   originChainId: number;
+  amount?: Amount;
+  message?: Hex;
+  recipient?: Address;
+  relayer?: Address;
 };
 
 export type GetLimitsParams = LimitsQueryParams & {

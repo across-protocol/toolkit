@@ -42,11 +42,7 @@ export function isOk(res: Response) {
 
 function makeFetcher(
   name: string,
-  apiErrorHandler?: (
-    response: Response,
-    data: any,
-    url: string,
-  ) => Promise<void>,
+  apiErrorHandler?: (response: Response, data: any, url: string) => void,
 ) {
   return async <ResBody, ReqParams = {}>(
     apiUrl: string,
@@ -92,43 +88,40 @@ function makeFetcher(
   };
 }
 
-export const fetchAcrossApi = makeFetcher(
-  "Across API",
-  async (res, data, url) => {
-    // Check for Across API errors
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "type" in data &&
-      data.type === "AcrossApiError"
-    ) {
-      const acrossApiError = data as unknown as {
-        message: string;
-        code: AcrossErrorCodeType;
-        transaction: {
-          from: Address;
-          to: Address;
-          data: Hex;
-        };
+export const fetchAcrossApi = makeFetcher("Across API", (res, data, url) => {
+  // Check for Across API errors
+  if (
+    typeof data === "object" &&
+    data !== null &&
+    "type" in data &&
+    data.type === "AcrossApiError"
+  ) {
+    const acrossApiError = data as unknown as {
+      message: string;
+      code: AcrossErrorCodeType;
+      transaction: {
+        from: Address;
+        to: Address;
+        data: Hex;
       };
+    };
 
-      if (acrossApiError.code === "SIMULATION_ERROR") {
-        throw new AcrossApiSimulationError({
-          message: acrossApiError.message,
-          url,
-          transaction: acrossApiError.transaction,
-        });
-      }
-
-      throw new AcrossApiError({
-        status: res.status,
+    if (acrossApiError.code === "SIMULATION_ERROR") {
+      throw new AcrossApiSimulationError({
         message: acrossApiError.message,
         url,
-        code: acrossApiError.code,
+        transaction: acrossApiError.transaction,
       });
     }
-  },
-);
+
+    throw new AcrossApiError({
+      status: res.status,
+      message: acrossApiError.message,
+      url,
+      code: acrossApiError.code,
+    });
+  }
+});
 
 export const fetchIndexerApi = makeFetcher(
   "Indexer API",

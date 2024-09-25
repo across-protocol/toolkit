@@ -277,7 +277,7 @@ export class AcrossClient {
       ) {
         const { simulationId, simulationUrl } = await this.simulateTxOnTenderly(
           {
-            networkId: params.originChainId.toString(),
+            networkId: params.destinationChainId.toString(),
             to: e.transaction.to,
             data: e.transaction.data,
             from: e.transaction.from,
@@ -296,7 +296,12 @@ export class AcrossClient {
 
   async getLimits(params: Omit<GetLimitsParams, "apiUrl" | "logger">) {
     try {
-      return getLimits({ ...params, apiUrl: this.apiUrl, logger: this.logger });
+      const limits = await getLimits({
+        ...params,
+        apiUrl: this.apiUrl,
+        logger: this.logger,
+      });
+      return limits;
     } catch (e) {
       if (
         this.tenderlySimOnError &&
@@ -305,7 +310,7 @@ export class AcrossClient {
       ) {
         const { simulationId, simulationUrl } = await this.simulateTxOnTenderly(
           {
-            networkId: params.originChainId.toString(),
+            networkId: params.destinationChainId.toString(),
             to: e.transaction.to,
             data: e.transaction.data,
             from: e.transaction.from,

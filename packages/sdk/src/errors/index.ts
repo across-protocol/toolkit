@@ -42,8 +42,8 @@ export class AcrossApiError extends HttpError {
   ) {
     super(
       {
-        name: "AcrossApiError",
         ...params,
+        name: params.name ?? "AcrossApiError",
       },
       opts,
     );
