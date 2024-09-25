@@ -65,10 +65,12 @@ export type AcrossClientOptions = {
   useTestnet?: boolean;
   logger?: LoggerT;
   pollingInterval?: number; // milliseconds seconds
-  tenderlySimOnError?: boolean;
-  tenderlyAccessKey?: string;
-  tenderlyAccountSlug?: string;
-  tenderlyProjectSlug?: string;
+  tenderly?: {
+    simOnError?: boolean;
+    accessKey: string;
+    accountSlug: string;
+    projectSlug: string;
+  };
 };
 
 export class AcrossClient {
@@ -82,16 +84,18 @@ export class AcrossClient {
   logger: LoggerT;
 
   // Tenderly related options
-  tenderlySimOnError?: boolean;
-  tenderlyAccessKey?: string;
-  tenderlyAccountSlug?: string;
-  tenderlyProjectSlug?: string;
+  tenderly?: {
+    simOnError?: boolean;
+    accessKey: string;
+    accountSlug: string;
+    projectSlug: string;
+  };
 
   get isTenderlyEnabled() {
     return Boolean(
-      this.tenderlyAccessKey &&
-        this.tenderlyAccountSlug &&
-        this.tenderlyProjectSlug,
+      this.tenderly?.accessKey &&
+        this.tenderly?.accountSlug &&
+        this.tenderly?.projectSlug,
     );
   }
 
@@ -127,10 +131,7 @@ export class AcrossClient {
     this.logger =
       args?.logger ??
       new DefaultLogger(args?.logLevel ?? CLIENT_DEFAULTS.logLevel);
-    this.tenderlySimOnError = args.tenderlySimOnError;
-    this.tenderlyAccessKey = args.tenderlyAccessKey;
-    this.tenderlyAccountSlug = args.tenderlyAccountSlug;
-    this.tenderlyProjectSlug = args.tenderlyProjectSlug;
+    this.tenderly = args.tenderly;
     // bind methods
     this.actions = {
       getSuggestedFees: this.getSuggestedFees.bind(this),
@@ -207,8 +208,8 @@ export class AcrossClient {
       });
     } catch (e) {
       if (
-        !this.tenderlySimOnError ||
         !this.isTenderlyEnabled ||
+        !this.tenderly?.simOnError ||
         !(
           e instanceof AcrossApiSimulationError ||
           e instanceof ContractFunctionExecutionError
@@ -216,6 +217,9 @@ export class AcrossClient {
       ) {
         throw e;
       }
+
+      // The Across API only throws an `AcrossApiSimulationError` when simulating fills
+      // on the destination chain.
       const isFillSimulationError = e instanceof AcrossApiSimulationError;
       const simParams = isFillSimulationError
         ? {
@@ -271,26 +275,25 @@ export class AcrossClient {
       return fees;
     } catch (e) {
       if (
-        this.tenderlySimOnError &&
-        this.isTenderlyEnabled &&
-        e instanceof AcrossApiSimulationError
+        !this.isTenderlyEnabled ||
+        !this.tenderly?.simOnError ||
+        !(e instanceof AcrossApiSimulationError)
       ) {
-        const { simulationId, simulationUrl } = await this.simulateTxOnTenderly(
-          {
-            networkId: params.destinationChainId.toString(),
-            to: e.transaction.to,
-            data: e.transaction.data,
-            from: e.transaction.from,
-            value: e.transaction.value ?? "0",
-          },
-        );
-        throw new SimulationError({
-          simulationId,
-          simulationUrl,
-          message: `simulation failed while fetching suggested fees: ${e.message}`,
-        });
+        throw e;
       }
-      throw e;
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.destinationChainId.toString(),
+        to: e.transaction.to,
+        data: e.transaction.data,
+        from: e.transaction.from,
+        value: e.transaction.value ?? "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `simulation failed while fetching suggested fees: ${e.message}`,
+      });
     }
   }
 
@@ -304,26 +307,24 @@ export class AcrossClient {
       return limits;
     } catch (e) {
       if (
-        this.tenderlySimOnError &&
-        this.isTenderlyEnabled &&
-        e instanceof AcrossApiSimulationError
+        !this.tenderly?.simOnError ||
+        !(e instanceof AcrossApiSimulationError)
       ) {
-        const { simulationId, simulationUrl } = await this.simulateTxOnTenderly(
-          {
-            networkId: params.destinationChainId.toString(),
-            to: e.transaction.to,
-            data: e.transaction.data,
-            from: e.transaction.from,
-            value: e.transaction.value ?? "0",
-          },
-        );
-        throw new SimulationError({
-          simulationId,
-          simulationUrl,
-          message: `simulation failed while fetching limits: ${e.message}`,
-        });
+        throw e;
       }
-      throw e;
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.destinationChainId.toString(),
+        to: e.transaction.to,
+        data: e.transaction.data,
+        from: e.transaction.from,
+        value: e.transaction.value ?? "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `simulation failed while fetching limits: ${e.message}`,
+      });
     }
   }
 
@@ -337,26 +338,24 @@ export class AcrossClient {
       return quote;
     } catch (e) {
       if (
-        this.tenderlySimOnError &&
-        this.isTenderlyEnabled &&
-        e instanceof AcrossApiSimulationError
+        !this.tenderly?.simOnError ||
+        !(e instanceof AcrossApiSimulationError)
       ) {
-        const { simulationId, simulationUrl } = await this.simulateTxOnTenderly(
-          {
-            networkId: params.route.originChainId.toString(),
-            to: e.transaction.to,
-            data: e.transaction.data,
-            from: e.transaction.from,
-            value: e.transaction.value ?? "0",
-          },
-        );
-        throw new SimulationError({
-          simulationId,
-          simulationUrl,
-          message: `simulation failed while fetching quote: ${e.message}`,
-        });
+        throw e;
       }
-      throw e;
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.route.originChainId.toString(),
+        to: e.transaction.to,
+        data: e.transaction.data,
+        from: e.transaction.from,
+        value: e.transaction.value ?? "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `simulation failed while fetching quote: ${e.message}`,
+      });
     }
   }
 
@@ -380,32 +379,31 @@ export class AcrossClient {
       return result;
     } catch (e) {
       if (
-        this.tenderlySimOnError &&
-        this.isTenderlyEnabled &&
-        e instanceof ContractFunctionExecutionError
+        !this.tenderly?.simOnError ||
+        !this.isTenderlyEnabled ||
+        !(e instanceof ContractFunctionExecutionError)
       ) {
-        const { simulationId, simulationUrl } = await this.simulateTxOnTenderly(
-          {
-            networkId: params.deposit.originChainId.toString(),
-            from: e.sender!,
-            to: e.contractAddress!,
-            data: encodeFunctionData({
-              abi: e.abi,
-              functionName: e.functionName,
-              args: e.args,
-            }),
-            value: params.deposit.isNative
-              ? String(params.deposit.inputAmount)
-              : "0",
-          },
-        );
-        throw new SimulationError({
-          simulationId,
-          simulationUrl,
-          message: `deposit simulation failed: ${e.shortMessage}`,
-        });
+        throw e;
       }
-      throw e;
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.deposit.originChainId.toString(),
+        from: e.sender!,
+        to: e.contractAddress!,
+        data: encodeFunctionData({
+          abi: e.abi,
+          functionName: e.functionName,
+          args: e.args,
+        }),
+        value: params.deposit.isNative
+          ? String(params.deposit.inputAmount)
+          : "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `deposit simulation failed: ${e.shortMessage}`,
+      });
     }
   }
 
@@ -464,21 +462,21 @@ export class AcrossClient {
     >,
   ) {
     if (
-      !this.tenderlyAccessKey ||
-      !this.tenderlyAccountSlug ||
-      !this.tenderlyProjectSlug
+      !this.tenderly?.accessKey ||
+      !this.tenderly?.accountSlug ||
+      !this.tenderly?.projectSlug
     ) {
       throw new ConfigError(
         "Tenderly credentials not set. Client needs to be configured with " +
-          "'tenderlyAccessKey', 'tenderlyAccountSlug', and 'tenderlyProjectSlug'.",
+          "'tenderly.accessKey', 'tenderly.accountSlug', and 'tenderly.projectSlug'.",
       );
     }
 
     return simulateTxOnTenderly({
       ...params,
-      accessKey: this.tenderlyAccessKey,
-      accountSlug: this.tenderlyAccountSlug,
-      projectSlug: this.tenderlyProjectSlug,
+      accessKey: this.tenderly?.accessKey,
+      accountSlug: this.tenderly?.accountSlug,
+      projectSlug: this.tenderly?.projectSlug,
       enableShare: true,
     });
   }
