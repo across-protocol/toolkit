@@ -132,6 +132,11 @@ export class AcrossClient {
       args?.logger ??
       new DefaultLogger(args?.logLevel ?? CLIENT_DEFAULTS.logLevel);
     this.tenderly = args.tenderly;
+
+    if (this.tenderly) {
+      this.tenderly.simOnError = args.tenderly?.simOnError ?? true;
+    }
+
     // bind methods
     this.actions = {
       getSuggestedFees: this.getSuggestedFees.bind(this),
