@@ -18,8 +18,7 @@ import { useDebounceValue } from "usehooks-ts";
 import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
 import { Progress } from "./Progress";
 import { TokenInput } from "@/components/TokenInput";
-import Link from "next/link";
-import { Icon } from "@/components/Icon";
+import { ExternalLink } from "@/components/ExternalLink";
 
 export function Bridge() {
   const { address } = useAccount();
@@ -238,10 +237,10 @@ export function Bridge() {
           className="mt-2"
           variant="accent"
         >
-          {isRefetching
-            ? "Updating quote..."
-            : isPending
-              ? "Executing..."
+          {isPending
+            ? "Executing..."
+            : isRefetching
+              ? "Updating quote..."
               : "Confirm Transaction"}
         </Button>
 
@@ -250,30 +249,14 @@ export function Bridge() {
         )}
         <div className="flex gap-2 mt-4">
           {depositTxLink && (
-            <Link
-              target="_blank"
-              className="text-text/75 hover:text-text hover:border-text border border-border-secondary rounded-md px-3 py-2 flex gap-2 items-center"
-              href={depositTxLink}
-            >
+            <ExternalLink icon href={depositTxLink}>
               Deposit Tx
-              <Icon
-                className="w-[1em] h-[1em] text-inherit"
-                name="link-external"
-              />{" "}
-            </Link>
+            </ExternalLink>
           )}
           {fillTxLink && (
-            <Link
-              target="_blank"
-              className="text-text/75 hover:text-text hover:border-text border border-border-secondary rounded-md px-3 py-2 flex gap-2 items-center"
-              href={fillTxLink}
-            >
+            <ExternalLink icon href={fillTxLink}>
               Fill Tx
-              <Icon
-                className="w-[1em] h-[1em] text-inherit"
-                name="link-external"
-              />{" "}
-            </Link>
+            </ExternalLink>
           )}
         </div>
       </div>
