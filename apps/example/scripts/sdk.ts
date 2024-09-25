@@ -49,10 +49,12 @@ async function main() {
     integratorId: "TEST",
     logLevel: "DEBUG",
     walletClient,
-    tenderlyAccessKey: process.env.TENDERLY_ACCESS_KEY,
-    tenderlyAccountSlug: process.env.TENDERLY_ACCOUNT_SLUG,
-    tenderlyProjectSlug: process.env.TENDERLY_PROJECT_SLUG,
-    tenderlySimOnError: true,
+    tenderly: {
+      accessKey: process.env.TENDERLY_ACCESS_KEY,
+      accountSlug: process.env.TENDERLY_ACCOUNT_SLUG,
+      projectSlug: process.env.TENDERLY_PROJECT_SLUG,
+      simOnError: true,
+    },
   });
 
   // do call to find info for displaying input/output tokens and destination chains
