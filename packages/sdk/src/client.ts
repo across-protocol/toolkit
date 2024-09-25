@@ -1,4 +1,4 @@
-import { Chain, WalletClient } from "viem";
+import { Chain } from "viem";
 import {
   getAvailableRoutes,
   getSuggestedFees,
@@ -36,7 +36,11 @@ import {
   getSupportedChains,
 } from "./utils";
 import { ConfigError } from "./errors";
-import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
+import {
+  ConfiguredPublicClient,
+  ConfiguredPublicClientMap,
+  ConfiguredWalletClient,
+} from "./types";
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
@@ -46,7 +50,7 @@ const CLIENT_DEFAULTS = {
 export type AcrossClientOptions = {
   integratorId: string;
   chains: Chain[];
-  walletClient?: WalletClient;
+  walletClient?: ConfiguredWalletClient;
   rpcUrls?: {
     [key: number]: string;
   };
@@ -62,6 +66,7 @@ export class AcrossClient {
 
   integratorId: string;
   publicClients: ConfiguredPublicClientMap;
+  walletClient?: ConfiguredWalletClient;
   apiUrl: string;
   indexerUrl: string;
   logger: LoggerT;
@@ -86,6 +91,7 @@ export class AcrossClient {
 
   private constructor(args: AcrossClientOptions) {
     this.integratorId = args.integratorId;
+    this.walletClient = args?.walletClient;
     this.publicClients = configurePublicClients(
       args.chains,
       args.pollingInterval ?? CLIENT_DEFAULTS.pollingInterval,
@@ -159,7 +165,8 @@ export class AcrossClient {
       "logger" | "originClient" | "destinationClient" | "integratorId"
     >,
   ) {
-    if (!params.walletClient) {
+    const walletClient = params?.walletClient ?? this?.walletClient;
+    if (!walletClient) {
       throw new ConfigError(
         "WalletClient needs to be set to call 'executeQuote'",
       );
@@ -167,6 +174,7 @@ export class AcrossClient {
 
     return executeQuote({
       ...params,
+      walletClient,
       integratorId: this.integratorId,
       logger: this.logger,
       originClient: this.getPublicClient(params.deposit.originChainId),

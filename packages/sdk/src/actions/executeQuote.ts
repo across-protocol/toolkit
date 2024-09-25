@@ -1,44 +1,109 @@
-import { parseAbi, SimulateContractReturnType, TransactionReceipt } from "viem";
+import {
+  Address,
+  Hash,
+  parseAbi,
+  SimulateContractReturnType,
+  TransactionReceipt,
+} from "viem";
 import { Quote } from "./getQuote";
 import { simulateDepositTx } from "./simulateDepositTx";
 import { LoggerT } from "../utils";
 import { simulateApproveTx } from "./simulateApproveTx";
-import { waitForDepositTx } from "./waitForDepositTx";
+import { DepositStatus, waitForDepositTx } from "./waitForDepositTx";
 import { ConfiguredPublicClient, ConfiguredWalletClient } from "../types";
 import { waitForFillTx } from "./waitForFillTx";
 
-export type ExecutionProgress =
-  | { status: "idle" }
-  | (ProgressMeta & {
-      status: "txSimulationPending";
-    })
-  | (ProgressMeta & {
-      status: "txSimulationSuccess";
-    })
-  | (ProgressMeta & {
-      status: "txSimulationError";
-      error: Error;
-    })
-  | (ProgressMeta & {
+export type ExecutionProgress = TransactionProgress;
+
+type ProgressMeta = ApproveMeta | DepositMeta | FillMeta | undefined;
+
+type ApproveMeta = {
+  approvalAmount: bigint;
+  spender: Address;
+};
+
+type DepositMeta = {
+  deposit: Quote["deposit"];
+};
+
+type FillMeta = {
+  deposit: Quote["deposit"];
+  depositId: DepositStatus["depositId"];
+};
+
+export type TransactionProgress =
+  | {
+      step: "approve";
+      status: "idle";
+    }
+  | {
+      step: "approve";
+      status: "simulationPending";
+      meta: ApproveMeta;
+    }
+  | {
+      step: "approve";
+      status: "simulationSuccess";
+      txRequest: TxRequest;
+      meta: ApproveMeta;
+    }
+  | {
+      step: "approve";
       status: "txPending";
-      txHash: string;
-    })
-  | (ProgressMeta & {
+      txHash: Hash;
+      meta: ApproveMeta;
+    }
+  | {
+      step: "approve";
       status: "txSuccess";
       txReceipt: TransactionReceipt;
-    })
-  | (ProgressMeta & {
-      status: "txError";
+      meta: ApproveMeta;
+    }
+  | {
+      step: "deposit";
+      status: "simulationPending";
+      meta: DepositMeta;
+    }
+  | {
+      step: "deposit";
+      status: "simulationSuccess";
+      txRequest: TxRequest;
+      meta: DepositMeta;
+    }
+  | {
+      step: "deposit";
+      status: "txPending";
+      txHash: Hash;
+      meta: DepositMeta;
+    }
+  | {
+      step: "deposit";
+      status: "txSuccess";
+      txReceipt: TransactionReceipt;
+      depositId: DepositStatus["depositId"];
+      meta: DepositMeta;
+    }
+  | {
+      step: "fill";
+      status: "txPending";
+      meta: FillMeta;
+    }
+  | {
+      step: "fill";
+      status: "txSuccess";
+      txReceipt: TransactionReceipt;
+      fillTxTimestamp: bigint;
+      actionSuccess: boolean | undefined;
+      meta: FillMeta;
+    }
+  | {
+      step: "approve" | "deposit" | "fill";
+      status: "simulationError" | "txError" | "error";
       error: Error;
-    })
-  | { status: "error" };
+      meta: ProgressMeta;
+    };
 
-type ProgressMeta = {
-  type: "approve" | "deposit" | "fill";
-  meta: {
-    [key: string]: unknown;
-  };
-};
+type TxRequest = Awaited<SimulateContractReturnType>["request"];
 
 export type ExecuteQuoteParams = {
   logger?: LoggerT;
@@ -73,12 +138,12 @@ export async function executeQuote(params: ExecuteQuoteParams) {
     onProgress ||
     ((progress: ExecutionProgress) => defaultProgressHandler(progress, logger));
 
-  let txRequest: Awaited<SimulateContractReturnType>["request"];
-  let currentProgressStatus: ExecutionProgress["status"] = "idle";
-  let currentProgressMeta: ProgressMeta = {
-    type: "approve",
-    meta: {},
+  let txRequest: TxRequest;
+  let currentTransactionProgress: TransactionProgress = {
+    status: "idle",
+    step: "approve",
   };
+  let currentProgressMeta: ProgressMeta;
 
   try {
     const account = walletClient.account;
@@ -115,6 +180,7 @@ export async function executeQuote(params: ExecuteQuoteParams) {
         functionName: "allowance",
         args: [account.address, spokePoolAddress],
       });
+
       logger?.debug("Allowance", {
         allowance,
         owner: account.address,
@@ -128,17 +194,17 @@ export async function executeQuote(params: ExecuteQuoteParams) {
           : BigInt(inputAmount);
 
         currentProgressMeta = {
-          type: "approve",
-          meta: {
-            approvalAmount,
-            spender: spokePoolAddress,
-          },
+          approvalAmount,
+          spender: spokePoolAddress,
         };
-        currentProgressStatus = "txSimulationPending";
-        onProgressHandler({
-          status: currentProgressStatus,
-          ...currentProgressMeta,
-        });
+
+        currentTransactionProgress = {
+          step: "approve",
+          status: "simulationPending",
+          meta: currentProgressMeta,
+        };
+
+        onProgressHandler(currentTransactionProgress);
 
         const { request } = await simulateApproveTx({
           walletClient,
@@ -149,34 +215,36 @@ export async function executeQuote(params: ExecuteQuoteParams) {
         });
         txRequest = request;
 
-        currentProgressStatus = "txSimulationSuccess";
-        onProgressHandler({
-          status: currentProgressStatus,
-          ...currentProgressMeta,
-        });
+        currentTransactionProgress = {
+          ...currentTransactionProgress,
+          status: "simulationSuccess",
+          txRequest: request,
+        };
+        onProgressHandler(currentTransactionProgress);
 
         const approveTxHash = await walletClient.writeContract({
           account,
           ...txRequest,
         });
 
-        currentProgressStatus = "txPending";
-        onProgressHandler({
-          status: currentProgressStatus,
+        currentTransactionProgress = {
+          ...currentTransactionProgress,
+          status: "txPending",
           txHash: approveTxHash,
-          ...currentProgressMeta,
-        });
+        };
+
+        onProgressHandler(currentTransactionProgress);
 
         const approveTxReceipt = await originClient.waitForTransactionReceipt({
           hash: approveTxHash,
         });
 
-        currentProgressStatus = "txSuccess";
-        onProgressHandler({
-          status: currentProgressStatus,
+        currentTransactionProgress = {
+          ...currentTransactionProgress,
+          status: "txSuccess",
           txReceipt: approveTxReceipt,
-          ...currentProgressMeta,
-        });
+        };
+        onProgressHandler(currentTransactionProgress);
       }
     }
 
@@ -185,16 +253,14 @@ export async function executeQuote(params: ExecuteQuoteParams) {
     // 2. If successful, execute the deposit transaction
     // 3. Wait for the transaction to be mined
     currentProgressMeta = {
-      type: "deposit",
-      meta: {
-        deposit,
-      },
+      deposit,
     };
-    currentProgressStatus = "txSimulationPending";
-    onProgressHandler({
-      status: currentProgressStatus,
-      ...currentProgressMeta,
-    });
+    currentTransactionProgress = {
+      step: "deposit",
+      status: "simulationPending",
+      meta: currentProgressMeta,
+    };
+    onProgressHandler(currentTransactionProgress);
 
     const { request: _request } = await simulateDepositTx({
       walletClient,
@@ -205,55 +271,50 @@ export async function executeQuote(params: ExecuteQuoteParams) {
     });
     txRequest = _request;
 
-    currentProgressStatus = "txSimulationSuccess";
-    onProgressHandler({
-      status: currentProgressStatus,
-      ...currentProgressMeta,
-    });
+    currentTransactionProgress = {
+      ...currentTransactionProgress,
+      status: "simulationSuccess",
+      txRequest: _request,
+    };
+    onProgressHandler(currentTransactionProgress);
 
     const depositTxHash = await walletClient.writeContract({
       account,
       ...txRequest,
     });
-    const destinationBlock = await destinationClient.getBlockNumber();
-
-    currentProgressStatus = "txPending";
-    onProgressHandler({
-      status: currentProgressStatus,
+    currentTransactionProgress = {
+      ...currentTransactionProgress,
+      status: "txPending",
       txHash: depositTxHash,
-      ...currentProgressMeta,
-    });
+    };
+    onProgressHandler(currentTransactionProgress);
+
+    const destinationBlock = await destinationClient.getBlockNumber();
 
     const { depositId, depositTxReceipt } = await waitForDepositTx({
       transactionHash: depositTxHash,
       publicClient: originClient,
     });
 
-    currentProgressStatus = "txSuccess";
-    onProgressHandler({
-      status: currentProgressStatus,
+    currentTransactionProgress = {
+      ...currentTransactionProgress,
+      status: "txSuccess",
       txReceipt: depositTxReceipt,
-      ...{
-        ...currentProgressMeta,
-        meta: {
-          depositId,
-        },
-      },
-    });
+      depositId,
+    };
+    onProgressHandler(currentTransactionProgress);
 
     // After successful deposit, wait for fill
     currentProgressMeta = {
-      type: "fill",
-      meta: {
-        depositId,
-      },
+      depositId,
+      deposit,
     };
-    currentProgressStatus = "txPending";
-    onProgressHandler({
-      status: currentProgressStatus,
-      txHash: depositTxHash,
-      ...currentProgressMeta,
-    });
+    currentTransactionProgress = {
+      step: "fill",
+      status: "txPending",
+      meta: currentProgressMeta,
+    };
+    onProgressHandler(currentTransactionProgress);
 
     const { fillTxReceipt, fillTxTimestamp, actionSuccess } =
       await waitForFillTx({
@@ -263,31 +324,28 @@ export async function executeQuote(params: ExecuteQuoteParams) {
         fromBlock: destinationBlock - 100n, // TODO: use dynamic block buffer based chain
       });
 
-    currentProgressStatus = "txSuccess";
-    onProgressHandler({
-      status: currentProgressStatus,
+    currentTransactionProgress = {
+      ...currentTransactionProgress,
+      status: "txSuccess",
       txReceipt: fillTxReceipt,
-      ...{
-        ...currentProgressMeta,
-        meta: {
-          depositId,
-          fillTxTimestamp,
-          actionSuccess,
-        },
-      },
-    });
+      fillTxTimestamp,
+      actionSuccess,
+    };
+    onProgressHandler(currentTransactionProgress);
     return { depositId, depositTxReceipt, fillTxReceipt };
   } catch (error) {
     const errorStatus =
-      currentProgressStatus === "txPending"
+      currentTransactionProgress.status === "txPending"
         ? "txError"
-        : currentProgressStatus === "txSimulationPending"
-          ? "txSimulationError"
+        : currentTransactionProgress.status === "simulationPending"
+          ? "simulationError"
           : "error";
+
     onProgressHandler({
+      ...currentTransactionProgress,
       status: errorStatus,
       error: error as Error,
-      ...currentProgressMeta,
+      meta: currentProgressMeta,
     });
 
     if (!throwOnError) {

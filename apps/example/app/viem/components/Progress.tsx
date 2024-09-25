@@ -14,39 +14,39 @@ export function Progress({ progress, error, className }: ProgressProps) {
     return;
   }
 
-  if (progress.status === "error") {
-    return (
-      <p className={cn("text-destructive", className)}>
-        An Unknown error occurred
-      </p>
-    );
-  }
-
   const status = (() => {
     if (
       progress.status === "txError" ||
-      progress.status === "txSimulationError"
+      progress.status === "simulationError" ||
+      progress.status === "error"
     ) {
       return Status.ERROR;
     }
-    if (progress.status === "txSuccess" && progress.type === "fill") {
+    if (progress.status === "txSuccess" && progress.step === "fill") {
       return Status.SUCCESS;
     }
     return Status.PENDING;
   })();
 
   const label = (() => {
-    if (progress.type === "approve") {
+    if (
+      progress.status === "txError" ||
+      progress.status === "simulationError" ||
+      progress.status === "error"
+    ) {
+      return progress.error.name;
+    }
+    if (progress.step === "approve") {
       return "Approving ERC20 spend...";
     }
-    if (progress.type === "deposit") {
+    if (progress.step === "deposit") {
       return "Depositing on origin chain...";
     }
-    if (progress.type === "fill" && progress.status === "txSuccess") {
+    if (progress.step === "fill" && progress.status === "txSuccess") {
       return "Bridge complete!";
     }
 
-    if (progress.type === "fill" && progress.status !== "txSuccess") {
+    if (progress.step === "fill" && progress.status === "txPending") {
       return "Filling on destination chain...";
     }
   })();

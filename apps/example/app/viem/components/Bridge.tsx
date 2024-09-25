@@ -9,7 +9,7 @@ import { useInputTokens } from "@/lib/hooks/useInputTokens";
 import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
 import { useQuote } from "@/lib/hooks/useQuote";
 import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
-import { cn, getExplorerLink, reduceAcrossChains } from "@/lib/utils";
+import { getExplorerLink, reduceAcrossChains } from "@/lib/utils";
 import { TokenInfo } from "@across-toolkit/sdk";
 import { useEffect, useState } from "react";
 import { Address, formatUnits, parseUnits } from "viem";
@@ -150,9 +150,6 @@ export function Bridge() {
       txHash: fillReceipt.transactionHash,
     });
 
-  console.log("originChain", originChain);
-  console.log("fillReceipt", fillReceipt);
-
   return (
     <>
       <div className="bg-foreground border border-border-secondary p-6 w-full max-w-[600px] rounded-[10px]">
@@ -193,7 +190,7 @@ export function Bridge() {
             />
 
             <TokenSelect
-              className={cn("flex-[3]")}
+              className="flex-[3]"
               disabled={outputTokens ? !(outputTokens?.length > 1) : true}
               tokens={outputTokens}
               onTokenChange={setToTokenAddress}
