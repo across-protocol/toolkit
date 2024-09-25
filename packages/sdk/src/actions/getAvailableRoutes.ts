@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { buildSearchParams, LoggerT } from "../utils";
+import { LoggerT, fetchAcrossApi } from "../utils";
 import { Route } from "../types";
 import { MAINNET_API_URL } from "../constants";
 
@@ -23,22 +23,14 @@ export async function getAvailableRoutes({
   logger,
   ...params
 }: GetAvailableRoutesParams): Promise<AvailableRoutesResponse> {
-  const searchParams = params
-    ? buildSearchParams<RoutesQueryParams>(params)
-    : "";
-
-  const url = `${apiUrl}/available-routes?${searchParams}`;
-
-  logger?.debug("Fetching available routes for params:", params, `URL: ${url}`);
-
-  const res = await fetch(url);
-
-  const data = (await res.json()) as AvailableRoutesApiResponse;
-
-  logger?.debug("Routes data: ", data);
+  const routes = await fetchAcrossApi<AvailableRoutesApiResponse>(
+    `${apiUrl}/available-routes`,
+    params,
+    logger,
+  );
 
   // Transform to internal type consistency
-  return data.map((route) => ({
+  return routes.map((route) => ({
     isNative: route.isNative,
     originChainId: route.originChainId,
     inputToken: route.originToken as Address,
