@@ -50,9 +50,9 @@ async function main() {
     logLevel: "DEBUG",
     walletClient,
     tenderly: {
-      accessKey: process.env.TENDERLY_ACCESS_KEY,
-      accountSlug: process.env.TENDERLY_ACCOUNT_SLUG,
-      projectSlug: process.env.TENDERLY_PROJECT_SLUG,
+      accessKey: process.env.TENDERLY_ACCESS_KEY!,
+      accountSlug: process.env.TENDERLY_ACCOUNT_SLUG!,
+      projectSlug: process.env.TENDERLY_PROJECT_SLUG!,
       simOnError: true,
     },
   });
