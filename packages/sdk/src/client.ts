@@ -170,6 +170,10 @@ export class AcrossClient {
     return this.instance;
   }
 
+  update(params: Pick<AcrossClientOptions, "walletClient">) {
+    this.walletClient = params.walletClient;
+  }
+
   getPublicClient(chainId: number): ConfiguredPublicClient {
     const client = this.publicClients.get(chainId);
     if (!client) {
