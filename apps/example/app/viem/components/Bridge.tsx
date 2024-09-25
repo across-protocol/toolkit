@@ -12,7 +12,7 @@ import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
 import { getExplorerLink, reduceAcrossChains } from "@/lib/utils";
 import { TokenInfo } from "@across-toolkit/sdk";
 import { useEffect, useState } from "react";
-import { Address, formatUnits, parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import { useAccount, useBalance, useChains } from "wagmi";
 import { useDebounceValue } from "usehooks-ts";
 import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
@@ -39,15 +39,16 @@ export function Bridge() {
 
   // FROM TOKEN
   const { inputTokens } = useInputTokens(originChainId);
-  const [fromTokenAddress, setFromTokenAddress] = useState<Address | undefined>(
-    inputTokens?.[2]?.address,
+  const [fromToken, setFromToken] = useState<TokenInfo | undefined>(
+    inputTokens?.[0],
   );
   const { data: balance } = useBalance({
     address,
-    token: fromTokenAddress,
+    token: fromToken?.address,
   });
   const inputToken = inputTokens?.find(
-    (token) => token.address.toLowerCase() === fromTokenAddress?.toLowerCase(),
+    (token) =>
+      token.address.toLowerCase() === fromToken?.address?.toLowerCase(),
   );
 
   const [destinationChainId, setDestinationChainId] = useState<
@@ -57,7 +58,7 @@ export function Bridge() {
   const { availableRoutes } = useAvailableRoutes({
     originChainId,
     destinationChainId,
-    originToken: fromTokenAddress,
+    originToken: fromToken?.address,
   });
 
   const outputTokensForRoute = availableRoutes?.map((route) =>
@@ -76,25 +77,28 @@ export function Bridge() {
     setOutputTokens(_outputTokens);
   }, [availableRoutes]);
 
-  const [toTokenAddress, setToTokenAddress] = useState<Address | undefined>(
-    outputTokens?.[0]?.address,
-  );
-  const toToken = outputTokens?.find(
-    (token) => token.address.toLowerCase() === toTokenAddress?.toLowerCase(),
+  const [toToken, setToToken] = useState<TokenInfo | undefined>(
+    outputTokens?.[0],
   );
 
   useEffect(() => {
     if (outputTokens) {
-      setToTokenAddress(outputTokens?.[0]?.address);
+      setToToken(
+        outputTokens.find((token) => token.symbol === fromToken?.symbol) ??
+          outputTokens?.[0],
+      );
     }
   }, [outputTokens]);
 
   const [inputAmount, setInputAmount] = useState<string>();
   const [debouncedInputAmount] = useDebounceValue(inputAmount, 300);
-  const route = availableRoutes?.find(
-    (route) =>
-      route.outputToken.toLocaleLowerCase() === toTokenAddress?.toLowerCase(),
-  );
+  const route = availableRoutes?.find((route) => {
+    return (
+      route.outputToken.toLocaleLowerCase() ===
+        toToken?.address?.toLowerCase() &&
+      route.outputTokenSymbol === toToken.symbol
+    );
+  });
 
   const quoteConfig =
     route && debouncedInputAmount && inputToken
@@ -171,8 +175,8 @@ export function Bridge() {
             <TokenSelect
               className="flex-[3]"
               tokens={inputTokens}
-              onTokenChange={setFromTokenAddress}
-              token={fromTokenAddress}
+              onTokenChange={setFromToken}
+              token={fromToken}
             />
           </div>
 
@@ -193,8 +197,8 @@ export function Bridge() {
               className="flex-[3]"
               disabled={outputTokens ? !(outputTokens?.length > 1) : true}
               tokens={outputTokens}
-              onTokenChange={setToTokenAddress}
-              token={toTokenAddress}
+              onTokenChange={setToToken}
+              token={toToken}
             />
           </div>
 
@@ -244,32 +248,34 @@ export function Bridge() {
         {progress && (
           <Progress className="mt-8" error={error} progress={progress} />
         )}
-        {depositTxLink && (
-          <Link
-            target="_blank"
-            className="text-text/75 hover:text-text border border-border-secondary rounded-md px-3 py-2 flex gap-2 items-center"
-            href={depositTxLink}
-          >
-            Deposit Tx
-            <Icon
-              className="w-[1em] h-[1em] text-inherit"
-              name="link-external"
-            />{" "}
-          </Link>
-        )}
-        {fillTxLink && (
-          <Link
-            target="_blank"
-            className="text-text/75 hover:text-text border border-border-secondary rounded-md px-3 py-2 flex gap-2 items-center"
-            href={fillTxLink}
-          >
-            Fill Tx
-            <Icon
-              className="w-[1em] h-[1em] text-inherit"
-              name="link-external"
-            />{" "}
-          </Link>
-        )}
+        <div className="flex gap-2 mt-4">
+          {depositTxLink && (
+            <Link
+              target="_blank"
+              className="text-text/75 hover:text-text hover:border-text border border-border-secondary rounded-md px-3 py-2 flex gap-2 items-center"
+              href={depositTxLink}
+            >
+              Deposit Tx
+              <Icon
+                className="w-[1em] h-[1em] text-inherit"
+                name="link-external"
+              />{" "}
+            </Link>
+          )}
+          {fillTxLink && (
+            <Link
+              target="_blank"
+              className="text-text/75 hover:text-text hover:border-text border border-border-secondary rounded-md px-3 py-2 flex gap-2 items-center"
+              href={fillTxLink}
+            >
+              Fill Tx
+              <Icon
+                className="w-[1em] h-[1em] text-inherit"
+                name="link-external"
+              />{" "}
+            </Link>
+          )}
+        </div>
       </div>
     </>
   );
