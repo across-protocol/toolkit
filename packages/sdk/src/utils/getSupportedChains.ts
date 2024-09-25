@@ -1,7 +1,6 @@
 import { MAINNET_API_URL } from "../constants";
-import { HttpError } from "../errors";
 import { TokenInfo } from "../types";
-import { buildSearchParams, isOk, LoggerT } from ".";
+import { LoggerT, fetchAcrossApi } from ".";
 
 export type ChainsQueryParams = Partial<{
   inputTokenSymbol: string;
@@ -20,20 +19,11 @@ export async function getSupportedChains({
   apiUrl = MAINNET_API_URL,
   ...params
 }: GetSupportedChainsParams) {
-  const url = `${apiUrl}/chains?${buildSearchParams<ChainsQueryParams>(params)}`;
-
-  logger?.debug(`Fetching supported chains with endpoint ${url}`);
-
-  const res = await fetch(url);
-
-  if (!isOk(res)) {
-    throw new HttpError(res.status, url, await res.text());
-  }
-
-  const data = (await res.json()) as ChainsQueryResponse;
-
-  logger?.debug("SUPPORTED CHAINS", data);
-
+  const data = await fetchAcrossApi<ChainsQueryResponse>(
+    `${apiUrl}/chains`,
+    params,
+    logger,
+  );
   return data;
 }
 

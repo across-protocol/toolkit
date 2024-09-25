@@ -1,4 +1,4 @@
-import { buildSearchParams, isOk } from "../utils";
+import { fetchIndexerApi } from "../utils";
 import { DepositStatus } from "./waitForDepositTx";
 import {
   Hash,
@@ -10,13 +10,8 @@ import {
 import { Quote } from "./getQuote";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { MAINNET_INDEXER_API } from "../constants";
-import { HttpError, IndexerError, NoFillLogError } from "../errors";
+import { NoFillLogError } from "../errors";
 import { IndexerStatusResponse } from "../types";
-
-type DepositStatusQueryParams = {
-  depositId: DepositStatus["depositId"];
-  originChainId: number;
-};
 
 export type GetFillByDepositTxParams = Pick<Quote, "deposit"> & {
   depositId: DepositStatus["depositId"];
@@ -39,24 +34,13 @@ export async function getFillByDepositTx(
   } = params;
 
   try {
-    const url = `${indexerUrl}/deposit/status?${buildSearchParams<DepositStatusQueryParams>(
+    const data = await fetchIndexerApi<IndexerStatusResponse>(
+      `${indexerUrl}/deposit/status`,
       {
         depositId,
         originChainId: deposit.originChainId,
       },
-    )}`;
-
-    const res = await fetch(url);
-
-    if (!isOk(res)) {
-      throw new HttpError(res.status, url, await res.text());
-    }
-
-    const data = (await res.json()) as IndexerStatusResponse;
-
-    if (data?.error) {
-      throw new IndexerError(url, data?.message, data?.error);
-    }
+    );
 
     if (data?.status === "filled" && data?.fillTx) {
       const fillTxReceipt = await destinationChainClient.getTransactionReceipt({

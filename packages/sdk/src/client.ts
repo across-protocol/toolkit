@@ -1,4 +1,9 @@
-import { Chain, WalletClient } from "viem";
+import {
+  Chain,
+  ContractFunctionExecutionError,
+  encodeFunctionData,
+  WalletClient,
+} from "viem";
 import {
   getAvailableRoutes,
   getSuggestedFees,
@@ -34,8 +39,14 @@ import {
   configurePublicClients,
   GetSupportedChainsParams,
   getSupportedChains,
+  simulateTxOnTenderly,
+  TenderlySimulateTxParams,
 } from "./utils";
-import { ConfigError } from "./errors";
+import {
+  AcrossApiSimulationError,
+  ConfigError,
+  SimulationError,
+} from "./errors";
 import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
 
 const CLIENT_DEFAULTS = {
@@ -54,7 +65,12 @@ export type AcrossClientOptions = {
   useTestnet?: boolean;
   logger?: LoggerT;
   pollingInterval?: number; // milliseconds seconds
-  // tenderlyApiKey?: string
+  tenderly?: {
+    simOnError?: boolean;
+    accessKey: string;
+    accountSlug: string;
+    projectSlug: string;
+  };
 };
 
 export class AcrossClient {
@@ -66,6 +82,22 @@ export class AcrossClient {
   apiUrl: string;
   indexerUrl: string;
   logger: LoggerT;
+
+  // Tenderly related options
+  tenderly?: {
+    simOnError?: boolean;
+    accessKey: string;
+    accountSlug: string;
+    projectSlug: string;
+  };
+
+  get isTenderlyEnabled() {
+    return Boolean(
+      this.tenderly?.accessKey &&
+        this.tenderly?.accountSlug &&
+        this.tenderly?.projectSlug,
+    );
+  }
 
   public actions: {
     getAvailableRoutes: AcrossClient["getAvailableRoutes"];
@@ -82,7 +114,7 @@ export class AcrossClient {
 
   public utils: {
     getSupportedChains: AcrossClient["getSupportedChains"];
-    // ... utils go here
+    simulateTxOnTenderly: AcrossClient["simulateTxOnTenderly"];
   };
 
   private constructor(args: AcrossClientOptions) {
@@ -99,6 +131,12 @@ export class AcrossClient {
     this.logger =
       args?.logger ??
       new DefaultLogger(args?.logLevel ?? CLIENT_DEFAULTS.logLevel);
+    this.tenderly = args.tenderly;
+
+    if (this.tenderly) {
+      this.tenderly.simOnError = args.tenderly?.simOnError ?? true;
+    }
+
     // bind methods
     this.actions = {
       getSuggestedFees: this.getSuggestedFees.bind(this),
@@ -115,6 +153,7 @@ export class AcrossClient {
     // bind utils
     this.utils = {
       getSupportedChains: this.getSupportedChains.bind(this),
+      simulateTxOnTenderly: this.simulateTxOnTenderly.bind(this),
     };
 
     this.logger.debug("Client created with args: \n", args);
@@ -138,16 +177,6 @@ export class AcrossClient {
 
   update(params: Pick<AcrossClientOptions, "walletClient">) {
     this.walletClient = params.walletClient;
-  }
-
-  getSupportedChains(
-    params: Omit<GetSupportedChainsParams, "apiUrl" | "logger">,
-  ) {
-    return getSupportedChains({
-      ...params,
-      logger: this.logger,
-      apiUrl: this.apiUrl,
-    });
   }
 
   getPublicClient(chainId: number): ConfiguredPublicClient {
@@ -175,16 +204,62 @@ export class AcrossClient {
       );
     }
 
-    return executeQuote({
-      ...params,
-      integratorId: this.integratorId,
-      logger: this.logger,
-      walletClient: this.walletClient,
-      originClient: this.getPublicClient(params.deposit.originChainId),
-      destinationClient: this.getPublicClient(
-        params.deposit.destinationChainId,
-      ),
-    });
+    try {
+      await executeQuote({
+        ...params,
+        integratorId: this.integratorId,
+        logger: this.logger,
+        walletClient: this.walletClient,
+        originClient: this.getPublicClient(params.deposit.originChainId),
+        destinationClient: this.getPublicClient(
+          params.deposit.destinationChainId,
+        ),
+      });
+    } catch (e) {
+      if (
+        !this.isTenderlyEnabled ||
+        !this.tenderly?.simOnError ||
+        !(
+          e instanceof AcrossApiSimulationError ||
+          e instanceof ContractFunctionExecutionError
+        )
+      ) {
+        throw e;
+      }
+
+      // The Across API only throws an `AcrossApiSimulationError` when simulating fills
+      // on the destination chain.
+      const isFillSimulationError = e instanceof AcrossApiSimulationError;
+      const simParams = isFillSimulationError
+        ? {
+            networkId: params.deposit.destinationChainId.toString(),
+            from: e.transaction.from,
+            to: e.transaction.to,
+            data: e.transaction.data,
+          }
+        : {
+            networkId: params.deposit.originChainId.toString(),
+            from: e.sender!,
+            to: e.contractAddress!,
+            data: encodeFunctionData({
+              abi: e.abi,
+              functionName: e.functionName,
+              args: e.args,
+            }),
+          };
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        value: params.deposit.isNative
+          ? String(params.deposit.inputAmount)
+          : "0",
+        ...simParams,
+      });
+      const reason = isFillSimulationError ? e.message : e.shortMessage;
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `simulation failed while executing quote: ${reason}`,
+      });
+    }
   }
 
   async getAvailableRoutes(
@@ -200,19 +275,97 @@ export class AcrossClient {
   async getSuggestedFees(
     params: Omit<GetSuggestedFeesParams, "apiUrl" | "logger">,
   ) {
-    return getSuggestedFees({
-      ...params,
-      apiUrl: this.apiUrl,
-      logger: this.logger,
-    });
+    try {
+      const fees = await getSuggestedFees({
+        ...params,
+        apiUrl: this.apiUrl,
+        logger: this.logger,
+      });
+      return fees;
+    } catch (e) {
+      if (
+        !this.isTenderlyEnabled ||
+        !this.tenderly?.simOnError ||
+        !(e instanceof AcrossApiSimulationError)
+      ) {
+        throw e;
+      }
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.destinationChainId.toString(),
+        to: e.transaction.to,
+        data: e.transaction.data,
+        from: e.transaction.from,
+        value: e.transaction.value ?? "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `simulation failed while fetching suggested fees: ${e.message}`,
+      });
+    }
   }
 
   async getLimits(params: Omit<GetLimitsParams, "apiUrl" | "logger">) {
-    return getLimits({ ...params, apiUrl: this.apiUrl, logger: this.logger });
+    try {
+      const limits = await getLimits({
+        ...params,
+        apiUrl: this.apiUrl,
+        logger: this.logger,
+      });
+      return limits;
+    } catch (e) {
+      if (
+        !this.tenderly?.simOnError ||
+        !(e instanceof AcrossApiSimulationError)
+      ) {
+        throw e;
+      }
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.destinationChainId.toString(),
+        to: e.transaction.to,
+        data: e.transaction.data,
+        from: e.transaction.from,
+        value: e.transaction.value ?? "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `simulation failed while fetching limits: ${e.message}`,
+      });
+    }
   }
 
   async getQuote(params: Omit<GetQuoteParams, "logger" | "apiUrl">) {
-    return getQuote({ ...params, logger: this.logger, apiUrl: this.apiUrl });
+    try {
+      const quote = await getQuote({
+        ...params,
+        logger: this.logger,
+        apiUrl: this.apiUrl,
+      });
+      return quote;
+    } catch (e) {
+      if (
+        !this.tenderly?.simOnError ||
+        !(e instanceof AcrossApiSimulationError)
+      ) {
+        throw e;
+      }
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.route.originChainId.toString(),
+        to: e.transaction.to,
+        data: e.transaction.data,
+        from: e.transaction.from,
+        value: e.transaction.value ?? "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `simulation failed while fetching quote: ${e.message}`,
+      });
+    }
   }
 
   async getDepositLogs(params: GetDepositLogsParams) {
@@ -225,12 +378,42 @@ export class AcrossClient {
       "integratorId" | "publicClient" | "logger"
     >,
   ) {
-    return simulateDepositTx({
-      ...params,
-      integratorId: this.integratorId,
-      publicClient: this.getPublicClient(params.deposit.originChainId),
-      logger: this.logger,
-    });
+    try {
+      const result = await simulateDepositTx({
+        ...params,
+        integratorId: this.integratorId,
+        publicClient: this.getPublicClient(params.deposit.originChainId),
+        logger: this.logger,
+      });
+      return result;
+    } catch (e) {
+      if (
+        !this.tenderly?.simOnError ||
+        !this.isTenderlyEnabled ||
+        !(e instanceof ContractFunctionExecutionError)
+      ) {
+        throw e;
+      }
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.deposit.originChainId.toString(),
+        from: e.sender!,
+        to: e.contractAddress!,
+        data: encodeFunctionData({
+          abi: e.abi,
+          functionName: e.functionName,
+          args: e.args,
+        }),
+        value: params.deposit.isNative
+          ? String(params.deposit.inputAmount)
+          : "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `deposit simulation failed: ${e.shortMessage}`,
+      });
+    }
   }
 
   async waitForDepositTx({
@@ -266,6 +449,44 @@ export class AcrossClient {
       destinationPublicClient: this.getPublicClient(
         params.deposit.destinationChainId,
       ),
+    });
+  }
+
+  /* -------------------------------- Utilities ------------------------------- */
+
+  async getSupportedChains(
+    params: Omit<GetSupportedChainsParams, "apiUrl" | "logger">,
+  ) {
+    return getSupportedChains({
+      ...params,
+      logger: this.logger,
+      apiUrl: this.apiUrl,
+    });
+  }
+
+  async simulateTxOnTenderly(
+    params: Omit<
+      TenderlySimulateTxParams,
+      "enableShare" | "accessKey" | "accountSlug" | "projectSlug"
+    >,
+  ) {
+    if (
+      !this.tenderly?.accessKey ||
+      !this.tenderly?.accountSlug ||
+      !this.tenderly?.projectSlug
+    ) {
+      throw new ConfigError(
+        "Tenderly credentials not set. Client needs to be configured with " +
+          "'tenderly.accessKey', 'tenderly.accountSlug', and 'tenderly.projectSlug'.",
+      );
+    }
+
+    return simulateTxOnTenderly({
+      ...params,
+      accessKey: this.tenderly?.accessKey,
+      accountSlug: this.tenderly?.accountSlug,
+      projectSlug: this.tenderly?.projectSlug,
+      enableShare: true,
     });
   }
 }
