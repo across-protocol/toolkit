@@ -105,20 +105,65 @@ export type TransactionProgress =
 
 type TxRequest = Awaited<SimulateContractReturnType>["request"];
 
+/**
+ * Params for {@link executeQuote}.
+ */
 export type ExecuteQuoteParams = {
-  logger?: LoggerT;
+  /**
+   * An identifier for the integrator.
+   */
   integratorId: string;
+  /**
+   * The deposit to execute. Should be taken from return value of {@link getQuote}.
+   */
   deposit: Quote["deposit"];
+  /**
+   * The wallet client to use for the deposit.
+   */
   walletClient: ConfiguredWalletClient;
+  /**
+   * The public client for the origin chain.
+   */
   originClient: ConfiguredPublicClient;
+  /**
+   * The public client for the destination chain.
+   */
   destinationClient: ConfiguredPublicClient;
+  /**
+   * Whether to use an infinite approval for the SpokePool contract.
+   */
   infiniteApproval?: boolean;
+  /**
+   * Whether to skip the allowance check.
+   */
   skipAllowanceCheck?: boolean;
+  /**
+   * Whether to throw if an error occurs.
+   */
   throwOnError?: boolean;
+  /**
+   * Whether to force the origin chain by switching to it if necessary.
+   */
   forceOriginChain?: boolean;
+  /**
+   * A handler for the execution progress. See {@link ExecutionProgress} for steps.
+   */
   onProgress?: (progress: ExecutionProgress) => void;
+  /**
+   * The logger to use.
+   */
+  logger?: LoggerT;
 };
 
+/**
+ * Executes a quote by:
+ * 1. Approving the SpokePool contract if necessary
+ * 2. Depositing the input token on the origin chain
+ * 3. Waiting for the deposit to be filled on the destination chain
+ * @param params - See {@link ExecuteQuoteParams}.
+ * @returns The deposit ID and receipts for the deposit and fill transactions.
+ * @public
+ */
 export async function executeQuote(params: ExecuteQuoteParams) {
   const {
     integratorId,
