@@ -15,8 +15,8 @@ import { SelectProps } from "@radix-ui/react-select";
 
 export type TokenSelectProps = SelectProps & {
   tokens: TokenInfo[] | undefined;
-  token: TokenInfo["address"] | undefined;
-  onTokenChange: (_address: TokenInfo["address"]) => void;
+  token: TokenInfo | undefined;
+  onTokenChange: (token: TokenInfo) => void;
   className?: string;
 };
 
@@ -38,8 +38,13 @@ export function TokenSelect({
     );
   }
 
+  function handleTokenChange(symbol: string) {
+    const token = tokens?.find((t) => t.symbol === symbol);
+    onTokenChange(token as TokenInfo);
+  }
+
   return (
-    <Select value={token} onValueChange={onTokenChange} {...props}>
+    <Select value={token?.symbol} onValueChange={handleTokenChange} {...props}>
       <SelectTrigger className={cn("w-full", className)}>
         <SelectValue placeholder="Select a Token" />
       </SelectTrigger>
@@ -47,10 +52,7 @@ export function TokenSelect({
         <SelectGroup>
           <SelectLabel>Select a Token</SelectLabel>
           {tokens.map((token) => (
-            <SelectItem
-              key={token.address + token.symbol}
-              value={token.address}
-            >
+            <SelectItem key={token.symbol} value={token.symbol}>
               <div className="flex gap-2 items-center">
                 <Image
                   alt={`logo for ${token.name}`}

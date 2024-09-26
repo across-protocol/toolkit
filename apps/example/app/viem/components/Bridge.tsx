@@ -3,18 +3,22 @@
 import { ChainSelect } from "@/components/ChainSelect";
 import { Divider } from "@/components/Divider";
 import { TokenSelect } from "@/components/TokenSelect";
-import { Button, Input, Label, Skeleton } from "@/components/ui";
+import { Button, Label, Skeleton } from "@/components/ui";
 import { useAvailableRoutes } from "@/lib/hooks/useAvailableRoutes";
 import { useInputTokens } from "@/lib/hooks/useInputTokens";
 import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
 import { useQuote } from "@/lib/hooks/useQuote";
 import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
-import { cn, reduceAcrossChains } from "@/lib/utils";
+import { getExplorerLink, reduceAcrossChains } from "@/lib/utils";
 import { TokenInfo } from "@across-toolkit/sdk";
 import { useEffect, useState } from "react";
-import { Address, formatUnits, parseUnits } from "viem";
-import { useAccount, useChains } from "wagmi";
-import { useDebounce } from "@uidotdev/usehooks";
+import { formatUnits, parseUnits } from "viem";
+import { useAccount, useBalance, useChains } from "wagmi";
+import { useDebounceValue } from "usehooks-ts";
+import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
+import { Progress } from "./Progress";
+import { TokenInput } from "@/components/TokenInput";
+import { ExternalLink } from "@/components/ExternalLink";
 
 export function Bridge() {
   const { address } = useAccount();
@@ -34,11 +38,16 @@ export function Bridge() {
 
   // FROM TOKEN
   const { inputTokens } = useInputTokens(originChainId);
-  const [fromTokenAddress, setFromTokenAddress] = useState<Address | undefined>(
-    inputTokens?.[2]?.address,
+  const [fromToken, setFromToken] = useState<TokenInfo | undefined>(
+    inputTokens?.[0],
   );
+  const { data: balance } = useBalance({
+    address,
+    token: fromToken?.address,
+  });
   const inputToken = inputTokens?.find(
-    (token) => token.address.toLowerCase() === fromTokenAddress?.toLowerCase(),
+    (token) =>
+      token.address.toLowerCase() === fromToken?.address?.toLowerCase(),
   );
 
   const [destinationChainId, setDestinationChainId] = useState<
@@ -48,7 +57,7 @@ export function Bridge() {
   const { availableRoutes } = useAvailableRoutes({
     originChainId,
     destinationChainId,
-    originToken: fromTokenAddress,
+    originToken: fromToken?.address,
   });
 
   const outputTokensForRoute = availableRoutes?.map((route) =>
@@ -67,25 +76,28 @@ export function Bridge() {
     setOutputTokens(_outputTokens);
   }, [availableRoutes]);
 
-  const [toTokenAddress, setToTokenAddress] = useState<Address | undefined>(
-    outputTokens?.[0]?.address,
-  );
-  const toToken = outputTokens?.find(
-    (token) => token.address.toLowerCase() === toTokenAddress?.toLowerCase(),
+  const [toToken, setToToken] = useState<TokenInfo | undefined>(
+    outputTokens?.[0],
   );
 
   useEffect(() => {
     if (outputTokens) {
-      setToTokenAddress(outputTokens?.[0]?.address);
+      setToToken(
+        outputTokens.find((token) => token.symbol === fromToken?.symbol) ??
+          outputTokens?.[0],
+      );
     }
   }, [outputTokens]);
 
   const [inputAmount, setInputAmount] = useState<string>();
-  const debouncedInputAmount = useDebounce(inputAmount, 300);
-  const route = availableRoutes?.find(
-    (route) =>
-      route.outputToken.toLocaleLowerCase() === toTokenAddress?.toLowerCase(),
-  );
+  const [debouncedInputAmount] = useDebounceValue(inputAmount, 300);
+  const route = availableRoutes?.find((route) => {
+    return (
+      route.outputToken.toLocaleLowerCase() ===
+        toToken?.address?.toLowerCase() &&
+      route.outputTokenSymbol === toToken.symbol
+    );
+  });
 
   const quoteConfig =
     route && debouncedInputAmount && inputToken
@@ -96,7 +108,50 @@ export function Bridge() {
         }
       : undefined;
 
-  const { quote, isLoading: quoteLoading } = useQuote(quoteConfig);
+  const {
+    quote,
+    isLoading: quoteLoading,
+    isRefetching,
+  } = useQuote(quoteConfig);
+
+  const {
+    executeQuote,
+    progress,
+    error,
+    isPending,
+    depositReceipt,
+    fillReceipt,
+  } = useExecuteQuote(quote);
+  const inputBalance = balance?.value
+    ? parseFloat(formatUnits(balance?.value, balance?.decimals)).toFixed(4)
+    : undefined;
+
+  function onMax() {
+    if (!balance?.value) return;
+    setInputAmount(formatUnits(balance?.value, balance?.decimals));
+  }
+  const originChain = chains.find((chain) => chain.id === originChainId);
+  const destinationChain = chains.find(
+    (chain) => chain.id === destinationChainId,
+  );
+
+  const depositTxLink =
+    depositReceipt &&
+    originChain &&
+    getExplorerLink({
+      chain: originChain,
+      type: "transaction",
+      txHash: depositReceipt.transactionHash,
+    });
+
+  const fillTxLink =
+    fillReceipt &&
+    destinationChain &&
+    getExplorerLink({
+      chain: destinationChain,
+      type: "transaction",
+      txHash: fillReceipt.transactionHash,
+    });
 
   return (
     <>
@@ -119,8 +174,8 @@ export function Bridge() {
             <TokenSelect
               className="flex-[3]"
               tokens={inputTokens}
-              onTokenChange={setFromTokenAddress}
-              token={fromTokenAddress}
+              onTokenChange={setFromToken}
+              token={fromToken}
             />
           </div>
 
@@ -138,23 +193,25 @@ export function Bridge() {
             />
 
             <TokenSelect
-              className={cn("flex-[3]")}
+              className="flex-[3]"
               disabled={outputTokens ? !(outputTokens?.length > 1) : true}
               tokens={outputTokens}
-              onTokenChange={setToTokenAddress}
-              token={toTokenAddress}
+              onTokenChange={setToToken}
+              token={toToken}
             />
           </div>
 
           <Divider className="my-4" />
 
           <Label htmlFor="input-amount">Send</Label>
-          <Input
+          <TokenInput
             className="flex-[5]"
+            balance={inputBalance}
             id="input-amount"
             placeholder="Enter amount"
             type="number"
             value={inputAmount}
+            onMax={onMax}
             onChange={(e) => setInputAmount(e.currentTarget.value)}
           />
         </div>
@@ -175,12 +232,33 @@ export function Bridge() {
           </p>
         )}
         <Button
-          disabled={!(quote && toToken)}
+          onClick={() => executeQuote()}
+          disabled={!(quote && toToken) || isRefetching || isPending}
           className="mt-2"
           variant="accent"
         >
-          Confirm Transaction
+          {isPending
+            ? "Executing..."
+            : isRefetching
+              ? "Updating quote..."
+              : "Confirm Transaction"}
         </Button>
+
+        {progress && (
+          <Progress className="mt-8" error={error} progress={progress} />
+        )}
+        <div className="flex gap-2 mt-4">
+          {depositTxLink && (
+            <ExternalLink icon href={depositTxLink}>
+              Deposit Tx
+            </ExternalLink>
+          )}
+          {fillTxLink && (
+            <ExternalLink icon href={fillTxLink}>
+              Fill Tx
+            </ExternalLink>
+          )}
+        </div>
       </div>
     </>
   );

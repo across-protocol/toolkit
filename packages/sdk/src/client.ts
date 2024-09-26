@@ -2,7 +2,6 @@ import {
   Chain,
   ContractFunctionExecutionError,
   encodeFunctionData,
-  WalletClient,
 } from "viem";
 import {
   getAvailableRoutes,
@@ -47,7 +46,11 @@ import {
   ConfigError,
   SimulationError,
 } from "./errors";
-import { ConfiguredPublicClient, ConfiguredPublicClientMap } from "./types";
+import {
+  ConfiguredPublicClient,
+  ConfiguredPublicClientMap,
+  ConfiguredWalletClient,
+} from "./types";
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
@@ -57,7 +60,7 @@ const CLIENT_DEFAULTS = {
 export type AcrossClientOptions = {
   integratorId: string;
   chains: Chain[];
-  walletClient?: WalletClient;
+  walletClient?: ConfiguredWalletClient;
   rpcUrls?: {
     [key: number]: string;
   };
@@ -78,7 +81,7 @@ export class AcrossClient {
 
   integratorId: string;
   publicClients: ConfiguredPublicClientMap;
-  walletClient?: WalletClient;
+  walletClient?: ConfiguredWalletClient;
   apiUrl: string;
   indexerUrl: string;
   logger: LoggerT;
@@ -119,7 +122,7 @@ export class AcrossClient {
 
   private constructor(args: AcrossClientOptions) {
     this.integratorId = args.integratorId;
-    this.walletClient = args.walletClient;
+    this.walletClient = args?.walletClient;
     this.publicClients = configurePublicClients(
       args.chains,
       args.pollingInterval ?? CLIENT_DEFAULTS.pollingInterval,
@@ -191,14 +194,11 @@ export class AcrossClient {
   async executeQuote(
     params: Omit<
       ExecuteQuoteParams,
-      | "logger"
-      | "walletClient"
-      | "originClient"
-      | "destinationClient"
-      | "integratorId"
+      "logger" | "originClient" | "destinationClient" | "integratorId"
     >,
   ) {
-    if (!this.walletClient) {
+    const _walletClient = params?.walletClient ?? this?.walletClient;
+    if (!_walletClient) {
       throw new ConfigError(
         "WalletClient needs to be set to call 'executeQuote'",
       );
@@ -209,7 +209,7 @@ export class AcrossClient {
         ...params,
         integratorId: this.integratorId,
         logger: this.logger,
-        walletClient: this.walletClient,
+        walletClient: _walletClient,
         originClient: this.getPublicClient(params.deposit.originChainId),
         destinationClient: this.getPublicClient(
           params.deposit.destinationChainId,
