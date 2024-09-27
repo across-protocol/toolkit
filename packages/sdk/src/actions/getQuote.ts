@@ -1,5 +1,5 @@
 import { Address, Hex } from "viem";
-import { Amount, CrossChainAction, Route } from "../types";
+import { Amount, CrossChainAction } from "../types";
 import {
   getMultiCallHandlerAddress,
   buildMulticallHandlerMessage,
@@ -7,14 +7,52 @@ import {
 } from "../utils";
 import { getSuggestedFees } from "./getSuggestedFees";
 
+/**
+ * Params for {@link getQuote}.
+ */
 export type GetQuoteParams = {
-  route: Route;
+  route: {
+    /**
+     * The origin chain id for deposit route.
+     */
+    originChainId: number;
+    /**
+     * The destination chain id for deposit route.
+     */
+    destinationChainId: number;
+    /**
+     * The input token for deposit route.
+     */
+    inputToken: Address;
+    /**
+     * The output token for deposit route.
+     */
+    outputToken: Address;
+    /**
+     * Whether the input token is a native token on the origin chain.
+     * Defaults to `false`. Should be set to `true` for ETH only if origin chain is not
+     * Polygon.
+     */
+    isNative?: boolean;
+  };
+  /**
+   * The input amount for deposit route.
+   */
   inputAmount: Amount;
+  /**
+   * [Optional] The logger to use.
+   */
   logger?: LoggerT;
+  /**
+   * [Optional] The Across API URL to use. Defaults to the mainnet API URL.
+   */
   apiUrl?: string;
-  outputAmount?: Amount; // @todo add support for outputAmount
+  /**
+   * [Optional] The recipient address. Should in most cases be omitted but is required
+   * when using Across+, i.e. when a cross-chain message is attached to the deposit.
+   * This needs to be the address of the handler contract on the destination chain.
+   */
   recipient?: Address;
-
   /**
    * A cross-chain message to be executed on the destination chain. Can either
    * be a pre-constructed hex string or an object containing the actions to be
@@ -28,9 +66,57 @@ export type GetQuoteParams = {
     | Hex;
 };
 
-export type Quote = Awaited<ReturnType<typeof getQuote>>;
+export type Quote = {
+  deposit: {
+    inputAmount: bigint;
+    outputAmount: bigint;
+    recipient: Address;
+    message: Hex;
+    quoteTimestamp: number;
+    exclusiveRelayer: Address;
+    exclusivityDeadline: number;
+    spokePoolAddress: Address;
+    destinationSpokePoolAddress: Address;
+    originChainId: number;
+    destinationChainId: number;
+    inputToken: Address;
+    outputToken: Address;
+    isNative?: boolean;
+  };
+  limits: {
+    minDeposit: bigint;
+    maxDeposit: bigint;
+    maxDepositInstant: bigint;
+  };
+  fees: {
+    lpFee: {
+      pct: bigint;
+      total: bigint;
+    };
+    relayerGasFee: {
+      pct: bigint;
+      total: bigint;
+    };
+    relayerCapitalFee: {
+      pct: bigint;
+      total: bigint;
+    };
+    totalRelayFee: {
+      pct: bigint;
+      total: bigint;
+    };
+  };
+  isAmountTooLow: boolean;
+  estimatedFillTimeSec: number;
+};
 
-export async function getQuote(params: GetQuoteParams) {
+/**
+ * Get a quote for a given set of parameters.
+ * @param params - See {@link GetQuoteParams}.
+ * @returns See {@link Quote}.
+ * @public
+ */
+export async function getQuote(params: GetQuoteParams): Promise<Quote> {
   const {
     route,
     recipient: _recipient,
@@ -110,9 +196,9 @@ export async function getQuote(params: GetQuoteParams) {
 
   return {
     deposit: {
-      inputAmount,
+      inputAmount: BigInt(inputAmount),
       outputAmount,
-      recipient,
+      recipient: recipient as Address,
       message,
       quoteTimestamp: Number(timestamp),
       exclusiveRelayer: exclusiveRelayer as Address,

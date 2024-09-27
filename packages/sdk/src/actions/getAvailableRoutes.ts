@@ -4,25 +4,48 @@ import { Route } from "../types";
 import { MAINNET_API_URL } from "../constants";
 
 export type RoutesQueryParams = Partial<{
+  /**
+   * The origin token address. If set only routes with this token as origin are returned.
+   */
   originToken: Address;
+  /**
+   * The destination token address. If set only routes with this token as destination
+   * are returned.
+   */
   destinationToken: Address;
+  /**
+   * The destination chain id. If set only routes with this chain id as destination
+   * are returned.
+   */
   destinationChainId: number;
+  /**
+   * The origin chain id. If set only routes with this chain id as origin are returned.
+   */
   originChainId: number;
 }>;
 
+/**
+ * Params for {@link getAvailableRoutes}.
+ */
 export type GetAvailableRoutesParams = RoutesQueryParams &
   Partial<{
     apiUrl: string;
     logger: LoggerT;
   }>;
 
-export type AvailableRoutesResponse = Route[];
+export type GetAvailableRoutesReturnType = Route[];
 
+/**
+ * Get the available routes for a given set of parameters.
+ * @param params - See {@link GetAvailableRoutesParams}.
+ * @returns See {@link GetAvailableRoutesReturnType}.
+ * @public
+ */
 export async function getAvailableRoutes({
   apiUrl = MAINNET_API_URL,
   logger,
   ...params
-}: GetAvailableRoutesParams): Promise<AvailableRoutesResponse> {
+}: GetAvailableRoutesParams): Promise<GetAvailableRoutesReturnType> {
   const routes = await fetchAcrossApi<AvailableRoutesApiResponse>(
     `${apiUrl}/available-routes`,
     params,
