@@ -9,7 +9,11 @@ import { useInputTokens } from "@/lib/hooks/useInputTokens";
 import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
 import { useQuote } from "@/lib/hooks/useQuote";
 import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
-import { getExplorerLink, reduceAcrossChains } from "@/lib/utils";
+import {
+  getExplorerLink,
+  isNativeToken,
+  reduceAcrossChains,
+} from "@/lib/utils";
 import { TokenInfo } from "@across-toolkit/sdk";
 import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
@@ -24,7 +28,6 @@ export function Bridge() {
   const { address } = useAccount();
   const chains = useChains();
   // CHAINS
-
   const { supportedChains } = useSupportedAcrossChains({});
 
   // use only token data for chains we support
@@ -41,14 +44,14 @@ export function Bridge() {
   const [fromToken, setFromToken] = useState<TokenInfo | undefined>(
     inputTokens?.[0],
   );
-  const { data: balance } = useBalance({
+
+  const { data: fromTokenBalance } = useBalance({
     address,
-    token: fromToken?.address,
+    token: isNativeToken(fromToken, originChainId)
+      ? undefined
+      : fromToken?.address,
+    chainId: originChainId,
   });
-  const inputToken = inputTokens?.find(
-    (token) =>
-      token.address.toLowerCase() === fromToken?.address?.toLowerCase(),
-  );
 
   const [destinationChainId, setDestinationChainId] = useState<
     number | undefined
@@ -100,11 +103,11 @@ export function Bridge() {
   });
 
   const quoteConfig =
-    route && debouncedInputAmount && inputToken
+    route && debouncedInputAmount && fromToken
       ? {
           route,
           recipient: address,
-          inputAmount: parseUnits(debouncedInputAmount, inputToken?.decimals),
+          inputAmount: parseUnits(debouncedInputAmount, fromToken?.decimals),
         }
       : undefined;
 
@@ -122,13 +125,17 @@ export function Bridge() {
     depositReceipt,
     fillReceipt,
   } = useExecuteQuote(quote);
-  const inputBalance = balance?.value
-    ? parseFloat(formatUnits(balance?.value, balance?.decimals)).toFixed(4)
+  const inputBalance = fromTokenBalance
+    ? parseFloat(
+        formatUnits(fromTokenBalance?.value, fromTokenBalance?.decimals),
+      ).toFixed(4)
     : undefined;
 
   function onMax() {
-    if (!balance?.value) return;
-    setInputAmount(formatUnits(balance?.value, balance?.decimals));
+    if (!fromTokenBalance?.value) return;
+    setInputAmount(
+      formatUnits(fromTokenBalance?.value, fromTokenBalance?.decimals),
+    );
   }
   const originChain = chains.find((chain) => chain.id === originChainId);
   const destinationChain = chains.find(
@@ -174,7 +181,7 @@ export function Bridge() {
             <TokenSelect
               className="flex-[3]"
               tokens={inputTokens}
-              onTokenChange={setFromToken}
+              onTokenChange={(token) => setFromToken(token)}
               token={fromToken}
             />
           </div>
