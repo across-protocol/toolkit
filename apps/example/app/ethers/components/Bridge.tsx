@@ -5,7 +5,7 @@ import {
   DepositStatus,
   FillStatus,
   Quote,
-} from "@across-toolkit/sdk";
+} from "@across-protocol/integrator-sdk";
 import { useEthers } from "@usedapp/core";
 import { useEffect, useState } from "react";
 import { Address, createWalletClient, custom, Hash, parseEther } from "viem";

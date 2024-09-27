@@ -1,4 +1,4 @@
-import { AcrossClient } from "@across-toolkit/sdk";
+import { AcrossClient } from "@across-protocol/integrator-sdk";
 import {
   encodeFunctionData,
   parseAbiItem,
@@ -99,7 +99,6 @@ async function main() {
   const bridgeQuoteRes = await client.actions.getQuote({
     route,
     inputAmount: parseUnits("1", usdc.decimals),
-    recipient: account.address,
   });
 
   // 2. simulate/prep deposit tx

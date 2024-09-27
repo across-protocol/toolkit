@@ -1,7 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useAcross } from "../across";
 import { buildQueryKey } from "../utils";
-import { AcrossClient, ExecutionProgress } from "@across-toolkit/sdk";
+import {
+  AcrossClient,
+  ExecutionProgress,
+} from "@across-protocol/integrator-sdk";
 import { useChainId, useConfig, useSwitchChain } from "wagmi";
 import { useState } from "react";
 import { TransactionReceipt } from "viem";

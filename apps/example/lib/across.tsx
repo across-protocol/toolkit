@@ -1,5 +1,5 @@
 import React from "react";
-import { AcrossClient } from "@across-toolkit/sdk";
+import { AcrossClient } from "@across-protocol/integrator-sdk";
 import { SUPPORTED_CHAINS } from "./chains";
 
 const sdk = AcrossClient.create({
