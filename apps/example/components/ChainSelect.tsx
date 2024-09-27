@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { AcrossChain } from "@across-toolkit/sdk";
+import { AcrossChain } from "@across-protocol/integrator-sdk";
 import { Skeleton } from "./ui";
 import Image from "next/image";
 import { Divider } from "./Divider";

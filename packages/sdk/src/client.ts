@@ -608,6 +608,22 @@ export class AcrossClient {
   }
 }
 
-export function getClient() {
+/**
+ * Get the existing `AcrossClient` singleton instance.
+ * @returns The existing `AcrossClient` instance.
+ * @throws If the instance is not initialized.
+ * @public
+ */
+export function getAcrossClient() {
   return AcrossClient.getInstance();
+}
+
+/**
+ * Create a singleton `AcrossClient` instance.
+ * @param options - See {@link AcrossClientOptions}.
+ * @returns A new `AcrossClient` instance.
+ * @public
+ */
+export function createAcrossClient(options: AcrossClientOptions) {
+  return AcrossClient.create(options);
 }

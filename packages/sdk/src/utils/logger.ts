@@ -10,7 +10,7 @@ export type LogLevel = keyof typeof LogLevels;
 
 export class DefaultLogger implements LoggerT {
   logLevel: LogLevel;
-  readonly secondaryLabel = "@across-toolkit/sdk";
+  readonly secondaryLabel = "@across-protocol/integrator-sdk";
   readonly logPrefix = ">";
 
   constructor(logLevel: LogLevel) {
