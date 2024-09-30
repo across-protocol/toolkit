@@ -57,6 +57,7 @@ import {
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
+  integratorId: "PROTOCOL_XYZ",
   logLevel: "ERROR",
 } as const;
 
@@ -65,7 +66,7 @@ export type AcrossClientOptions = {
   /**
    * An identifier representing the integrator.
    */
-  integratorId: string;
+  integratorId?: string;
   /**
    * The chains to use for the Across API. Should be imported from `viem/chains`.
    */
@@ -179,7 +180,7 @@ export class AcrossClient {
    * @internal
    */
   private constructor(args: AcrossClientOptions) {
-    this.integratorId = args.integratorId;
+    this.integratorId = args?.integratorId ?? CLIENT_DEFAULTS.integratorId;
     this.walletClient = args?.walletClient;
     this.publicClients = configurePublicClients(
       args.chains,
