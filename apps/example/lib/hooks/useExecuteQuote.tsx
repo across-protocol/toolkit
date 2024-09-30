@@ -11,7 +11,7 @@ import { TransactionReceipt } from "viem";
 import { getWalletClient } from "wagmi/actions";
 
 export type useExecuteQuoteParams =
-  | Omit<Parameters<AcrossClient["actions"]["executeQuote"]>[0], "walletClient">
+  | Omit<Parameters<AcrossClient["executeQuote"]>[0], "walletClient">
   | undefined;
 
 export function useExecuteQuote(params: useExecuteQuoteParams) {

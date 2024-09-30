@@ -4,7 +4,7 @@ import { AcrossClient } from "@across-protocol/integrator-sdk";
 import { buildQueryKey } from "../utils";
 
 export type useAvailableRoutesParams = Parameters<
-  AcrossClient["actions"]["getAvailableRoutes"]
+  AcrossClient["getAvailableRoutes"]
 >[0];
 
 export function useAvailableRoutes(params: useAvailableRoutesParams) {

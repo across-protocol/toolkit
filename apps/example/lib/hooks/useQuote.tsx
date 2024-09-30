@@ -4,10 +4,7 @@ import { AcrossClient } from "@across-protocol/integrator-sdk";
 import { buildQueryKey } from "../utils";
 
 export type useQuoteParams =
-  | Pick<
-      Parameters<AcrossClient["actions"]["getQuote"]>[0],
-      "inputAmount" | "route"
-    >
+  | Pick<Parameters<AcrossClient["getQuote"]>[0], "inputAmount" | "route">
   | undefined;
 
 export function useQuote(params: useQuoteParams) {
