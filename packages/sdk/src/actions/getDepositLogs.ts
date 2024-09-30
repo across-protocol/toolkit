@@ -5,6 +5,8 @@ export type GetDepositLogsParams = {
   receipt: TransactionReceipt;
 };
 
+export type GetDepositLogsReturnType = ReturnType<typeof getDepositLogs>;
+
 export function getDepositLogs({ receipt }: GetDepositLogsParams) {
   const parsedLogs = parseEventLogs({
     abi: spokePoolAbi,
