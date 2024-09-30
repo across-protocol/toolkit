@@ -4,7 +4,7 @@ import { AcrossClient } from "@across-protocol/integrator-sdk";
 import { buildQueryKey } from "../utils";
 
 export type useAcrossChainsParams = Parameters<
-  AcrossClient["utils"]["getSupportedChains"]
+  AcrossClient["getSupportedChains"]
 >[0];
 
 export function useSupportedAcrossChains(params: useAcrossChainsParams) {
