@@ -44,6 +44,7 @@ export function Bridge() {
   const { data: balance } = useBalance({
     address,
     token: fromToken?.address,
+    chainId: originChainId,
   });
   const inputToken = inputTokens?.find(
     (token) =>
