@@ -79,7 +79,7 @@ const quote = await client.getQuote({
 ```
 
 Note that we provide additional utilities for retrieving available routes, chain details, and token infos.
-See [SDK reference]().
+See [SDK reference](./packages/sdk/README.md).
 
 ### 3. Execute a quote
 

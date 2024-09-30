@@ -25,6 +25,7 @@ import {
   WaitForFillTxParams,
   GetQuoteParams,
   GetDepositLogsParams,
+  GetDepositLogsReturnType,
   ExecuteQuoteParams,
   executeQuote,
 } from "./actions";
@@ -133,15 +134,15 @@ export type AcrossClientOptions = {
 export class AcrossClient {
   private static instance: AcrossClient | null = null;
 
-  integratorId: string;
-  publicClients: ConfiguredPublicClientMap;
-  walletClient?: ConfiguredWalletClient;
-  apiUrl: string;
-  indexerUrl: string;
+  private integratorId: string;
+  private publicClients: ConfiguredPublicClientMap;
+  private walletClient?: ConfiguredWalletClient;
+  private apiUrl: string;
+  private indexerUrl: string;
   logger: LoggerT;
 
   // Tenderly related options
-  tenderly?: {
+  private tenderly?: {
     simOnError?: boolean;
     accessKey: string;
     accountSlug: string;
@@ -156,9 +157,6 @@ export class AcrossClient {
     );
   }
 
-  /**
-   * @internal
-   */
   private constructor(args: AcrossClientOptions) {
     this.integratorId = args.integratorId;
     this.walletClient = args?.walletClient;
@@ -241,7 +239,6 @@ export class AcrossClient {
    *
    * @param params - See {@link ExecuteQuoteParams}.
    * @returns The deposit ID and receipts for the deposit and fill transactions.
-   * @public
    */
   async executeQuote(
     params: Omit<
@@ -318,7 +315,6 @@ export class AcrossClient {
    * Get the available routes for a given set of parameters. See {@link getAvailableRoutes}.
    * @param params - See {@link GetAvailableRoutesParams}.
    * @returns See {@link GetAvailableRoutesReturnType}.
-   * @public
    */
   async getAvailableRoutes(
     params: Omit<GetAvailableRoutesParams, "apiUrl" | "logger">,
@@ -334,7 +330,6 @@ export class AcrossClient {
    * Get the suggested fees for a given route. See {@link getSuggestedFees}.
    * @param params - See {@link GetSuggestedFeesParams}.
    * @returns See {@link GetSuggestedFeesReturnType}.
-   * @public
    */
   async getSuggestedFees(
     params: Omit<GetSuggestedFeesParams, "apiUrl" | "logger">,
@@ -412,7 +407,6 @@ export class AcrossClient {
    * Get a quote for a given set of parameters. See {@link getQuote}.
    * @param params - See {@link GetQuoteParams}.
    * @returns See {@link Quote}.
-   * @public
    */
   async getQuote(params: Omit<GetQuoteParams, "logger" | "apiUrl">) {
     try {
@@ -445,7 +439,14 @@ export class AcrossClient {
     }
   }
 
-  async getDepositLogs(params: GetDepositLogsParams) {
+  /**
+   * Get the deposit logs for a given deposit. See {@link getDepositLogs}.
+   * @param params - See {@link GetDepositLogsParams}.
+   * @returns See {@link GetDepositLogsReturnType}.
+   */
+  async getDepositLogs(
+    params: GetDepositLogsParams,
+  ): Promise<GetDepositLogsReturnType> {
     return getDepositLogs(params);
   }
 
