@@ -14,7 +14,7 @@ export function useSupportedAcrossChains(params: useAcrossChainsParams) {
   const { data: supportedChains, ...rest } = useQuery({
     queryKey,
     queryFn: () => {
-      return sdk.utils.getSupportedChains(params);
+      return sdk.getSupportedChains(params);
     },
     enabled: true,
     refetchInterval: Infinity,

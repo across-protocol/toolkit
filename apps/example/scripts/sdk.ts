@@ -58,7 +58,7 @@ async function main() {
 
   // do call to find info for displaying input/output tokens and destination chains
   // 1. populate UI
-  const chainDetails = await client.utils.getSupportedChains({});
+  const chainDetails = await client.getSupportedChains({});
 
   // 2. choose origin chain, optimism in this example
   const originChain = optimism.id;
