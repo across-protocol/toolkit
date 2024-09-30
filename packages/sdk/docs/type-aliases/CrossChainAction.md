@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / CrossChainAction
+[@across-protocol/integrator-sdk](../README.md) / CrossChainAction
 
 # Type Alias: CrossChainAction
 
@@ -32,4 +32,4 @@
 
 ## Defined in
 
-[packages/sdk/src/types/index.ts:22](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/types/index.ts#L22)
+[packages/sdk/src/types/index.ts:22](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/types/index.ts#L22)

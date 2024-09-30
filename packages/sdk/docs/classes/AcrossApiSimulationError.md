@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / AcrossApiSimulationError
+[@across-protocol/integrator-sdk](../README.md) / AcrossApiSimulationError
 
 # Class: AcrossApiSimulationError
 
@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:61](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/errors/index.ts#L61)
+[packages/sdk/src/errors/index.ts:61](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/errors/index.ts#L61)
 
 ## Properties
 
@@ -112,7 +112,7 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:15](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/errors/index.ts#L15)
+[packages/sdk/src/errors/index.ts:15](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/errors/index.ts#L15)
 
 ***
 
@@ -138,7 +138,7 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:54](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/errors/index.ts#L54)
+[packages/sdk/src/errors/index.ts:54](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/errors/index.ts#L54)
 
 ***
 
@@ -152,7 +152,7 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:14](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/errors/index.ts#L14)
+[packages/sdk/src/errors/index.ts:14](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/errors/index.ts#L14)
 
 ***
 

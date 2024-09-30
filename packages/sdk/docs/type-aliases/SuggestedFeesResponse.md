@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / SuggestedFeesResponse
+[@across-protocol/integrator-sdk](../README.md) / SuggestedFeesResponse
 
 # Type Alias: SuggestedFeesResponse
 
@@ -140,4 +140,4 @@
 
 ## Defined in
 
-[packages/sdk/src/actions/getSuggestedFees.ts:194](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/actions/getSuggestedFees.ts#L194)
+[packages/sdk/src/actions/getSuggestedFees.ts:194](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/getSuggestedFees.ts#L194)

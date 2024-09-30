@@ -1,4 +1,4 @@
-# `@across-protocol/integrator-sdk` Reference
+# Reference `@across-protocol/integrator-sdk`
 
 ## `AcrossClient`
 

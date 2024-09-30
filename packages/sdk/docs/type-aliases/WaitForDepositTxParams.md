@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / WaitForDepositTxParams
+[@across-protocol/integrator-sdk](../README.md) / WaitForDepositTxParams
 
 # Type Alias: WaitForDepositTxParams
 
@@ -16,4 +16,4 @@
 
 ## Defined in
 
-[packages/sdk/src/actions/waitForDepositTx.ts:6](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/actions/waitForDepositTx.ts#L6)
+[packages/sdk/src/actions/waitForDepositTx.ts:6](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/waitForDepositTx.ts#L6)
