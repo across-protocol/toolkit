@@ -57,7 +57,7 @@ import {
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
-  integratorId: "PROTOCOL_XYZ",
+  integratorId: "INTEGRATOR_SDK",
   logLevel: "ERROR",
 } as const;
 
