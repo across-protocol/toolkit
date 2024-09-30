@@ -18,7 +18,7 @@ export function useQuote(params: useQuoteParams) {
     queryKey,
     queryFn: async () => {
       if (!params) return;
-      return await sdk.actions.getQuote(params);
+      return await sdk.getQuote(params);
     },
     enabled: Boolean(params),
     refetchInterval: 10_000,

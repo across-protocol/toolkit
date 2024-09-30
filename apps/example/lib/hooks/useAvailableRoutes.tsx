@@ -15,7 +15,7 @@ export function useAvailableRoutes(params: useAvailableRoutesParams) {
   const { data: availableRoutes, ...rest } = useQuery({
     queryKey,
     queryFn: () => {
-      return sdk.actions.getAvailableRoutes(params);
+      return sdk.getAvailableRoutes(params);
     },
     enabled: Boolean(
       params.originChainId && params.destinationChainId && params.originToken,

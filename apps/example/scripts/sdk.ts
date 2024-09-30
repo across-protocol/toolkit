@@ -81,7 +81,7 @@ async function main() {
   const usdc = inputTokens.find((token) => token.symbol === "USDC")!;
 
   // 5. get routes
-  const routeInfo = await client.actions.getAvailableRoutes({
+  const routeInfo = await client.getAvailableRoutes({
     originChainId: originChain,
     destinationChainId: destinationChainDetails?.chainId,
     originToken: usdc?.address,
@@ -96,13 +96,13 @@ async function main() {
   /* --------------------------- test normal bridge --------------------------- */
 
   // 1. get quote
-  const bridgeQuoteRes = await client.actions.getQuote({
+  const bridgeQuoteRes = await client.getQuote({
     route,
     inputAmount: parseUnits("1", usdc.decimals),
   });
 
   // 2. simulate/prep deposit tx
-  const { request } = await client.actions.simulateDepositTx({
+  const { request } = await client.simulateDepositTx({
     walletClient,
     deposit: bridgeQuoteRes.deposit,
   });
@@ -136,7 +136,7 @@ async function main() {
 
     // 5. OPTION 1 - watch events on destination chain
 
-    const result = await client.actions.waitForFillTx({
+    const result = await client.waitForFillTx({
       depositId,
       deposit: bridgeQuoteRes.deposit,
       fromBlock: destinationBlock,
@@ -153,7 +153,7 @@ async function main() {
       let res = undefined;
       while (!res) {
         try {
-          const result = await client.actions.getFillByDepositTx({
+          const result = await client.getFillByDepositTx({
             depositId,
             depositTransactionHash: depositTxReceipt.transactionHash,
             deposit: bridgeQuoteRes.deposit,
@@ -179,7 +179,7 @@ async function main() {
   /* -------------------- test with `executeQuote` function ------------------- */
   if (process.env.USE_EXECUTE_QUOTE === "true") {
     console.log("\nExecuting quote via `executeQuote` function...");
-    const result = await client.actions.executeQuote({
+    const result = await client.executeQuote({
       walletClient,
       deposit: bridgeQuoteRes.deposit,
       onProgress: (progress) => {
@@ -200,7 +200,7 @@ async function main() {
   const inputTokenDetails = arbitrumInfo.inputTokens.find(
     (token) => token.symbol === "DAI",
   )!;
-  const routes = await client.actions.getAvailableRoutes({
+  const routes = await client.getAvailableRoutes({
     originChainId: optimism.id,
     destinationChainId: arbitrum.id,
   });
@@ -218,7 +218,7 @@ async function main() {
   const depositCurrency = inputTokenDetails.address;
   const aaveReferralCode = 0;
 
-  const quoteRes = await client.actions.getQuote({
+  const quoteRes = await client.getQuote({
     route: crossChainRoute,
     inputAmount,
     recipient: "0x924a9f036260DdD5808007E1AA95f08eD08aA569",
@@ -261,7 +261,7 @@ async function main() {
   console.log(quoteRes);
 
   try {
-    await client.actions.getLimits({
+    await client.getLimits({
       inputToken: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       outputToken: "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f",
       originChainId: 1,
@@ -279,7 +279,7 @@ async function main() {
   try {
     // simulate deposit tx - should fail
     const { request: simulateDepositTxRequest } =
-      await client.actions.simulateDepositTx({
+      await client.simulateDepositTx({
         walletClient,
         deposit: quoteRes.deposit,
       });

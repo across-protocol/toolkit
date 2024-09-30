@@ -53,7 +53,7 @@ export function useExecuteQuote(params: useExecuteQuoteParams) {
         return;
       }
 
-      return sdk.actions.executeQuote({
+      return sdk.executeQuote({
         ...params,
         walletClient,
         infiniteApproval: true,

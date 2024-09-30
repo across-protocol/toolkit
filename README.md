@@ -4,7 +4,7 @@
   <a href="https://across.to">
       <picture>
         <source media="(prefers-color-scheme: dark)" srcset="./.github/across-logo-dark.png">
-        <img alt="viem logo" src="./.github/across-logo-light.png" width="auto" height="60">
+        <img alt="across logo" src="./.github/across-logo-light.png" width="auto" height="60">
       </picture>
 </a>
 </p>
@@ -72,7 +72,7 @@ const route = {
   inputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
   outputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
 };
-const quote = await client.actions.getQuote({
+const quote = await client.getQuote({
   route,
   inputAmount: parseUnit("1000", 6) // USDC decimals
 })
