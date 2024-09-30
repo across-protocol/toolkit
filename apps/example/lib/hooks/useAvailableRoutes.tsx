@@ -4,7 +4,7 @@ import { AcrossClient } from "@across-protocol/integrator-sdk";
 import { buildQueryKey } from "../utils";
 
 export type useAvailableRoutesParams = Parameters<
-  AcrossClient["actions"]["getAvailableRoutes"]
+  AcrossClient["getAvailableRoutes"]
 >[0];
 
 export function useAvailableRoutes(params: useAvailableRoutesParams) {
@@ -15,7 +15,7 @@ export function useAvailableRoutes(params: useAvailableRoutesParams) {
   const { data: availableRoutes, ...rest } = useQuery({
     queryKey,
     queryFn: () => {
-      return sdk.actions.getAvailableRoutes(params);
+      return sdk.getAvailableRoutes(params);
     },
     enabled: Boolean(
       params.originChainId && params.destinationChainId && params.originToken,

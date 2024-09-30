@@ -1,11 +1,11 @@
 ---
 name: "Bug report \U0001F41B"
-about: Thank you for reporting an issue with the Across Integrator SDK. To help us
+about:
+  Thank you for reporting an issue with the Across Integrator SDK. To help us
   address your problem efficiently, please fill out the following details.
-title: ''
+title: ""
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 ## Summary
@@ -25,17 +25,16 @@ assignees: ''
 ## Integration Details
 
 - **Functionality Affected**:
-    
-    - [ ]  Getting a quote
-    - [ ]  Executing a quote
-    - [ ]  Tracking bridge progress
-    - [ ]  Lower-level utilities
-    - [ ]  Other (please specify): <!-- Describe if other functionality is affected -->
+
+  - [ ] Getting a quote
+  - [ ] Executing a quote
+  - [ ] Tracking bridge progress
+  - [ ] Lower-level utilities
+  - [ ] Other (please specify): <!-- Describe if other functionality is affected -->
 
 - **Network Environment**:
-    
-    - [ ]  Mainnet
-    - [ ]  Testnet 
+  - [ ] Mainnet
+  - [ ] Testnet
 
 ## Steps to Reproduce
 
@@ -53,11 +52,11 @@ assignees: ''
 
 <!-- Describe what actually happened, including any error messages or stack traces -->
 
-## Is This a Regression? 
+## Is This a Regression?
 
-- [ ]  Yes
-- [ ]  No
-- [ ]  Not Sure
+- [ ] Yes
+- [ ] No
+- [ ] Not Sure
 
 ## Code Snippets (optional)
 
@@ -65,22 +64,22 @@ assignees: ''
 
 ```ts
 const client = AcrossClient.create({
-	chains,
-	useTestnet: false,
-	integratorId: "TEST",
-	logLevel: "DEBUG",
-	walletClient,
-	tenderly: {
-	accessKey: process.env.TENDERLY_ACCESS_KEY!,
-	accountSlug: process.env.TENDERLY_ACCOUNT_SLUG!,
-	projectSlug: process.env.TENDERLY_PROJECT_SLUG!,
-	},
+  chains,
+  useTestnet: false,
+  integratorId: "TEST",
+  logLevel: "DEBUG",
+  walletClient,
+  tenderly: {
+    accessKey: process.env.TENDERLY_ACCESS_KEY!,
+    accountSlug: process.env.TENDERLY_ACCOUNT_SLUG!,
+    projectSlug: process.env.TENDERLY_PROJECT_SLUG!,
+  },
 });
 
-const routeInfo = await client.actions.getAvailableRoutes({
-	originChainId: 10,
-	destinationChainId: 1,
-	originToken: "0x123123",
+const routeInfo = await client.getAvailableRoutes({
+  originChainId: 10,
+  destinationChainId: 1,
+  originToken: "0x123123",
 });
 ```
 
@@ -91,8 +90,6 @@ const routeInfo = await client.actions.getAvailableRoutes({
 ## Screenshots (optional)
 
 <!-- If applicable, add screenshots to help explain your problem -->
-
-
 
 <!-- If yes, specify the last version where the issue did not occur -->
 

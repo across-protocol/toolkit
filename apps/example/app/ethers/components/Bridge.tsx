@@ -22,7 +22,7 @@ const sdk = AcrossClient.create({
 });
 
 async function getQuote(account: Address) {
-  const routes = await sdk.actions.getAvailableRoutes({
+  const routes = await sdk.getAvailableRoutes({
     originChainId: mainnet.id,
     destinationChainId: arbitrum.id,
   })!;
@@ -30,7 +30,7 @@ async function getQuote(account: Address) {
   const route = routes.find((r) => r.inputTokenSymbol === "ETH")!;
 
   // 1. get quote
-  const bridgeQuoteRes = await sdk.actions.getQuote({
+  const bridgeQuoteRes = await sdk.getQuote({
     route,
     inputAmount: parseEther("0.01"),
     recipient: account,
@@ -52,7 +52,7 @@ async function bridge(
     transport: custom(library.provider),
   });
 
-  const { request } = await sdk.actions.simulateDepositTx({
+  const { request } = await sdk.simulateDepositTx({
     walletClient,
     deposit: quote.deposit,
   });
@@ -115,7 +115,7 @@ export function Bridge() {
   ) => {
     setLoadingFill(true);
     //  wait for tx to be filled
-    const data = await sdk.actions.waitForFillTx({
+    const data = await sdk.waitForFillTx({
       depositId: deposit.depositId,
       deposit: quote.deposit,
       fromBlock: destinationBlock,

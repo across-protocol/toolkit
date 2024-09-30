@@ -129,7 +129,6 @@ export type AcrossClientOptions = {
 
 /**
  * Entrypoint for the Across Integrator SDK
- * @public
  */
 export class AcrossClient {
   private static instance: AcrossClient | null = null;
@@ -157,24 +156,6 @@ export class AcrossClient {
     );
   }
 
-  public actions: {
-    getAvailableRoutes: AcrossClient["getAvailableRoutes"];
-    waitForDepositTx: AcrossClient["waitForDepositTx"];
-    getFillByDepositTx: AcrossClient["getFillByDepositTx"];
-    getSuggestedFees: AcrossClient["getSuggestedFees"];
-    getLimits: AcrossClient["getLimits"];
-    waitForFillTx: AcrossClient["waitForFillTx"];
-    getQuote: AcrossClient["getQuote"];
-    getDepositLogs: AcrossClient["getDepositLogs"];
-    simulateDepositTx: AcrossClient["simulateDepositTx"];
-    executeQuote: AcrossClient["executeQuote"];
-  };
-
-  public utils: {
-    getSupportedChains: AcrossClient["getSupportedChains"];
-    simulateTxOnTenderly: AcrossClient["simulateTxOnTenderly"];
-  };
-
   /**
    * @internal
    */
@@ -198,25 +179,6 @@ export class AcrossClient {
       this.tenderly.simOnError = args.tenderly?.simOnError ?? true;
     }
 
-    // bind methods
-    this.actions = {
-      getSuggestedFees: this.getSuggestedFees.bind(this),
-      getAvailableRoutes: this.getAvailableRoutes.bind(this),
-      waitForDepositTx: this.waitForDepositTx.bind(this),
-      getFillByDepositTx: this.getFillByDepositTx.bind(this),
-      waitForFillTx: this.waitForFillTx.bind(this),
-      getQuote: this.getQuote.bind(this),
-      getLimits: this.getLimits.bind(this),
-      getDepositLogs: this.getDepositLogs.bind(this),
-      simulateDepositTx: this.simulateDepositTx.bind(this),
-      executeQuote: this.executeQuote.bind(this),
-    };
-    // bind utils
-    this.utils = {
-      getSupportedChains: this.getSupportedChains.bind(this),
-      simulateTxOnTenderly: this.simulateTxOnTenderly.bind(this),
-    };
-
     this.logger.debug("Client created with args: \n", args);
   }
 
@@ -225,7 +187,6 @@ export class AcrossClient {
    * @param options - See {@link AcrossClientOptions}.
    * @returns A new `AcrossClient` instance if it doesn't exist, otherwise the existing
    * instance.
-   * @public
    */
   public static create(options: AcrossClientOptions): AcrossClient {
     if (this.instance === null) {
@@ -238,7 +199,6 @@ export class AcrossClient {
    * Get the existing `AcrossClient` singleton instance.
    * @returns The existing `AcrossClient` instance.
    * @throws If the instance is not initialized.
-   * @public
    */
   public static getInstance(): AcrossClient {
     if (this.instance === null) {
