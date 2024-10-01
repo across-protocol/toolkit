@@ -2,7 +2,7 @@ import { ChainsQueryResponse, TokenInfo } from "@across-toolkit/sdk";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Address, Chain, Hash, Hex } from "viem";
-import { SUPPORTED_CHAINS } from "./chains";
+import { SUPPORTED_CHAINS } from "./across";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

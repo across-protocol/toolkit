@@ -9,11 +9,7 @@ import { useInputTokens } from "@/lib/hooks/useInputTokens";
 import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
 import { useQuote } from "@/lib/hooks/useQuote";
 import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
-import {
-  getExplorerLink,
-  isNativeToken,
-  reduceAcrossChains,
-} from "@/lib/utils";
+import { getExplorerLink, isNativeToken } from "@/lib/utils";
 import { TokenInfo } from "@across-toolkit/sdk";
 import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
@@ -23,6 +19,7 @@ import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
 import { Progress } from "./Progress";
 import { TokenInput } from "@/components/TokenInput";
 import { ExternalLink } from "@/components/ExternalLink";
+import { useAcrossChains } from "@/lib/hooks/useAcrossChains";
 
 export function Bridge() {
   const { address } = useAccount();
@@ -31,7 +28,7 @@ export function Bridge() {
   const { supportedChains } = useSupportedAcrossChains({});
 
   // use only token data for chains we support
-  const acrossChains = reduceAcrossChains(supportedChains, [...chains]);
+  const acrossChains = useAcrossChains();
 
   // Optimism default input chain
   const defaultOriginChainId = chains.find((chain) => chain.id === 10)?.id;
@@ -41,6 +38,7 @@ export function Bridge() {
 
   // FROM TOKEN
   const { inputTokens } = useInputTokens(originChainId);
+
   const [fromToken, setFromToken] = useState<TokenInfo | undefined>(
     inputTokens?.[0],
   );
@@ -92,7 +90,7 @@ export function Bridge() {
     }
   }, [outputTokens]);
 
-  const [inputAmount, setInputAmount] = useState<string>();
+  const [inputAmount, setInputAmount] = useState<string>("");
   const [debouncedInputAmount] = useDebounceValue(inputAmount, 300);
   const route = availableRoutes?.find((route) => {
     return (
@@ -162,7 +160,7 @@ export function Bridge() {
 
   return (
     <>
-      <div className="bg-foreground border border-border-secondary p-6 w-full max-w-[600px] rounded-[10px]">
+      <div className="bg-foreground border border-border-secondary p-6 w-full rounded-[10px]">
         <div className="flex flex-col gap-4">
           <Label htmlFor="origin-chain">From</Label>
           <div className="w-full flex flex-col sm:flex-row justify-start items-center gap-2">
@@ -224,7 +222,7 @@ export function Bridge() {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col items-start gap-2 bg-foreground border border-border-secondary p-6 w-full max-w-[600px] rounded-[10px]">
+      <div className="flex flex-col items-start gap-2 bg-foreground border border-border-secondary p-6 w-full rounded-[10px]">
         <Label>Receive</Label>
         {!quote && quoteLoading && (
           <Skeleton className="text-md font-normal text-text/80">
@@ -254,7 +252,7 @@ export function Bridge() {
         {progress && (
           <Progress className="mt-8" error={error} progress={progress} />
         )}
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2">
           {depositTxLink && (
             <ExternalLink icon href={depositTxLink}>
               Deposit Tx

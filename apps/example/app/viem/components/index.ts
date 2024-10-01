@@ -1,2 +1,2 @@
 export * from "./Header";
-export * from "./Bridge";
+export * from "./BridgeOrAction";
