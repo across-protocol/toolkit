@@ -7,12 +7,11 @@ import { Icon } from "@/components/Icon";
 import { TokenInput } from "@/components/TokenInput";
 import { TokenSelect } from "@/components/TokenSelect";
 import { Button, Label } from "@/components/ui";
-import { routeConfig, STAKE_CONTRACT, stakeToken } from "@/lib/constants";
+import { routeConfig, STAKE_CONTRACT, stakeToken } from "@/lib/stake";
 import { useAcrossChains } from "@/lib/hooks/useAcrossChains";
 import { useAvailableRoutes } from "@/lib/hooks/useAvailableRoutes";
 import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
 import { useInputTokens } from "@/lib/hooks/useInputTokens";
-import { useQuote } from "@/lib/hooks/useQuote";
 import { useUserStake } from "@/lib/hooks/useUserStake";
 import { useWithdraw } from "@/lib/hooks/useWithdraw";
 import { getExplorerLink, isNativeToken } from "@/lib/utils";
@@ -22,8 +21,11 @@ import { useDebounceValue } from "usehooks-ts";
 import { formatUnits, parseUnits } from "viem";
 import { optimism } from "viem/chains";
 import { useAccount, useBalance } from "wagmi";
+import { useStakeQuote } from "@/lib/hooks/useStakeQuote";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function Stake() {
+  const queryClient = useQueryClient();
   const { availableRoutes } = useAvailableRoutes(routeConfig);
   const { address } = useAccount();
 
@@ -101,42 +103,49 @@ export function Stake() {
     );
   });
 
-  console.log("route", route);
-
-  const quoteConfig =
-    route && debouncedInputAmount && fromToken
-      ? {
-          route,
-          recipient: address,
-          inputAmount: parseUnits(debouncedInputAmount, fromToken?.decimals),
-        }
-      : undefined;
+  const { userStakeFormatted, userStakeQueryKey } = useUserStake();
+  const {
+    canWithdraw,
+    withdrawAsync,
+    withdrawPending,
+    withdrawConfirming,
+    withdrawTxLink,
+  } = useWithdraw();
 
   const {
-    quote,
-    isLoading: quoteLoading,
-    isRefetching,
-  } = useQuote(quoteConfig);
+    stakeQuote,
+    error: stakeQuoteError,
+    isPending: stakeQuotePending,
+    isRefetching: stakeQuoteRefetching,
+  } = useStakeQuote({
+    route,
+    inputAmount: parseUnits(
+      debouncedInputAmount,
+      STAKE_CONTRACT.token.decimals,
+    ),
+  });
 
-  const {
-    executeQuote,
-    progress,
-    error,
-    isPending,
-    depositReceipt,
-    fillReceipt,
-  } = useExecuteQuote(quote);
+  const { executeQuote, progress, isPending, fillTxLink, depositTxLink } =
+    useExecuteQuote(stakeQuote);
 
-  const { userStake, userStakeFormatted } = useUserStake();
-  const { withdrawAsync, withdrawPending, withdrawConfirming, withdrawTxLink } =
-    useWithdraw();
+  useEffect(() => {
+    if (withdrawConfirming) {
+      queryClient.invalidateQueries({ queryKey: userStakeQueryKey });
+    }
+  }, [withdrawConfirming]);
+
+  useEffect(() => {
+    if (progress.step === "fill" && progress.status === "txSuccess") {
+      queryClient.invalidateQueries({ queryKey: userStakeQueryKey });
+    }
+  }, [progress]);
 
   return (
     <>
       <div className="bg-foreground border border-border-secondary p-6 w-full rounded-[10px]">
         <div className="flex flex-col gap-4">
           <h2 className="text-text text-xl mx-auto font-normal mb-2">
-            ACME Staking Protocol
+            Demo Staking Protocol
           </h2>
           <p className="text-text/75 text-center">
             Bridge from another chain and stake the bridged funds on this{" "}
@@ -162,7 +171,7 @@ export function Stake() {
             {userStakeFormatted}
           </div>
           <Button
-            disabled={withdrawPending || withdrawConfirming}
+            disabled={!canWithdraw || withdrawPending || withdrawConfirming}
             onClick={() => void withdrawAsync()}
             variant="accent"
           >
@@ -234,21 +243,28 @@ export function Stake() {
           />
           <Button
             onClick={() => executeQuote()}
-            disabled={!(quote && toToken) || isRefetching || isPending}
+            disabled={!stakeQuote || stakeQuoteRefetching || isPending}
             className="mt-2"
             variant="accent"
           >
             {isPending
               ? "Executing..."
-              : isRefetching
+              : stakeQuoteRefetching
                 ? "Updating quote..."
                 : "Stake"}
           </Button>
+          {depositTxLink && (
+            <ExternalLink icon href={depositTxLink}>
+              Deposit Tx
+            </ExternalLink>
+          )}
+          {fillTxLink && (
+            <ExternalLink icon href={fillTxLink}>
+              Fill Tx
+            </ExternalLink>
+          )}
         </div>
       </div>
-      {progress.status !== "idle" && (
-        <div className="flex flex-col items-start gap-2 bg-foreground border border-border-secondary p-6 w-full rounded-[10px]"></div>
-      )}
     </>
   );
 }

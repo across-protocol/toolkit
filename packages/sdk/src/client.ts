@@ -566,6 +566,7 @@ export class AcrossClient {
       destinationPublicClient: this.getPublicClient(
         params.deposit.destinationChainId,
       ),
+      logger: this.logger,
     });
   }
 

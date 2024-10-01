@@ -1,5 +1,5 @@
 import { useAccount, useReadContract } from "wagmi";
-import { STAKE_CONTRACT } from "../constants";
+import { STAKE_CONTRACT } from "../stake";
 import { formatUnits } from "viem";
 
 export function useUserStake() {
@@ -15,7 +15,6 @@ export function useUserStake() {
     functionName: "getStake",
     chainId: STAKE_CONTRACT.chain.id,
     args: [address!],
-    scopeKey: "userStake",
     query: {
       enabled: !!address,
     },

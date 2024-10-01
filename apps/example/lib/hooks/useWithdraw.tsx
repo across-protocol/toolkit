@@ -6,7 +6,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { useUserStake } from "./useUserStake";
-import { STAKE_CONTRACT } from "../constants";
+import { STAKE_CONTRACT } from "../stake";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getExplorerLink } from "../utils";
@@ -17,9 +17,7 @@ export function useWithdraw() {
   const { userStake, userStakeQueryKey } = useUserStake();
   const queryClient = useQueryClient();
 
-  const withdrawEnabled = Boolean(
-    address && (userStake ? userStake > 0 : false),
-  );
+  const canWithdraw = Boolean(address && (userStake ? userStake > 0 : false));
   const { switchChainAsync } = useSwitchChain();
 
   const writeConfig = {
@@ -73,12 +71,12 @@ export function useWithdraw() {
     });
 
   return {
-    withdrawEnabled,
+    canWithdraw,
     hash,
     withdraw: () => writeContract(writeConfig),
     withdrawAsync: async () => {
       await checkChain();
-      await writeContractAsync(writeConfig);
+      return writeContractAsync(writeConfig);
     },
     withdrawConfirmed,
     withdrawConfirming,

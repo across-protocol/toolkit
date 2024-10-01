@@ -10,7 +10,10 @@ export type useQuoteParams =
     >
   | undefined;
 
-export function useQuote(params: useQuoteParams) {
+export function useQuote(
+  params: useQuoteParams,
+  query?: Parameters<typeof useQuery>[1],
+) {
   const sdk = useAcross();
   const queryKey = buildQueryKey("getQuote", params);
 
@@ -29,6 +32,7 @@ export function useQuote(params: useQuoteParams) {
       console.log(error);
       return true;
     },
+    ...query,
   });
 
   return { quote, ...rest };

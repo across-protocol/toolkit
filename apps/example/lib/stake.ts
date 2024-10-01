@@ -1,3 +1,5 @@
+import { CrossChainAction } from "@across-toolkit/sdk";
+import { Address, encodeFunctionData } from "viem";
 import { optimism } from "viem/chains";
 
 // For this example, we want to allow users to stake native ETH on our contract on Optimism.
@@ -131,5 +133,25 @@ export const STAKE_CONTRACT = {
   address: "0x733Debf51574c70CfCdb7918F032E16F686bd9f8",
   chain: optimism,
   token: stakeToken,
+  multicallHandler: "0x924a9f036260DdD5808007E1AA95f08eD08aA569",
   abi: StakerContractABI,
 } as const;
+
+export function generateStakeAction(
+  userAddress: Address,
+  value: bigint,
+): CrossChainAction {
+  return {
+    target: STAKE_CONTRACT.address,
+    callData: generateStakeCallData(userAddress),
+    value,
+  };
+}
+
+export function generateStakeCallData(userAddress: Address) {
+  return encodeFunctionData({
+    abi: STAKE_CONTRACT.abi,
+    functionName: "stake",
+    args: [userAddress],
+  });
+}
