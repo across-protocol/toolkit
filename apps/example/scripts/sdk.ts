@@ -232,11 +232,15 @@ async function main() {
             depositAmount: inputAmount,
           }),
           value: 0n,
-          updateCallData: (outputAmount: bigint) =>
-            generateApproveCallData({
-              aaveAddress,
-              depositAmount: outputAmount,
-            }),
+          update: (outputAmount: bigint) => {
+            return {
+              callData: generateApproveCallData({
+                aaveAddress,
+                depositAmount: outputAmount,
+              }),
+              value: 0n,
+            };
+          },
         },
         {
           target: aaveAddress,
@@ -247,13 +251,17 @@ async function main() {
             aaveReferralCode,
           }),
           value: 0n,
-          updateCallData: (outputAmount: bigint) =>
-            generateDepositCallDataForAave({
-              userAddress,
-              depositAmount: outputAmount,
-              depositCurrency,
-              aaveReferralCode,
-            }),
+          update: (outputAmount: bigint) => {
+            return {
+              callData: generateDepositCallDataForAave({
+                userAddress,
+                depositAmount: outputAmount,
+                depositCurrency,
+                aaveReferralCode,
+              }),
+              value: 0n,
+            };
+          },
         },
       ],
       fallbackRecipient: "0x924a9f036260DdD5808007E1AA95f08eD08aA569",

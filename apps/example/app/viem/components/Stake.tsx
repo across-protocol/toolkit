@@ -6,7 +6,7 @@ import { ExternalLink } from "@/components/ExternalLink";
 import { Icon } from "@/components/Icon";
 import { TokenInput } from "@/components/TokenInput";
 import { TokenSelect } from "@/components/TokenSelect";
-import { Button, Label } from "@/components/ui";
+import { Button, Label, Skeleton } from "@/components/ui";
 import { routeConfig, STAKE_CONTRACT, stakeToken } from "@/lib/stake";
 import { useAcrossChains } from "@/lib/hooks/useAcrossChains";
 import { useAvailableRoutes } from "@/lib/hooks/useAvailableRoutes";
@@ -115,15 +115,20 @@ export function Stake() {
   const {
     stakeQuote,
     error: stakeQuoteError,
-    isPending: stakeQuotePending,
+    isLoading: stakeQuotePending,
     isRefetching: stakeQuoteRefetching,
-  } = useStakeQuote({
-    route,
-    inputAmount: parseUnits(
-      debouncedInputAmount,
-      STAKE_CONTRACT.token.decimals,
-    ),
-  });
+  } = useStakeQuote(
+    {
+      route,
+      inputAmount: parseUnits(
+        debouncedInputAmount,
+        STAKE_CONTRACT.token.decimals,
+      ),
+    },
+    {
+      enabled: Boolean(debouncedInputAmount),
+    },
+  );
 
   const { executeQuote, progress, isPending, fillTxLink, depositTxLink } =
     useExecuteQuote(stakeQuote);
@@ -175,10 +180,13 @@ export function Stake() {
             onClick={() => void withdrawAsync()}
             variant="accent"
           >
-            {withdrawPending || withdrawConfirming
-              ? "Withdrawing..."
-              : "Withdraw"}
+            {withdrawConfirming ? "Withdrawing..." : "Withdraw"}
           </Button>
+
+          <p className="text-text/75 text-xs">
+            You will withdraw your funds on{" "}
+            <strong>{STAKE_CONTRACT.chain.name}</strong>
+          </p>
 
           {withdrawTxLink && (
             <ExternalLink icon href={withdrawTxLink}>
@@ -253,6 +261,19 @@ export function Stake() {
                 ? "Updating quote..."
                 : "Stake"}
           </Button>
+          <Label className="text-lg">Stake Amount</Label>
+          {!stakeQuote && stakeQuotePending && (
+            <Skeleton className="text-md font-normal text-text/80">
+              fetching quote...
+            </Skeleton>
+          )}
+          {stakeQuote && fromToken && (
+            <p className="text-md font-normal text-text">
+              {parseFloat(
+                formatUnits(stakeQuote.deposit.outputAmount, toToken.decimals),
+              ).toFixed(6)}
+            </p>
+          )}
           {depositTxLink && (
             <ExternalLink icon href={depositTxLink}>
               Deposit Tx

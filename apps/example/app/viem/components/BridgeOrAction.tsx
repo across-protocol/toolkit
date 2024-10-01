@@ -22,10 +22,10 @@ export function BridgeOrAction({ className }: { className?: string }) {
         <TabsTrigger value={TABS.STAKE}>Bridge + Action</TabsTrigger>
       </TabsList>
 
-      <TabsContent asChild value={TABS.BRIDGE}>
+      <TabsContent className="w-full" value={TABS.BRIDGE}>
         <Bridge />
       </TabsContent>
-      <TabsContent asChild value={TABS.STAKE}>
+      <TabsContent className="w-full" value={TABS.STAKE}>
         <Stake />
       </TabsContent>
     </Tabs>

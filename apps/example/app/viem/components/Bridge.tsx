@@ -159,9 +159,9 @@ export function Bridge() {
     });
 
   return (
-    <>
-      <div className="bg-foreground border border-border-secondary p-6 w-full rounded-[10px]">
-        <div className="flex flex-col gap-4">
+    <div className="bg-foreground border border-border-secondary p-6 w-full rounded-[10px]">
+      <>
+        <div className="flex flex-col gap-4 w-full">
           <Label htmlFor="origin-chain">From</Label>
           <div className="w-full flex flex-col sm:flex-row justify-start items-center gap-2">
             <ChainSelect
@@ -220,7 +220,7 @@ export function Bridge() {
             onChange={(e) => setInputAmount(e.currentTarget.value)}
           />
         </div>
-      </div>
+      </>
 
       <div className="flex flex-col items-start gap-2 bg-foreground border border-border-secondary p-6 w-full rounded-[10px]">
         <Label>Receive</Label>
@@ -265,6 +265,6 @@ export function Bridge() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

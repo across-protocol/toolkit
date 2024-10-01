@@ -3,7 +3,7 @@ import { useAcross } from "../across";
 import { AcrossClient, Amount } from "@across-toolkit/sdk";
 import { generateUnwrapCallData, WETH_OPTIMISM } from "../weth";
 import { generateStakeCallData, STAKE_CONTRACT } from "../stake";
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { buildQueryKey } from "../utils";
 
 type StakeQuoteParams = Partial<
@@ -12,7 +12,7 @@ type StakeQuoteParams = Partial<
 
 export function useStakeQuote(
   params: StakeQuoteParams,
-  queryOptions?: Parameters<typeof useQuery>,
+  queryOptions?: Omit<UseQueryOptions, "queryKey" | "queryFn">,
 ) {
   const { address } = useAccount();
   const sdk = useAcross();
@@ -24,23 +24,29 @@ export function useStakeQuote(
       throw new Error("No account connected");
     }
 
-    // TODO: Remove stub, for dynamic output value
-    const finalAmount = (BigInt(inputAmount) * BigInt(9)) / BigInt(10); // 90%
-
     return {
       actions: [
         {
           target: WETH_OPTIMISM.address,
           callData: generateUnwrapCallData(inputAmount),
           value: 0n,
-          updateCallData(outputAmount) {
-            return generateUnwrapCallData(outputAmount);
+          update: (updatedOutputAmount) => {
+            return {
+              callData: generateUnwrapCallData(updatedOutputAmount),
+              value: 0n,
+            };
           },
         },
         {
           target: STAKE_CONTRACT.address,
           callData: generateStakeCallData(address),
-          value: finalAmount, //! cannot update value!
+          value: inputAmount,
+          update: (updatedOutputAmount) => {
+            return {
+              callData: generateStakeCallData(address),
+              value: updatedOutputAmount,
+            };
+          },
         },
       ],
       fallbackRecipient: address,
@@ -48,6 +54,10 @@ export function useStakeQuote(
   }
 
   const queryKey = buildQueryKey("getStakeQuote", params);
+
+  const enabled = Boolean(
+    params.route && params.inputAmount && (queryOptions?.enabled ?? true),
+  );
 
   const { data: stakeQuote, ...rest } = useQuery({
     queryKey,
@@ -58,8 +68,7 @@ export function useStakeQuote(
         recipient: STAKE_CONTRACT.multicallHandler,
         crossChainMessage: buildCrossChainMessage(params.inputAmount!),
       }),
-    enabled: Boolean(params.route && params.inputAmount),
-    ...queryOptions,
+    enabled,
   });
 
   return {
