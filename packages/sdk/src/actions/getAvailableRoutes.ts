@@ -7,21 +7,24 @@ export type RoutesQueryParams = Partial<{
   /**
    * The origin token address. If set only routes with this token as origin are returned.
    */
-  originToken: Address;
+  originToken?: Address;
   /**
    * The destination token address. If set only routes with this token as destination
    * are returned.
    */
-  destinationToken: Address;
+  destinationToken?: Address;
   /**
    * The destination chain id. If set only routes with this chain id as destination
    * are returned.
    */
-  destinationChainId: number;
+  destinationChainId?: number;
   /**
    * The origin chain id. If set only routes with this chain id as origin are returned.
    */
-  originChainId: number;
+  originChainId?: number;
+
+  originTokenSymbol?: string;
+  destinationTokenSymbol?: string;
 }>;
 
 /**
