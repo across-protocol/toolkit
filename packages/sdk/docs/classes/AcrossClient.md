@@ -12,7 +12,7 @@ Entrypoint for the Across Integrator SDK
 
 #### Defined in
 
-[packages/sdk/src/client.ts:143](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L143)
+[packages/sdk/src/client.ts:143](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L143)
 
 ## Accessors
 
@@ -26,7 +26,7 @@ Entrypoint for the Across Integrator SDK
 
 #### Defined in
 
-[packages/sdk/src/client.ts:153](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L153)
+[packages/sdk/src/client.ts:153](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L153)
 
 ## Methods
 
@@ -62,7 +62,7 @@ const { depositId } = await client.executeQuote({ deposit: quote.deposit });
 
 #### Defined in
 
-[packages/sdk/src/client.ts:244](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L244)
+[packages/sdk/src/client.ts:244](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L244)
 
 ***
 
@@ -86,7 +86,7 @@ See [GetAvailableRoutesReturnType](../type-aliases/GetAvailableRoutesReturnType.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:320](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L320)
+[packages/sdk/src/client.ts:320](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L320)
 
 ***
 
@@ -110,7 +110,7 @@ See [Deposit](../type-aliases/Deposit.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:531](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L531)
+[packages/sdk/src/client.ts:531](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L531)
 
 ***
 
@@ -134,7 +134,7 @@ See [FillStatus](../type-aliases/FillStatus.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:499](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L499)
+[packages/sdk/src/client.ts:499](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L499)
 
 ***
 
@@ -158,7 +158,7 @@ See [GetLimitsReturnType](../type-aliases/GetLimitsReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:374](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L374)
+[packages/sdk/src/client.ts:374](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L374)
 
 ***
 
@@ -2783,7 +2783,7 @@ const unwatch = await client.watchPendingTransactions({
 
 #### Defined in
 
-[packages/sdk/src/client.ts:218](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L218)
+[packages/sdk/src/client.ts:218](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L218)
 
 ***
 
@@ -2807,7 +2807,7 @@ See [Quote](../type-aliases/Quote.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:412](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L412)
+[packages/sdk/src/client.ts:412](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L412)
 
 ***
 
@@ -2831,7 +2831,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:335](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L335)
+[packages/sdk/src/client.ts:335](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L335)
 
 ***
 
@@ -2849,7 +2849,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:549](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L549)
+[packages/sdk/src/client.ts:549](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L549)
 
 ***
 
@@ -2867,7 +2867,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:443](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L443)
+[packages/sdk/src/client.ts:443](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L443)
 
 ***
 
@@ -2893,7 +2893,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:559](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L559)
+[packages/sdk/src/client.ts:559](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L559)
 
 ***
 
@@ -2911,7 +2911,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:211](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L211)
+[packages/sdk/src/client.ts:211](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L211)
 
 ***
 
@@ -2929,7 +2929,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:487](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L487)
+[packages/sdk/src/client.ts:487](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L487)
 
 ***
 
@@ -2947,7 +2947,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:515](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L515)
+[packages/sdk/src/client.ts:515](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L515)
 
 ***
 
@@ -2972,7 +2972,7 @@ instance.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:190](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L190)
+[packages/sdk/src/client.ts:190](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L190)
 
 ***
 
@@ -2994,4 +2994,4 @@ If the instance is not initialized.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:202](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/client.ts#L202)
+[packages/sdk/src/client.ts:202](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/client.ts#L202)

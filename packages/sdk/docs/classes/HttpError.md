@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:16](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/errors/index.ts#L16)
+[packages/sdk/src/errors/index.ts:16](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/errors/index.ts#L16)
 
 ## Properties
 
@@ -106,7 +106,7 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:15](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/errors/index.ts#L15)
+[packages/sdk/src/errors/index.ts:15](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/errors/index.ts#L15)
 
 ***
 
@@ -116,7 +116,7 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:14](https://github.com/across-protocol/toolkit/blob/291e746cb19cfa8d76835b72ba70acec1a2f9971/packages/sdk/src/errors/index.ts#L14)
+[packages/sdk/src/errors/index.ts:14](https://github.com/across-protocol/toolkit/blob/0408e9d38e7f5e4687131c33ea4b58d12a946b0d/packages/sdk/src/errors/index.ts#L14)
 
 ***
 
