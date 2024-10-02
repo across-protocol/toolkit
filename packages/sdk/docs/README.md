@@ -1,45 +1,97 @@
-# `@across-protocol/integrator-sdk` Reference
+# @across-protocol/integrator-sdk
 
-## `AcrossClient`
+## Classes
 
-### Set Up
+- [AcrossApiError](classes/AcrossApiError.md)
+- [AcrossApiSimulationError](classes/AcrossApiSimulationError.md)
+- [AcrossClient](classes/AcrossClient.md)
+- [ConfigError](classes/ConfigError.md)
+- [DefaultLogger](classes/DefaultLogger.md)
+- [DepositRevert](classes/DepositRevert.md)
+- [HttpError](classes/HttpError.md)
+- [IndexerError](classes/IndexerError.md)
+- [NoDepositLogError](classes/NoDepositLogError.md)
+- [NoFillLogError](classes/NoFillLogError.md)
+- [SimulationError](classes/SimulationError.md)
 
-- [`createAcrossClient`](_media/createAcrossClient.md)
-- [`getAcrossClient`](_media/getAcrossClient.md)
+## Type Aliases
 
-### Chains and Routes
+- [AcrossChain](type-aliases/AcrossChain.md)
+- [AcrossClientOptions](type-aliases/AcrossClientOptions.md)
+- [AcrossErrorCodeType](type-aliases/AcrossErrorCodeType.md)
+- [Amount](type-aliases/Amount.md)
+- [BuildMessageParams](type-aliases/BuildMessageParams.md)
+- [ChainsQueryParams](type-aliases/ChainsQueryParams.md)
+- [ChainsQueryResponse](type-aliases/ChainsQueryResponse.md)
+- [ConfiguredPublicClient](type-aliases/ConfiguredPublicClient.md)
+- [ConfiguredPublicClientMap](type-aliases/ConfiguredPublicClientMap.md)
+- [ConfiguredWalletClient](type-aliases/ConfiguredWalletClient.md)
+- [CrossChainAction](type-aliases/CrossChainAction.md)
+- [Deposit](type-aliases/Deposit.md)
+- [DepositStatus](type-aliases/DepositStatus.md)
+- [ExecuteQuoteParams](type-aliases/ExecuteQuoteParams.md)
+- [ExecutionProgress](type-aliases/ExecutionProgress.md)
+- [FillStatus](type-aliases/FillStatus.md)
+- [GetAvailableRoutesParams](type-aliases/GetAvailableRoutesParams.md)
+- [GetAvailableRoutesReturnType](type-aliases/GetAvailableRoutesReturnType.md)
+- [GetDepositLogsParams](type-aliases/GetDepositLogsParams.md)
+- [GetDepositLogsReturnType](type-aliases/GetDepositLogsReturnType.md)
+- [GetDepositParams](type-aliases/GetDepositParams.md)
+- [GetDepositReturnType](type-aliases/GetDepositReturnType.md)
+- [GetFillByDepositTxParams](type-aliases/GetFillByDepositTxParams.md)
+- [GetLimitsParams](type-aliases/GetLimitsParams.md)
+- [GetLimitsReturnType](type-aliases/GetLimitsReturnType.md)
+- [GetQuoteParams](type-aliases/GetQuoteParams.md)
+- [GetSuggestedFeesParams](type-aliases/GetSuggestedFeesParams.md)
+- [GetSuggestedFeesReturnType](type-aliases/GetSuggestedFeesReturnType.md)
+- [GetSupportedChainsParams](type-aliases/GetSupportedChainsParams.md)
+- [IndexerStatusResponse](type-aliases/IndexerStatusResponse.md)
+- [LoggerT](type-aliases/LoggerT.md)
+- [LogLevel](type-aliases/LogLevel.md)
+- [Quote](type-aliases/Quote.md)
+- [Route](type-aliases/Route.md)
+- [RoutesQueryParams](type-aliases/RoutesQueryParams.md)
+- [SimulateApproveTxParams](type-aliases/SimulateApproveTxParams.md)
+- [SimulateDepositTxParams](type-aliases/SimulateDepositTxParams.md)
+- [Status](type-aliases/Status.md)
+- [SuggestedFeesQueryParams](type-aliases/SuggestedFeesQueryParams.md)
+- [SuggestedFeesResponse](type-aliases/SuggestedFeesResponse.md)
+- [TenderlySimulateTxParams](type-aliases/TenderlySimulateTxParams.md)
+- [TokenInfo](type-aliases/TokenInfo.md)
+- [TransactionProgress](type-aliases/TransactionProgress.md)
+- [WaitForDepositTxParams](type-aliases/WaitForDepositTxParams.md)
+- [WaitForFillTxParams](type-aliases/WaitForFillTxParams.md)
 
-- [`getSupportedChains`](./docs/classes/AcrossClient.md#getsupportedchains)
-- [`getAvailableRoutes`](./docs/classes/AcrossClient.md#getquote)
+## Variables
 
-### Quotes, Fees and Limits
+- [DOMAIN\_CALLDATA\_DELIMITER](variables/DOMAIN_CALLDATA_DELIMITER.md)
+- [LogLevels](variables/LogLevels.md)
 
-- [`getQuote`](./docs/classes/AcrossClient.md#getquote)
-- [`getLimits`](./docs/classes/AcrossClient.md#getlimits)
-- [`getSuggestedFees`](./docs/classes/AcrossClient.md#getsuggestedfees)
+## Functions
 
-### Transaction Simulations and Executions
-
-- [`executeQuote`](./docs/classes/AcrossClient.md#executequote)
-- [`simulateDepositTx`](./docs/classes/AcrossClient.md#simulatedeposittx)
-
-### Deposit and Fill Status
-
-- [`waitForDepositTx`](./docs/classes/AcrossClient.md#waitfordeposittx)
-- [`getDepositLogs`](./docs/classes/AcrossClient.md#getdepositlogs)
-- [`getFillByDepositTx`](./docs/classes/AcrossClient.md#getfillbydeposittx)
-
-### Debugging via Tenderly
-
-- [`simulateTxOnTenderly`](./docs/classes/AcrossClient.md#simulatetxontenderly)
-
-## Utilities
-
-### Integrator tag
-
-- [`tagIntegratorId`](_media/tagIntegratorId.md)
-- [`getIntegratorDataSuffix`](_media/getIntegratorDataSuffix.md)
-
-### Cross-chain message
-
-- [`buildMulticallHandlerMessage`](_media/buildMulticallHandlerMessage.md)
+- [buildMulticallHandlerMessage](functions/buildMulticallHandlerMessage.md)
+- [buildSearchParams](functions/buildSearchParams.md)
+- [configurePublicClients](functions/configurePublicClients.md)
+- [createAcrossClient](functions/createAcrossClient.md)
+- [executeQuote](functions/executeQuote.md)
+- [fetchAcrossApi](functions/fetchAcrossApi.md)
+- [fetchIndexerApi](functions/fetchIndexerApi.md)
+- [getAcrossClient](functions/getAcrossClient.md)
+- [getAvailableRoutes](functions/getAvailableRoutes.md)
+- [getCurrentTimeSeconds](functions/getCurrentTimeSeconds.md)
+- [getDeposit](functions/getDeposit.md)
+- [getDepositFromLogs](functions/getDepositFromLogs.md)
+- [getFillByDepositTx](functions/getFillByDepositTx.md)
+- [getIntegratorDataSuffix](functions/getIntegratorDataSuffix.md)
+- [getLimits](functions/getLimits.md)
+- [getMultiCallHandlerAddress](functions/getMultiCallHandlerAddress.md)
+- [getQuote](functions/getQuote.md)
+- [getSuggestedFees](functions/getSuggestedFees.md)
+- [getSupportedChains](functions/getSupportedChains.md)
+- [isOk](functions/isOk.md)
+- [simulateApproveTx](functions/simulateApproveTx.md)
+- [simulateDepositTx](functions/simulateDepositTx.md)
+- [simulateTxOnTenderly](functions/simulateTxOnTenderly.md)
+- [tagIntegratorId](functions/tagIntegratorId.md)
+- [waitForDepositTx](functions/waitForDepositTx.md)
+- [waitForFillTx](functions/waitForFillTx.md)

@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / DOMAIN\_CALLDATA\_DELIMITER
+[@across-protocol/integrator-sdk](../README.md) / DOMAIN\_CALLDATA\_DELIMITER
 
 # Variable: DOMAIN\_CALLDATA\_DELIMITER
 
@@ -6,4 +6,4 @@
 
 ## Defined in
 
-[packages/sdk/src/utils/hex.ts:3](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/utils/hex.ts#L3)
+[packages/sdk/src/utils/hex.ts:3](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/hex.ts#L3)

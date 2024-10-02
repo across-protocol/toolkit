@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / RoutesQueryParams
+[@across-protocol/integrator-sdk](../README.md) / RoutesQueryParams
 
 # Type Alias: RoutesQueryParams
 
@@ -34,4 +34,4 @@ The origin token address. If set only routes with this token as origin are retur
 
 ## Defined in
 
-[packages/sdk/src/actions/getAvailableRoutes.ts:6](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/actions/getAvailableRoutes.ts#L6)
+[packages/sdk/src/actions/getAvailableRoutes.ts:6](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/getAvailableRoutes.ts#L6)
