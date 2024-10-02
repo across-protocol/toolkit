@@ -50,3 +50,25 @@ export type TokenInfo = {
   decimals: number;
   logoUrl: string;
 };
+
+export type Deposit = {
+  inputToken: Address;
+  outputToken: Address;
+  inputAmount: bigint;
+  outputAmount: bigint;
+  originChainId: number;
+  destinationChainId: number;
+  depositId: number;
+  quoteTimestamp: number;
+  fillDeadline: number;
+  exclusivityDeadline: number;
+  depositor: Address;
+  recipient: Address;
+  exclusiveRelayer: Address;
+  message: Hex;
+  status: "pending" | "filled";
+  depositTxHash: Hash;
+  depositTxBlock: bigint;
+  fillTxHash?: Hash;
+  fillTxBlock?: bigint;
+};

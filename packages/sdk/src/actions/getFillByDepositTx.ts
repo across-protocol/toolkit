@@ -1,43 +1,48 @@
-import { fetchIndexerApi } from "../utils";
-import { DepositStatus } from "./waitForDepositTx";
+import { fetchIndexerApi, LoggerT } from "../utils";
 import {
+  Address,
   Hash,
+  Hex,
   parseAbiItem,
   parseEventLogs,
   PublicClient,
   TransactionReceipt,
 } from "viem";
-import { Quote } from "./getQuote";
-import { spokePoolAbi } from "../abis/SpokePool";
 import { MAINNET_INDEXER_API } from "../constants";
 import { NoFillLogError } from "../errors";
 import { IndexerStatusResponse } from "../types";
 
-export type GetFillByDepositTxParams = Pick<Quote, "deposit"> & {
-  depositId: DepositStatus["depositId"];
-  depositTransactionHash: Hash;
-  fromBlock: bigint;
+export type GetFillByDepositTxParams = {
+  deposit: {
+    depositId: number;
+    depositTxHash: Hash;
+    originChainId: number;
+    destinationChainId: number;
+    destinationSpokePoolAddress: Address;
+    message: Hex;
+  };
   destinationChainClient: PublicClient;
+  fromBlock?: bigint;
   indexerUrl?: string;
+  logger?: LoggerT;
 };
 
 export async function getFillByDepositTx(
   params: GetFillByDepositTxParams,
 ): Promise<FillStatus> {
   const {
-    depositTransactionHash,
-    depositId,
     deposit,
     fromBlock,
     destinationChainClient,
     indexerUrl = MAINNET_INDEXER_API,
+    logger,
   } = params;
 
   try {
     const data = await fetchIndexerApi<IndexerStatusResponse>(
       `${indexerUrl}/deposit/status`,
       {
-        depositId,
+        depositId: deposit.depositId,
         originChainId: deposit.originChainId,
       },
     );
@@ -75,29 +80,137 @@ export async function getFillByDepositTx(
     }
     // TODO: do we want to handle pending states?
   } catch (e) {
-    console.error(e);
+    logger?.warn(`Failed to get fill status from indexer: ${e}`);
   }
 
-  const fillEventFilter =
-    await destinationChainClient.createContractEventFilter({
-      address: deposit.destinationSpokePoolAddress,
-      abi: spokePoolAbi,
-      eventName: "FilledV3Relay",
-      args: {
-        depositId,
-        originChainId: BigInt(deposit.originChainId),
-      },
-      fromBlock,
-    });
-
-  const [fillEvent] = await destinationChainClient.getFilterLogs({
-    filter: fillEventFilter,
+  const [fillEvent] = await destinationChainClient.getLogs({
+    address: deposit.destinationSpokePoolAddress,
+    event: {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "inputToken",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "address",
+          name: "outputToken",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "inputAmount",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "outputAmount",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "repaymentChainId",
+          type: "uint256",
+        },
+        {
+          indexed: true,
+          internalType: "uint256",
+          name: "originChainId",
+          type: "uint256",
+        },
+        {
+          indexed: true,
+          internalType: "uint32",
+          name: "depositId",
+          type: "uint32",
+        },
+        {
+          indexed: false,
+          internalType: "uint32",
+          name: "fillDeadline",
+          type: "uint32",
+        },
+        {
+          indexed: false,
+          internalType: "uint32",
+          name: "exclusivityDeadline",
+          type: "uint32",
+        },
+        {
+          indexed: false,
+          internalType: "address",
+          name: "exclusiveRelayer",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "relayer",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "address",
+          name: "depositor",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "address",
+          name: "recipient",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "bytes",
+          name: "message",
+          type: "bytes",
+        },
+        {
+          components: [
+            {
+              internalType: "address",
+              name: "updatedRecipient",
+              type: "address",
+            },
+            { internalType: "bytes", name: "updatedMessage", type: "bytes" },
+            {
+              internalType: "uint256",
+              name: "updatedOutputAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "enum V3SpokePoolInterface.FillType",
+              name: "fillType",
+              type: "uint8",
+            },
+          ],
+          indexed: false,
+          internalType: "struct V3SpokePoolInterface.V3RelayExecutionEventInfo",
+          name: "relayExecutionInfo",
+          type: "tuple",
+        },
+      ],
+      name: "FilledV3Relay",
+      type: "event",
+    },
+    args: {
+      depositId: deposit.depositId,
+      originChainId: BigInt(deposit.originChainId),
+    },
+    fromBlock: fromBlock ?? 0n,
   });
 
   if (!fillEvent) {
     throw new NoFillLogError(
-      depositId,
-      depositTransactionHash,
+      deposit.depositId,
+      deposit.depositTxHash,
       deposit.destinationChainId,
     );
   }

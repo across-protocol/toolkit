@@ -96,7 +96,7 @@ export function Bridge() {
     //  wait for tx to be mined
     const data = await sdk.waitForDepositTx({
       transactionHash: txHash,
-      chainId: quote.deposit.originChainId,
+      originChainId: quote.deposit.originChainId,
     });
     setLoadingDeposit(false);
     setDepositData(data);
