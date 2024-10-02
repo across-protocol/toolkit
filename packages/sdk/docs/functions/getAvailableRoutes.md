@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / getAvailableRoutes
+[@across-protocol/integrator-sdk](../README.md) / getAvailableRoutes
 
 # Function: getAvailableRoutes()
 
@@ -20,4 +20,4 @@ See [GetAvailableRoutesReturnType](../type-aliases/GetAvailableRoutesReturnType.
 
 ## Defined in
 
-[packages/sdk/src/actions/getAvailableRoutes.ts:44](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/actions/getAvailableRoutes.ts#L44)
+[packages/sdk/src/actions/getAvailableRoutes.ts:44](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/getAvailableRoutes.ts#L44)

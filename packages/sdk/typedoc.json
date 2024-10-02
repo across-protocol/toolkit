@@ -2,5 +2,6 @@
   "entryPoints": ["src/index.ts"],
   "plugin": ["typedoc-plugin-markdown"],
   "out": "./docs",
-  "hidePageHeader": true
+  "hidePageHeader": true,
+  "readme": "none"
 }

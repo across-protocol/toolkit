@@ -337,6 +337,7 @@ export async function executeQuote(params: ExecuteQuoteParams) {
     const destinationBlock = await destinationClient.getBlockNumber();
 
     const { depositId, depositTxReceipt } = await waitForDepositTx({
+      originChainId: deposit.originChainId,
       transactionHash: depositTxHash,
       publicClient: originClient,
     });
@@ -365,7 +366,7 @@ export async function executeQuote(params: ExecuteQuoteParams) {
       await waitForFillTx({
         deposit,
         depositId,
-        destinationPublicClient: destinationClient,
+        destinationChainClient: destinationClient,
         fromBlock: destinationBlock - 100n, // TODO: use dynamic block buffer based chain
       });
 

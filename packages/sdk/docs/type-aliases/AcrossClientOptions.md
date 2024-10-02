@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / AcrossClientOptions
+[@across-protocol/integrator-sdk](../README.md) / AcrossClientOptions
 
 # Type Alias: AcrossClientOptions
 
@@ -14,9 +14,9 @@ Options for [AcrossClient.create](../classes/AcrossClient.md#create)
 
 The chains to use for the Across API. Should be imported from `viem/chains`.
 
-### integratorId
+### integratorId?
 
-> **integratorId**: `string`
+> `optional` **integratorId**: `string`
 
 An identifier representing the integrator.
 
@@ -112,4 +112,4 @@ A wallet client to use for the Across API.
 
 ## Defined in
 
-[packages/sdk/src/client.ts:65](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L65)
+[packages/sdk/src/client.ts:66](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L66)

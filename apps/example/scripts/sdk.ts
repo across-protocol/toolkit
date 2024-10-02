@@ -122,7 +122,7 @@ async function main() {
     // 4. wait for tx to be mined
     const { depositTxReceipt, depositId } = await client.waitForDepositTx({
       transactionHash,
-      chainId: bridgeQuoteRes.deposit.originChainId,
+      originChainId: bridgeQuoteRes.deposit.originChainId,
     });
 
     console.log("Deposit receipt: ", depositTxReceipt);
@@ -154,10 +154,11 @@ async function main() {
       while (!res) {
         try {
           const result = await client.getFillByDepositTx({
-            depositId,
-            depositTransactionHash: depositTxReceipt.transactionHash,
-            deposit: bridgeQuoteRes.deposit,
-            destinationChainId: bridgeQuoteRes.deposit.destinationChainId,
+            deposit: {
+              ...bridgeQuoteRes.deposit,
+              depositId,
+              depositTxHash: depositTxReceipt.transactionHash,
+            },
             fromBlock: destinationBlock,
           });
           if (!result.fillTxReceipt) {
@@ -189,6 +190,29 @@ async function main() {
     });
     console.log("Execute quote result: ", result);
   }
+
+  /* ------------------------------ test getDeposit/getFillByDepositTx ----------------------------- */
+  const depositFilter = {
+    originChainId: 42161,
+    destinationChainId: 10,
+    originSpokePoolAddress: "0xe35e9842fceaCA96570B734083f4a58e8F7C5f2A",
+    destinationSpokePoolAddress: "0x6f26Bf09B1C792e3228e5467807a900A503c0281",
+  } as const;
+  const depositByTxHash = await client.getDeposit({
+    findBy: {
+      ...depositFilter,
+      depositTxHash:
+        "0x23829af133a4993c5d2975dede6f503b8182ab426b18d626a0711455bb8dcf28",
+    },
+  });
+  console.log("Deposit by tx hash", depositByTxHash);
+  const depositById = await client.getDeposit({
+    findBy: {
+      ...depositFilter,
+      depositId: 2525494,
+    },
+  });
+  console.log("Deposit by id", depositById);
 
   /* ------------------------ test cross-chain message ------------------------ */
   console.log("\nTesting cross-chain message...");

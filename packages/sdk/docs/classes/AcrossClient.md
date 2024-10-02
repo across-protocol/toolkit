@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / AcrossClient
+[@across-protocol/integrator-sdk](../README.md) / AcrossClient
 
 # Class: AcrossClient
 
@@ -12,7 +12,7 @@ Entrypoint for the Across Integrator SDK
 
 #### Defined in
 
-[packages/sdk/src/client.ts:142](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L142)
+[packages/sdk/src/client.ts:143](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L143)
 
 ## Accessors
 
@@ -26,7 +26,7 @@ Entrypoint for the Across Integrator SDK
 
 #### Defined in
 
-[packages/sdk/src/client.ts:152](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L152)
+[packages/sdk/src/client.ts:153](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L153)
 
 ## Methods
 
@@ -62,7 +62,7 @@ const { depositId } = await client.executeQuote({ deposit: quote.deposit });
 
 #### Defined in
 
-[packages/sdk/src/client.ts:243](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L243)
+[packages/sdk/src/client.ts:244](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L244)
 
 ***
 
@@ -86,49 +86,55 @@ See [GetAvailableRoutesReturnType](../type-aliases/GetAvailableRoutesReturnType.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:319](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L319)
+[packages/sdk/src/client.ts:320](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L320)
 
 ***
 
-### getDepositLogs()
+### getDeposit()
 
-> **getDepositLogs**(`params`): `Promise`\<`undefined` \| `Log`\<`bigint`, `number`, `false`, `undefined`, `true`, readonly [`object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`], `"V3FundsDeposited"`\>\>
+> **getDeposit**(`params`): `Promise`\<[`Deposit`](../type-aliases/Deposit.md)\>
 
-Get the deposit logs for a given deposit. See [getDepositLogs](../functions/getDepositLogs.md).
+Get a deposit by its deposit tx hash or deposit id + spoke pool address. See [getDeposit](../functions/getDeposit.md).
 
 #### Parameters
 
-• **params**: [`GetDepositLogsParams`](../type-aliases/GetDepositLogsParams.md)
+• **params**: `Omit`\<[`GetDepositParams`](../type-aliases/GetDepositParams.md), `"destinationChainClient"` \| `"indexerUrl"` \| `"originChainClient"`\>
 
-See [GetDepositLogsParams](../type-aliases/GetDepositLogsParams.md).
+See [GetDepositParams](../type-aliases/GetDepositParams.md).
 
 #### Returns
 
-`Promise`\<`undefined` \| `Log`\<`bigint`, `number`, `false`, `undefined`, `true`, readonly [`object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`, `object`], `"V3FundsDeposited"`\>\>
+`Promise`\<[`Deposit`](../type-aliases/Deposit.md)\>
 
-See [GetDepositLogsReturnType](../type-aliases/GetDepositLogsReturnType.md).
+See [Deposit](../type-aliases/Deposit.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:447](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L447)
+[packages/sdk/src/client.ts:531](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L531)
 
 ***
 
 ### getFillByDepositTx()
 
-> **getFillByDepositTx**(`__namedParameters`): `Promise`\<[`FillStatus`](../type-aliases/FillStatus.md)\>
+> **getFillByDepositTx**(`params`): `Promise`\<[`FillStatus`](../type-aliases/FillStatus.md)\>
+
+Get a fill after a deposit has been made. See [getFillByDepositTx](../functions/getFillByDepositTx.md).
 
 #### Parameters
 
-• **\_\_namedParameters**: `Omit`\<[`GetFillByDepositTxParams`](../type-aliases/GetFillByDepositTxParams.md), `"destinationChainClient"` \| `"indexerUrl"`\> & `object`
+• **params**: `Omit`\<[`GetFillByDepositTxParams`](../type-aliases/GetFillByDepositTxParams.md), `"logger"` \| `"destinationChainClient"` \| `"indexerUrl"` \| `"originChainClient"`\>
+
+See [GetFillByDepositTxParams](../type-aliases/GetFillByDepositTxParams.md).
 
 #### Returns
 
 `Promise`\<[`FillStatus`](../type-aliases/FillStatus.md)\>
 
+See [FillStatus](../type-aliases/FillStatus.md).
+
 #### Defined in
 
-[packages/sdk/src/client.ts:509](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L509)
+[packages/sdk/src/client.ts:499](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L499)
 
 ***
 
@@ -152,7 +158,7 @@ See [GetLimitsReturnType](../type-aliases/GetLimitsReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:373](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L373)
+[packages/sdk/src/client.ts:374](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L374)
 
 ***
 
@@ -2777,7 +2783,7 @@ const unwatch = await client.watchPendingTransactions({
 
 #### Defined in
 
-[packages/sdk/src/client.ts:217](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L217)
+[packages/sdk/src/client.ts:218](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L218)
 
 ***
 
@@ -2801,7 +2807,7 @@ See [Quote](../type-aliases/Quote.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:411](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L411)
+[packages/sdk/src/client.ts:412](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L412)
 
 ***
 
@@ -2825,7 +2831,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:334](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L334)
+[packages/sdk/src/client.ts:335](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L335)
 
 ***
 
@@ -2843,7 +2849,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:535](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L535)
+[packages/sdk/src/client.ts:549](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L549)
 
 ***
 
@@ -2861,7 +2867,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:453](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L453)
+[packages/sdk/src/client.ts:443](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L443)
 
 ***
 
@@ -2887,7 +2893,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:545](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L545)
+[packages/sdk/src/client.ts:559](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L559)
 
 ***
 
@@ -2905,17 +2911,17 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:210](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L210)
+[packages/sdk/src/client.ts:211](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L211)
 
 ***
 
 ### waitForDepositTx()
 
-> **waitForDepositTx**(`__namedParameters`): `Promise`\<[`DepositStatus`](../type-aliases/DepositStatus.md)\>
+> **waitForDepositTx**(`params`): `Promise`\<[`DepositStatus`](../type-aliases/DepositStatus.md)\>
 
 #### Parameters
 
-• **\_\_namedParameters**: `Omit`\<[`WaitForDepositTxParams`](../type-aliases/WaitForDepositTxParams.md), `"publicClient"`\> & `object`
+• **params**: `Omit`\<[`WaitForDepositTxParams`](../type-aliases/WaitForDepositTxParams.md), `"publicClient"`\>
 
 #### Returns
 
@@ -2923,7 +2929,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:497](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L497)
+[packages/sdk/src/client.ts:487](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L487)
 
 ***
 
@@ -2933,7 +2939,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Parameters
 
-• **params**: `Omit`\<[`WaitForFillTxParams`](../type-aliases/WaitForFillTxParams.md), `"destinationPublicClient"`\>
+• **params**: `Omit`\<[`WaitForFillTxParams`](../type-aliases/WaitForFillTxParams.md), `"destinationChainClient"`\>
 
 #### Returns
 
@@ -2941,7 +2947,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:522](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L522)
+[packages/sdk/src/client.ts:515](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L515)
 
 ***
 
@@ -2966,7 +2972,7 @@ instance.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:189](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L189)
+[packages/sdk/src/client.ts:190](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L190)
 
 ***
 
@@ -2988,4 +2994,4 @@ If the instance is not initialized.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:201](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/client.ts#L201)
+[packages/sdk/src/client.ts:202](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L202)
