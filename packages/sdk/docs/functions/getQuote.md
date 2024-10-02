@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../globals.md) / getQuote
+[@across-protocol/integrator-sdk](../README.md) / getQuote
 
 # Function: getQuote()
 
@@ -20,4 +20,4 @@ See [Quote](../type-aliases/Quote.md).
 
 ## Defined in
 
-[packages/sdk/src/actions/getQuote.ts:119](https://github.com/across-protocol/toolkit/blob/eee89a253938d54aa640eb34f40c2d714b9d031f/packages/sdk/src/actions/getQuote.ts#L119)
+[packages/sdk/src/actions/getQuote.ts:119](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/getQuote.ts#L119)

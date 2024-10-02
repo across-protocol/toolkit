@@ -9,10 +9,9 @@ import {
   getLimits,
   getQuote,
   waitForDepositTx,
+  getDeposit,
   getFillByDepositTx,
-  getDepositLogs,
   WaitForDepositTxParams,
-  GetFillByDepositTxParams,
   GetAvailableRoutesParams,
   GetAvailableRoutesReturnType,
   GetSuggestedFeesParams,
@@ -24,10 +23,10 @@ import {
   waitForFillTx,
   WaitForFillTxParams,
   GetQuoteParams,
-  GetDepositLogsParams,
-  GetDepositLogsReturnType,
   ExecuteQuoteParams,
   executeQuote,
+  GetDepositParams,
+  GetFillByDepositTxParams,
 } from "./actions";
 import {
   MAINNET_API_URL,
@@ -54,6 +53,7 @@ import {
   ConfiguredPublicClient,
   ConfiguredPublicClientMap,
   ConfiguredWalletClient,
+  Deposit,
 } from "./types";
 
 const CLIENT_DEFAULTS = {
@@ -440,17 +440,6 @@ export class AcrossClient {
     }
   }
 
-  /**
-   * Get the deposit logs for a given deposit. See {@link getDepositLogs}.
-   * @param params - See {@link GetDepositLogsParams}.
-   * @returns See {@link GetDepositLogsReturnType}.
-   */
-  async getDepositLogs(
-    params: GetDepositLogsParams,
-  ): Promise<GetDepositLogsReturnType> {
-    return getDepositLogs(params);
-  }
-
   async simulateDepositTx(
     params: Omit<
       SimulateDepositTxParams,
@@ -495,40 +484,64 @@ export class AcrossClient {
     }
   }
 
-  async waitForDepositTx({
-    chainId,
-    ...params
-  }: Omit<WaitForDepositTxParams, "publicClient"> & {
-    chainId: number;
-  }) {
+  async waitForDepositTx(params: Omit<WaitForDepositTxParams, "publicClient">) {
     return waitForDepositTx({
       ...params,
-      publicClient: this.getPublicClient(chainId),
+      publicClient: this.getPublicClient(params.originChainId),
     });
   }
 
-  async getFillByDepositTx({
-    destinationChainId,
-    ...params
-  }: Omit<GetFillByDepositTxParams, "destinationChainClient" | "indexerUrl"> & {
-    destinationChainId: number;
-  }) {
+  /**
+   * Get a fill after a deposit has been made. See {@link getFillByDepositTx}.
+   * @param params - See {@link GetFillByDepositTxParams}.
+   * @returns See {@link FillStatus}.
+   */
+  async getFillByDepositTx(
+    params: Omit<
+      GetFillByDepositTxParams,
+      "originChainClient" | "destinationChainClient" | "indexerUrl" | "logger"
+    >,
+  ) {
     return getFillByDepositTx({
       ...params,
-      destinationChainClient: this.getPublicClient(destinationChainId),
+      destinationChainClient: this.getPublicClient(
+        params.deposit.destinationChainId,
+      ),
       indexerUrl: this.indexerUrl,
+      logger: this.logger,
     });
   }
 
   async waitForFillTx(
-    params: Omit<WaitForFillTxParams, "destinationPublicClient">,
+    params: Omit<WaitForFillTxParams, "destinationChainClient">,
   ) {
     return waitForFillTx({
       ...params,
-      destinationPublicClient: this.getPublicClient(
+      destinationChainClient: this.getPublicClient(
         params.deposit.destinationChainId,
       ),
       logger: this.logger,
+    });
+  }
+
+  /**
+   * Get a deposit by its deposit tx hash or deposit id + spoke pool address. See {@link getDeposit}.
+   * @param params - See {@link GetDepositParams}.
+   * @returns See {@link Deposit}.
+   */
+  async getDeposit(
+    params: Omit<
+      GetDepositParams,
+      "originChainClient" | "destinationChainClient" | "indexerUrl"
+    >,
+  ) {
+    return getDeposit({
+      ...params,
+      indexerUrl: this.indexerUrl,
+      originChainClient: this.getPublicClient(params.findBy.originChainId),
+      destinationChainClient: this.getPublicClient(
+        params.findBy.destinationChainId,
+      ),
     });
   }
 

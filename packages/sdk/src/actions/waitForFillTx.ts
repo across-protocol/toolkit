@@ -1,13 +1,18 @@
-import { parseAbiItem, parseEventLogs } from "viem";
+import { Address, Hex, parseAbiItem, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { FillStatus } from "./getFillByDepositTx";
-import { Quote } from "./getQuote";
 import { LoggerT, MulticallHandlerAbi } from "../utils";
 
-export type WaitForFillTxParams = Pick<Quote, "deposit"> & {
+export type WaitForFillTxParams = {
   depositId: number;
-  destinationPublicClient: ConfiguredPublicClient; // destination client
+  deposit: {
+    originChainId: number;
+    destinationChainId: number;
+    destinationSpokePoolAddress: Address;
+    message: Hex;
+  };
+  destinationChainClient: ConfiguredPublicClient;
   fromBlock: bigint;
   logger?: LoggerT;
 };
@@ -15,15 +20,18 @@ export type WaitForFillTxParams = Pick<Quote, "deposit"> & {
 export async function waitForFillTx(
   params: WaitForFillTxParams,
 ): Promise<FillStatus> {
-  const { depositId, destinationPublicClient, deposit, fromBlock, logger } =
+  const { depositId, destinationChainClient, deposit, fromBlock, logger } =
     params;
 
   return new Promise<FillStatus>((resolve, reject) => {
-    const unwatch = destinationPublicClient.watchContractEvent({
+    const unwatch = destinationChainClient.watchContractEvent({
       address: deposit.destinationSpokePoolAddress,
       abi: spokePoolAbi,
       eventName: "FilledV3Relay",
-      args: { depositId, originChainId: BigInt(deposit.originChainId) },
+      args: {
+        depositId,
+        originChainId: BigInt(deposit.originChainId),
+      },
       fromBlock,
       onError: (error) => {
         console.log("Watch FilledV3Relay event error", error);
@@ -37,10 +45,10 @@ export async function waitForFillTx(
           try {
             // Retrieve the transaction receipt and block information
             const [fillTxReceipt, fillBlock] = await Promise.all([
-              destinationPublicClient.getTransactionReceipt({
+              destinationChainClient.getTransactionReceipt({
                 hash: fillLog.transactionHash,
               }),
-              destinationPublicClient.getBlock({
+              destinationChainClient.getBlock({
                 blockNumber: fillLog.blockNumber,
               }),
             ]);
