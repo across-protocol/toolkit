@@ -1,7 +1,11 @@
-import { ChainsQueryResponse } from "@across-protocol/integrator-sdk";
+import {
+  ChainsQueryResponse,
+  TokenInfo,
+} from "@across-protocol/integrator-sdk";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Address, Chain, Hash, Hex } from "viem";
+import { SUPPORTED_CHAINS } from "./across";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -78,4 +82,21 @@ export function getExplorerLink(params: ExplorerLinkParams) {
   if (params.type === "event") {
     return `${url}/tx/${params.txHash}#eventlog#${params.eventIndex}`;
   }
+}
+
+export function isNativeToken(
+  token: TokenInfo | undefined,
+  chainId: number | undefined,
+) {
+  if (!token || !chainId) return;
+  const chainNativeCurrency = SUPPORTED_CHAINS.find(
+    (chain) => chain.id === chainId,
+  )?.nativeCurrency;
+  if (!chainNativeCurrency) {
+    throw new Error("Chain not supported");
+  }
+  return Boolean(
+    chainNativeCurrency.symbol === token.symbol &&
+      chainNativeCurrency.decimals === token.decimals,
+  );
 }

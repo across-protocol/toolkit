@@ -23,7 +23,7 @@ export type CrossChainAction = {
   target: Address;
   callData: Hex;
   value: Amount;
-  updateCallData?: (outputAmount: bigint) => Hex;
+  update?: (outputAmount: bigint) => { callData: Hex; value: bigint };
 };
 
 export type IndexerStatusResponse = {

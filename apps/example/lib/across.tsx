@@ -1,6 +1,10 @@
+"use client";
+
 import React from "react";
 import { AcrossClient } from "@across-protocol/integrator-sdk";
-import { SUPPORTED_CHAINS } from "./chains";
+import { MAINNET_SUPPORTED_CHAINS } from "./chains";
+
+export const SUPPORTED_CHAINS = MAINNET_SUPPORTED_CHAINS;
 
 const sdk = AcrossClient.create({
   chains: [...SUPPORTED_CHAINS],

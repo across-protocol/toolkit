@@ -7,7 +7,10 @@ export type useAvailableRoutesParams = Parameters<
   AcrossClient["getAvailableRoutes"]
 >[0];
 
-export function useAvailableRoutes(params: useAvailableRoutesParams) {
+export function useAvailableRoutes(
+  params: useAvailableRoutesParams,
+  enabled = true,
+) {
   const sdk = useAcross();
 
   const queryKey = buildQueryKey("availableRoutes", params);
@@ -17,9 +20,7 @@ export function useAvailableRoutes(params: useAvailableRoutesParams) {
     queryFn: () => {
       return sdk.getAvailableRoutes(params);
     },
-    enabled: Boolean(
-      params.originChainId && params.destinationChainId && params.originToken,
-    ), // FIXME
+    enabled,
     refetchInterval: Infinity,
   });
 

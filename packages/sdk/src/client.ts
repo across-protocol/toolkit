@@ -520,6 +520,7 @@ export class AcrossClient {
       destinationChainClient: this.getPublicClient(
         params.deposit.destinationChainId,
       ),
+      logger: this.logger,
     });
   }
 

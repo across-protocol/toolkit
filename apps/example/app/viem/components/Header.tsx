@@ -16,9 +16,7 @@ export const Header = ({
     >
       <div className="relative flex items-center justify-start gap-2">
         <Icon name="across-logo" className="h-8 w-8 text-accent" />
-        <h2 className="text-text font-extralight text-xl">
-          Integrator Toolkit Demo
-        </h2>
+        <h2 className="text-text font-extralight text-xl">Integrator SDK</h2>
       </div>
 
       <ConnectButton className="relative" />

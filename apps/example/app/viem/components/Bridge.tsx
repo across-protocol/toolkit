@@ -9,7 +9,7 @@ import { useInputTokens } from "@/lib/hooks/useInputTokens";
 import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
 import { useQuote } from "@/lib/hooks/useQuote";
 import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
-import { getExplorerLink, reduceAcrossChains } from "@/lib/utils";
+import { getExplorerLink, isNativeToken } from "@/lib/utils";
 import { TokenInfo } from "@across-protocol/integrator-sdk";
 import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
@@ -19,16 +19,16 @@ import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
 import { Progress } from "./Progress";
 import { TokenInput } from "@/components/TokenInput";
 import { ExternalLink } from "@/components/ExternalLink";
+import { useAcrossChains } from "@/lib/hooks/useAcrossChains";
 
 export function Bridge() {
   const { address } = useAccount();
   const chains = useChains();
   // CHAINS
-
   const { supportedChains } = useSupportedAcrossChains({});
 
   // use only token data for chains we support
-  const acrossChains = reduceAcrossChains(supportedChains, [...chains]);
+  const acrossChains = useAcrossChains();
 
   // Optimism default input chain
   const defaultOriginChainId = chains.find((chain) => chain.id === 10)?.id;
@@ -38,18 +38,18 @@ export function Bridge() {
 
   // FROM TOKEN
   const { inputTokens } = useInputTokens(originChainId);
+
   const [fromToken, setFromToken] = useState<TokenInfo | undefined>(
     inputTokens?.[0],
   );
-  const { data: balance } = useBalance({
+
+  const { data: fromTokenBalance } = useBalance({
     address,
-    token: fromToken?.address,
+    token: isNativeToken(fromToken, originChainId)
+      ? undefined
+      : fromToken?.address,
     chainId: originChainId,
   });
-  const inputToken = inputTokens?.find(
-    (token) =>
-      token.address.toLowerCase() === fromToken?.address?.toLowerCase(),
-  );
 
   const [destinationChainId, setDestinationChainId] = useState<
     number | undefined
@@ -90,7 +90,7 @@ export function Bridge() {
     }
   }, [outputTokens]);
 
-  const [inputAmount, setInputAmount] = useState<string>();
+  const [inputAmount, setInputAmount] = useState<string>("");
   const [debouncedInputAmount] = useDebounceValue(inputAmount, 300);
   const route = availableRoutes?.find((route) => {
     return (
@@ -101,11 +101,11 @@ export function Bridge() {
   });
 
   const quoteConfig =
-    route && debouncedInputAmount && inputToken
+    route && debouncedInputAmount && fromToken
       ? {
           route,
           recipient: address,
-          inputAmount: parseUnits(debouncedInputAmount, inputToken?.decimals),
+          inputAmount: parseUnits(debouncedInputAmount, fromToken?.decimals),
         }
       : undefined;
 
@@ -123,13 +123,17 @@ export function Bridge() {
     depositReceipt,
     fillReceipt,
   } = useExecuteQuote(quote);
-  const inputBalance = balance?.value
-    ? parseFloat(formatUnits(balance?.value, balance?.decimals)).toFixed(4)
+  const inputBalance = fromTokenBalance
+    ? parseFloat(
+        formatUnits(fromTokenBalance?.value, fromTokenBalance?.decimals),
+      ).toFixed(4)
     : undefined;
 
   function onMax() {
-    if (!balance?.value) return;
-    setInputAmount(formatUnits(balance?.value, balance?.decimals));
+    if (!fromTokenBalance?.value) return;
+    setInputAmount(
+      formatUnits(fromTokenBalance?.value, fromTokenBalance?.decimals),
+    );
   }
   const originChain = chains.find((chain) => chain.id === originChainId);
   const destinationChain = chains.find(
@@ -155,9 +159,9 @@ export function Bridge() {
     });
 
   return (
-    <>
-      <div className="bg-foreground border border-border-secondary p-6 w-full max-w-[600px] rounded-[10px]">
-        <div className="flex flex-col gap-4">
+    <div className="bg-foreground border border-border-secondary p-6 w-full rounded-[10px]">
+      <>
+        <div className="flex flex-col gap-4 w-full">
           <Label htmlFor="origin-chain">From</Label>
           <div className="w-full flex flex-col sm:flex-row justify-start items-center gap-2">
             <ChainSelect
@@ -175,7 +179,7 @@ export function Bridge() {
             <TokenSelect
               className="flex-[3]"
               tokens={inputTokens}
-              onTokenChange={setFromToken}
+              onTokenChange={(token) => setFromToken(token)}
               token={fromToken}
             />
           </div>
@@ -216,9 +220,9 @@ export function Bridge() {
             onChange={(e) => setInputAmount(e.currentTarget.value)}
           />
         </div>
-      </div>
+      </>
 
-      <div className="mt-4 flex flex-col items-start gap-2 bg-foreground border border-border-secondary p-6 w-full max-w-[600px] rounded-[10px]">
+      <div className="flex flex-col items-start gap-2 bg-foreground border border-border-secondary p-6 w-full rounded-[10px]">
         <Label>Receive</Label>
         {!quote && quoteLoading && (
           <Skeleton className="text-md font-normal text-text/80">
@@ -248,7 +252,7 @@ export function Bridge() {
         {progress && (
           <Progress className="mt-8" error={error} progress={progress} />
         )}
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2">
           {depositTxLink && (
             <ExternalLink icon href={depositTxLink}>
               Deposit Tx
@@ -261,6 +265,6 @@ export function Bridge() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

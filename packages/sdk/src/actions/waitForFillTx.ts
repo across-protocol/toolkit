@@ -2,6 +2,7 @@ import { Address, Hex, parseAbiItem, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { FillStatus } from "./getFillByDepositTx";
+import { LoggerT, MulticallHandlerAbi } from "../utils";
 
 export type WaitForFillTxParams = {
   depositId: number;
@@ -13,12 +14,14 @@ export type WaitForFillTxParams = {
   };
   destinationChainClient: ConfiguredPublicClient;
   fromBlock: bigint;
+  logger?: LoggerT;
 };
 
 export async function waitForFillTx(
   params: WaitForFillTxParams,
 ): Promise<FillStatus> {
-  const { depositId, destinationChainClient, deposit, fromBlock } = params;
+  const { depositId, destinationChainClient, deposit, fromBlock, logger } =
+    params;
 
   return new Promise<FillStatus>((resolve, reject) => {
     const unwatch = destinationChainClient.watchContractEvent({
@@ -55,16 +58,19 @@ export async function waitForFillTx(
 
             // if message in deposit, check for CallsFailed event
             if (deposit.message !== "0x") {
-              const [callsFailedLog] = parseEventLogs({
-                abi: [
-                  parseAbiItem(
-                    "event CallsFailed(Call[] calls, address indexed fallbackRecipient)",
-                  ),
-                ],
+              const logs = parseEventLogs({
+                abi: MulticallHandlerAbi,
                 logs: fillTxReceipt.logs,
               });
+              // TODO: will this fail silently?
+
+              logger?.debug("Fill Logs", logs);
+
+              const actionSuccess = !logs.some(
+                (log) => log.eventName === "CallsFailed",
+              );
               resolve({
-                actionSuccess: !callsFailedLog,
+                actionSuccess,
                 fillTxReceipt: fillTxReceipt,
                 fillTxTimestamp: fillBlock.timestamp,
               });

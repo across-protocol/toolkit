@@ -22,6 +22,9 @@ export type RoutesQueryParams = Partial<{
    * The origin chain id. If set only routes with this chain id as origin are returned.
    */
   originChainId: number;
+
+  originTokenSymbol: string;
+  destinationTokenSymbol: string;
 }>;
 
 /**

@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useAcross } from "../across";
-import { buildQueryKey } from "../utils";
+import { buildQueryKey, getExplorerLink } from "../utils";
 import {
   AcrossClient,
   ExecutionProgress,
 } from "@across-protocol/integrator-sdk";
-import { useChainId, useConfig, useSwitchChain } from "wagmi";
+import { useChainId, useChains, useConfig, useSwitchChain } from "wagmi";
 import { useState } from "react";
 import { TransactionReceipt } from "viem";
 import { getWalletClient } from "wagmi/actions";
@@ -17,6 +17,7 @@ export type useExecuteQuoteParams =
 export function useExecuteQuote(params: useExecuteQuoteParams) {
   const sdk = useAcross();
   const config = useConfig();
+  const chains = useChains();
   const { switchChainAsync } = useSwitchChain();
   const chainId = useChainId();
   const mutationKey = buildQueryKey("executeQuote", params);
@@ -74,11 +75,39 @@ export function useExecuteQuote(params: useExecuteQuoteParams) {
     },
   });
 
+  const originChain = chains.find(
+    (chain) => chain.id === params?.deposit.originChainId,
+  );
+
+  const destinationChain = chains.find(
+    (chain) => chain.id === params?.deposit.destinationChainId,
+  );
+
+  const depositTxLink =
+    depositReceipt &&
+    originChain &&
+    getExplorerLink({
+      chain: originChain,
+      type: "transaction",
+      txHash: depositReceipt.transactionHash,
+    });
+
+  const fillTxLink =
+    fillReceipt &&
+    destinationChain &&
+    getExplorerLink({
+      chain: destinationChain,
+      type: "transaction",
+      txHash: fillReceipt.transactionHash,
+    });
+
   return {
     progress,
     executeQuote,
     depositReceipt,
     fillReceipt,
+    depositTxLink,
+    fillTxLink,
     ...rest,
   };
 }
