@@ -2,8 +2,8 @@
 
 # Type Alias: GetDepositLogsReturnType
 
-> **GetDepositLogsReturnType**: `ReturnType`\<*typeof* [`getDepositLogs`](../functions/getDepositLogs.md)\>
+> **GetDepositLogsReturnType**: `ReturnType`\<_typeof_ [`getDepositFromLogs`](../functions/getDepositFromLogs.md)\>
 
 ## Defined in
 
-[packages/sdk/src/actions/getDepositLogs.ts:8](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/getDepositLogs.ts#L8)
+packages/sdk/src/actions/getDepositFromLogs.ts:17

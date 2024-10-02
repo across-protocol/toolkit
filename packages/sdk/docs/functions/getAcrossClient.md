@@ -18,4 +18,4 @@ If the instance is not initialized.
 
 ## Defined in
 
-[packages/sdk/src/client.ts:579](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L579)
+[packages/sdk/src/client.ts:592](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L592)

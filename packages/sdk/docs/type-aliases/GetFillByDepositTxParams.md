@@ -2,30 +2,54 @@
 
 # Type Alias: GetFillByDepositTxParams
 
-> **GetFillByDepositTxParams**: `Pick`\<[`Quote`](Quote.md), `"deposit"`\> & `object`
+> **GetFillByDepositTxParams**: `object`
 
 ## Type declaration
 
-### depositId
+### deposit
 
-> **depositId**: [`DepositStatus`](DepositStatus.md)\[`"depositId"`\]
+> **deposit**: `object`
 
-### depositTransactionHash
+### deposit.depositId
 
-> **depositTransactionHash**: `Hash`
+> **depositId**: `number`
+
+### deposit.depositTxHash
+
+> **depositTxHash**: `Hash`
+
+### deposit.destinationChainId
+
+> **destinationChainId**: `number`
+
+### deposit.destinationSpokePoolAddress
+
+> **destinationSpokePoolAddress**: `Address`
+
+### deposit.message
+
+> **message**: `Hex`
+
+### deposit.originChainId
+
+> **originChainId**: `number`
 
 ### destinationChainClient
 
 > **destinationChainClient**: `PublicClient`
 
-### fromBlock
+### fromBlock?
 
-> **fromBlock**: `bigint`
+> `optional` **fromBlock**: `bigint`
 
 ### indexerUrl?
 
 > `optional` **indexerUrl**: `string`
 
+### logger?
+
+> `optional` **logger**: [`LoggerT`](LoggerT.md)
+
 ## Defined in
 
-[packages/sdk/src/actions/getFillByDepositTx.ts:16](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/getFillByDepositTx.ts#L16)
+[packages/sdk/src/actions/getFillByDepositTx.ts:15](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/getFillByDepositTx.ts#L15)

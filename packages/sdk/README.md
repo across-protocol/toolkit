@@ -15,8 +15,6 @@
 ### Quotes, Fees and Limits
 
 - [`getQuote`](./docs/classes/AcrossClient.md#getquote)
-- [`getLimits`](./docs/classes/AcrossClient.md#getlimits)
-- [`getSuggestedFees`](./docs/classes/AcrossClient.md#getsuggestedfees)
 
 ### Transaction Simulations and Executions
 
@@ -25,9 +23,8 @@
 
 ### Deposit and Fill Status
 
-- [`waitForDepositTx`](./docs/classes/AcrossClient.md#waitfordeposittx)
-- [`getDepositLogs`](./docs/classes/AcrossClient.md#getdepositlogs)
-- [`getFillByDepositTx`](./docs/classes/AcrossClient.md#getfillbydeposittx)
+- [`getDeposit`](./docs/classes/AcrossClient.md#getdeposit)
+- [`waitForFillTx`](./docs/classes/AcrossClient.md#waitforfilltx)
 
 ### Debugging via Tenderly
 

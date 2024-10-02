@@ -2,17 +2,37 @@
 
 # Type Alias: WaitForFillTxParams
 
-> **WaitForFillTxParams**: `Pick`\<[`Quote`](Quote.md), `"deposit"`\> & `object`
+> **WaitForFillTxParams**: `object`
 
 ## Type declaration
+
+### deposit
+
+> **deposit**: `object`
+
+### deposit.destinationChainId
+
+> **destinationChainId**: `number`
+
+### deposit.destinationSpokePoolAddress
+
+> **destinationSpokePoolAddress**: `Address`
+
+### deposit.message
+
+> **message**: `Hex`
+
+### deposit.originChainId
+
+> **originChainId**: `number`
 
 ### depositId
 
 > **depositId**: `number`
 
-### destinationPublicClient
+### destinationChainClient
 
-> **destinationPublicClient**: [`ConfiguredPublicClient`](ConfiguredPublicClient.md)
+> **destinationChainClient**: [`ConfiguredPublicClient`](ConfiguredPublicClient.md)
 
 ### fromBlock
 
@@ -20,4 +40,4 @@
 
 ## Defined in
 
-[packages/sdk/src/actions/waitForFillTx.ts:7](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/waitForFillTx.ts#L7)
+[packages/sdk/src/actions/waitForFillTx.ts:6](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/waitForFillTx.ts#L6)

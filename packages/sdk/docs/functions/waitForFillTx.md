@@ -14,4 +14,4 @@
 
 ## Defined in
 
-[packages/sdk/src/actions/waitForFillTx.ts:13](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/waitForFillTx.ts#L13)
+[packages/sdk/src/actions/waitForFillTx.ts:18](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/waitForFillTx.ts#L18)

@@ -27,6 +27,7 @@
 - [ConfiguredPublicClientMap](type-aliases/ConfiguredPublicClientMap.md)
 - [ConfiguredWalletClient](type-aliases/ConfiguredWalletClient.md)
 - [CrossChainAction](type-aliases/CrossChainAction.md)
+- [Deposit](type-aliases/Deposit.md)
 - [DepositStatus](type-aliases/DepositStatus.md)
 - [ExecuteQuoteParams](type-aliases/ExecuteQuoteParams.md)
 - [ExecutionProgress](type-aliases/ExecutionProgress.md)
@@ -35,6 +36,8 @@
 - [GetAvailableRoutesReturnType](type-aliases/GetAvailableRoutesReturnType.md)
 - [GetDepositLogsParams](type-aliases/GetDepositLogsParams.md)
 - [GetDepositLogsReturnType](type-aliases/GetDepositLogsReturnType.md)
+- [GetDepositParams](type-aliases/GetDepositParams.md)
+- [GetDepositReturnType](type-aliases/GetDepositReturnType.md)
 - [GetFillByDepositTxParams](type-aliases/GetFillByDepositTxParams.md)
 - [GetLimitsParams](type-aliases/GetLimitsParams.md)
 - [GetLimitsReturnType](type-aliases/GetLimitsReturnType.md)
@@ -61,7 +64,7 @@
 
 ## Variables
 
-- [DOMAIN\_CALLDATA\_DELIMITER](variables/DOMAIN_CALLDATA_DELIMITER.md)
+- [DOMAIN_CALLDATA_DELIMITER](variables/DOMAIN_CALLDATA_DELIMITER.md)
 - [LogLevels](variables/LogLevels.md)
 
 ## Functions
@@ -76,7 +79,8 @@
 - [getAcrossClient](functions/getAcrossClient.md)
 - [getAvailableRoutes](functions/getAvailableRoutes.md)
 - [getCurrentTimeSeconds](functions/getCurrentTimeSeconds.md)
-- [getDepositLogs](functions/getDepositLogs.md)
+- [getDeposit](functions/getDeposit.md)
+- [getDepositFromLogs](functions/getDepositFromLogs.md)
 - [getFillByDepositTx](functions/getFillByDepositTx.md)
 - [getIntegratorDataSuffix](functions/getIntegratorDataSuffix.md)
 - [getLimits](functions/getLimits.md)

@@ -6,6 +6,10 @@
 
 ## Type declaration
 
+### originChainId
+
+> **originChainId**: `number`
+
 ### publicClient
 
 > **publicClient**: [`ConfiguredPublicClient`](ConfiguredPublicClient.md)
