@@ -1,4 +1,4 @@
-import { CrossChainAction } from "@across-toolkit/sdk";
+import { CrossChainAction } from "@across-protocol/integrator-sdk";
 import { Address, encodeFunctionData } from "viem";
 import { optimism } from "viem/chains";
 

@@ -15,7 +15,7 @@ import { useInputTokens } from "@/lib/hooks/useInputTokens";
 import { useUserStake } from "@/lib/hooks/useUserStake";
 import { useWithdraw } from "@/lib/hooks/useWithdraw";
 import { getExplorerLink, isNativeToken } from "@/lib/utils";
-import { TokenInfo } from "@across-toolkit/sdk";
+import { TokenInfo } from "@across-protocol/integrator-sdk";
 import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { formatUnits, parseUnits } from "viem";

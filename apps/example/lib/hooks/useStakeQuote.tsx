@@ -1,14 +1,12 @@
 import { useAccount } from "wagmi";
 import { useAcross } from "../across";
-import { AcrossClient, Amount } from "@across-toolkit/sdk";
+import { AcrossClient, Amount } from "@across-protocol/integrator-sdk";
 import { generateUnwrapCallData, WETH_OPTIMISM } from "../weth";
 import { generateStakeCallData, STAKE_CONTRACT } from "../stake";
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { buildQueryKey } from "../utils";
 
-type StakeQuoteParams = Partial<
-  Parameters<AcrossClient["actions"]["getQuote"]>[0]
->;
+type StakeQuoteParams = Partial<Parameters<AcrossClient["getQuote"]>[0]>;
 
 export function useStakeQuote(
   params: StakeQuoteParams,
@@ -62,7 +60,7 @@ export function useStakeQuote(
   const { data: stakeQuote, ...rest } = useQuery({
     queryKey,
     queryFn: () =>
-      sdk.actions.getQuote({
+      sdk.getQuote({
         route: params.route!,
         inputAmount: params.inputAmount!,
         recipient: STAKE_CONTRACT.multicallHandler,
