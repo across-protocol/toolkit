@@ -33,6 +33,45 @@
 
 <br>
 
+## Overview
+
+Quickly integrate with a few lines of code. See [here](./packages/sdk/README.md) for more details.
+
+```ts
+import { createAcrossClient } from "@across-protocol/integrator-sdk";
+import { mainnet, optimism, arbitrum } from "viem/chains";
+import { useWalletClient } from "wagmi";
+
+const wallet = useWalletClient();
+
+// 1. Create client
+const client = createAcrossClient({
+  integratorId: "0xdead", // 2-byte hex string
+  chains: [mainnet, optimism, arbitrum],
+});
+
+// 2. Retrieve quote for USDC from Optimism -> Arbitrum
+const route = {
+  originChainId: optimism.chainId
+  destinationChainId: arbitrum.chainId,
+  inputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+  outputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+};
+const quote = await client.getQuote({
+  route,
+  inputAmount: parseUnit("1000", 6) // USDC decimals
+})
+
+// 3. Execute quote
+await client.executeQuote({
+  walletClient: wallet,
+  deposit: quote.deposit,
+  onProgress: (progress) => {
+    // handle progress
+  },
+});
+```
+
 ## Tools
 
 | Package                                                       | Description                                                                                |
