@@ -4,7 +4,6 @@ import { hardhat } from "viem/chains";
 
 const client = AcrossClient.create({
   useTestnet: true,
-  integratorId: "TEST_ID",
   logLevel: "WARN",
   chains: [hardhat],
 });
