@@ -1,6 +1,7 @@
 import {
   Address,
   Hash,
+  Hex,
   parseAbi,
   SimulateContractReturnType,
   TransactionReceipt,
@@ -112,7 +113,7 @@ export type ExecuteQuoteParams = {
   /**
    * An identifier for the integrator.
    */
-  integratorId: string;
+  integratorId: Hex;
   /**
    * The deposit to execute. Should be taken from return value of {@link getQuote}.
    */

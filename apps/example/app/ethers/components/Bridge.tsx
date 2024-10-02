@@ -17,7 +17,6 @@ const chains = [mainnet, arbitrum];
 const sdk = AcrossClient.create({
   chains,
   useTestnet: false,
-  integratorId: "TEST",
   logLevel: "DEBUG",
 });
 

@@ -1,4 +1,5 @@
 import {
+  Hex,
   PublicClient,
   SimulateContractReturnType,
   WalletClient,
@@ -18,7 +19,7 @@ export type SimulateDepositTxParams = {
   deposit: Quote["deposit"] & {
     fillDeadline?: number;
   };
-  integratorId: string;
+  integratorId: Hex;
   logger?: LoggerT;
 };
 

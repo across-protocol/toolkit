@@ -2,6 +2,7 @@ import {
   Chain,
   ContractFunctionExecutionError,
   encodeFunctionData,
+  Hex,
 } from "viem";
 import {
   getAvailableRoutes,
@@ -43,6 +44,7 @@ import {
   getSupportedChains,
   simulateTxOnTenderly,
   TenderlySimulateTxParams,
+  assertValidIntegratorId,
 } from "./utils";
 import {
   AcrossApiSimulationError,
@@ -53,12 +55,11 @@ import {
   ConfiguredPublicClient,
   ConfiguredPublicClientMap,
   ConfiguredWalletClient,
-  Deposit,
 } from "./types";
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
-  integratorId: "INTEGRATOR_SDK",
+  integratorId: "0xdead",
   logLevel: "ERROR",
 } as const;
 
@@ -67,7 +68,7 @@ export type AcrossClientOptions = {
   /**
    * An identifier representing the integrator.
    */
-  integratorId?: string;
+  integratorId?: Hex;
   /**
    * The chains to use for the Across API. Should be imported from `viem/chains`.
    */
@@ -135,7 +136,7 @@ export type AcrossClientOptions = {
 export class AcrossClient {
   private static instance: AcrossClient | null = null;
 
-  private integratorId: string;
+  private integratorId: Hex;
   private publicClients: ConfiguredPublicClientMap;
   private walletClient?: ConfiguredWalletClient;
   private apiUrl: string;
@@ -159,7 +160,10 @@ export class AcrossClient {
   }
 
   private constructor(args: AcrossClientOptions) {
-    this.integratorId = args?.integratorId ?? CLIENT_DEFAULTS.integratorId;
+    const integratorId = args?.integratorId ?? CLIENT_DEFAULTS.integratorId;
+    assertValidIntegratorId(integratorId);
+
+    this.integratorId = integratorId;
     this.walletClient = args?.walletClient;
     this.publicClients = configurePublicClients(
       args.chains,
