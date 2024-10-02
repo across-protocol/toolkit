@@ -216,6 +216,7 @@ export async function getDeposit(
     rawDeposit.fillTxHash = fill.fillTxReceipt.transactionHash;
     rawDeposit.fillTxBlock = fill.fillTxReceipt.blockNumber;
     rawDeposit.status = "filled";
+    rawDeposit.actionSuccess = fill.actionSuccess;
   } catch (e) {
     if (e instanceof NoFillLogError) {
       // if no fill log, deposit is pending

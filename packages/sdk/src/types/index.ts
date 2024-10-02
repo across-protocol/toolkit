@@ -71,4 +71,5 @@ export type Deposit = {
   depositTxBlock: bigint;
   fillTxHash?: Hash;
   fillTxBlock?: bigint;
+  actionSuccess?: boolean;
 };
