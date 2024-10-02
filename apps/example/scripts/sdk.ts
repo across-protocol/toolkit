@@ -46,7 +46,6 @@ async function main() {
   const client = AcrossClient.create({
     chains,
     useTestnet: false,
-    integratorId: "TEST",
     logLevel: "DEBUG",
     walletClient,
     tenderly: {

@@ -9,7 +9,6 @@ export const SUPPORTED_CHAINS = MAINNET_SUPPORTED_CHAINS;
 const sdk = AcrossClient.create({
   chains: [...SUPPORTED_CHAINS],
   useTestnet: false,
-  integratorId: "TEST",
   logLevel: "DEBUG",
 });
 
