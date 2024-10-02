@@ -1,5 +1,5 @@
 {
-  "name": "@across-toolkit/sdk",
+  "name": "@across-protocol/integrator-sdk",
   "version": "0.0.0",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
@@ -38,7 +38,8 @@
     "type-check": "tsc",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
     "test": "vitest run",
-    "ci": "pnpm run build && pnpm run check-exports pnpm npm run lint && pnpm run test"
+    "ci": "pnpm run build && pnpm run check-exports pnpm npm run lint && pnpm run test",
+    "typedoc": "typedoc --out docs src/index.ts"
   },
   "devDependencies": {
     "@across-toolkit/eslint-config": "workspace:*",
@@ -49,6 +50,8 @@
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "tsup": "^8.0.2",
+    "typedoc": "^0.26.7",
+    "typedoc-plugin-markdown": "^4.2.8",
     "typescript": "^5.3.3",
     "viem": "^2.20.1",
     "vitest": "^2.0.5"

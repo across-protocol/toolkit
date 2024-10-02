@@ -8,7 +8,7 @@ export function useInputTokens(originChainId: number | undefined) {
   const { data: chains, ...rest } = useQuery({
     queryKey,
     queryFn: () => {
-      return sdk.utils.getSupportedChains({ chainId: originChainId });
+      return sdk.getSupportedChains({ chainId: originChainId });
     },
     enabled: Boolean(originChainId),
     refetchInterval: Infinity,

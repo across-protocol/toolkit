@@ -25,6 +25,7 @@ import {
   WaitForFillTxParams,
   GetQuoteParams,
   GetDepositLogsParams,
+  GetDepositLogsReturnType,
   ExecuteQuoteParams,
   executeQuote,
 } from "./actions";
@@ -57,6 +58,7 @@ import {
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
+  integratorId: "INTEGRATOR_SDK",
   logLevel: "ERROR",
 } as const;
 
@@ -65,7 +67,7 @@ export type AcrossClientOptions = {
   /**
    * An identifier representing the integrator.
    */
-  integratorId: string;
+  integratorId?: string;
   /**
    * The chains to use for the Across API. Should be imported from `viem/chains`.
    */
@@ -129,20 +131,19 @@ export type AcrossClientOptions = {
 
 /**
  * Entrypoint for the Across Integrator SDK
- * @public
  */
 export class AcrossClient {
   private static instance: AcrossClient | null = null;
 
-  integratorId: string;
-  publicClients: ConfiguredPublicClientMap;
-  walletClient?: ConfiguredWalletClient;
-  apiUrl: string;
-  indexerUrl: string;
+  private integratorId: string;
+  private publicClients: ConfiguredPublicClientMap;
+  private walletClient?: ConfiguredWalletClient;
+  private apiUrl: string;
+  private indexerUrl: string;
   logger: LoggerT;
 
   // Tenderly related options
-  tenderly?: {
+  private tenderly?: {
     simOnError?: boolean;
     accessKey: string;
     accountSlug: string;
@@ -157,29 +158,8 @@ export class AcrossClient {
     );
   }
 
-  public actions: {
-    getAvailableRoutes: AcrossClient["getAvailableRoutes"];
-    waitForDepositTx: AcrossClient["waitForDepositTx"];
-    getFillByDepositTx: AcrossClient["getFillByDepositTx"];
-    getSuggestedFees: AcrossClient["getSuggestedFees"];
-    getLimits: AcrossClient["getLimits"];
-    waitForFillTx: AcrossClient["waitForFillTx"];
-    getQuote: AcrossClient["getQuote"];
-    getDepositLogs: AcrossClient["getDepositLogs"];
-    simulateDepositTx: AcrossClient["simulateDepositTx"];
-    executeQuote: AcrossClient["executeQuote"];
-  };
-
-  public utils: {
-    getSupportedChains: AcrossClient["getSupportedChains"];
-    simulateTxOnTenderly: AcrossClient["simulateTxOnTenderly"];
-  };
-
-  /**
-   * @internal
-   */
   private constructor(args: AcrossClientOptions) {
-    this.integratorId = args.integratorId;
+    this.integratorId = args?.integratorId ?? CLIENT_DEFAULTS.integratorId;
     this.walletClient = args?.walletClient;
     this.publicClients = configurePublicClients(
       args.chains,
@@ -198,25 +178,6 @@ export class AcrossClient {
       this.tenderly.simOnError = args.tenderly?.simOnError ?? true;
     }
 
-    // bind methods
-    this.actions = {
-      getSuggestedFees: this.getSuggestedFees.bind(this),
-      getAvailableRoutes: this.getAvailableRoutes.bind(this),
-      waitForDepositTx: this.waitForDepositTx.bind(this),
-      getFillByDepositTx: this.getFillByDepositTx.bind(this),
-      waitForFillTx: this.waitForFillTx.bind(this),
-      getQuote: this.getQuote.bind(this),
-      getLimits: this.getLimits.bind(this),
-      getDepositLogs: this.getDepositLogs.bind(this),
-      simulateDepositTx: this.simulateDepositTx.bind(this),
-      executeQuote: this.executeQuote.bind(this),
-    };
-    // bind utils
-    this.utils = {
-      getSupportedChains: this.getSupportedChains.bind(this),
-      simulateTxOnTenderly: this.simulateTxOnTenderly.bind(this),
-    };
-
     this.logger.debug("Client created with args: \n", args);
   }
 
@@ -225,7 +186,6 @@ export class AcrossClient {
    * @param options - See {@link AcrossClientOptions}.
    * @returns A new `AcrossClient` instance if it doesn't exist, otherwise the existing
    * instance.
-   * @public
    */
   public static create(options: AcrossClientOptions): AcrossClient {
     if (this.instance === null) {
@@ -238,7 +198,6 @@ export class AcrossClient {
    * Get the existing `AcrossClient` singleton instance.
    * @returns The existing `AcrossClient` instance.
    * @throws If the instance is not initialized.
-   * @public
    */
   public static getInstance(): AcrossClient {
     if (this.instance === null) {
@@ -281,7 +240,6 @@ export class AcrossClient {
    *
    * @param params - See {@link ExecuteQuoteParams}.
    * @returns The deposit ID and receipts for the deposit and fill transactions.
-   * @public
    */
   async executeQuote(
     params: Omit<
@@ -358,7 +316,6 @@ export class AcrossClient {
    * Get the available routes for a given set of parameters. See {@link getAvailableRoutes}.
    * @param params - See {@link GetAvailableRoutesParams}.
    * @returns See {@link GetAvailableRoutesReturnType}.
-   * @public
    */
   async getAvailableRoutes(
     params: Omit<GetAvailableRoutesParams, "apiUrl" | "logger">,
@@ -374,7 +331,6 @@ export class AcrossClient {
    * Get the suggested fees for a given route. See {@link getSuggestedFees}.
    * @param params - See {@link GetSuggestedFeesParams}.
    * @returns See {@link GetSuggestedFeesReturnType}.
-   * @public
    */
   async getSuggestedFees(
     params: Omit<GetSuggestedFeesParams, "apiUrl" | "logger">,
@@ -452,7 +408,6 @@ export class AcrossClient {
    * Get a quote for a given set of parameters. See {@link getQuote}.
    * @param params - See {@link GetQuoteParams}.
    * @returns See {@link Quote}.
-   * @public
    */
   async getQuote(params: Omit<GetQuoteParams, "logger" | "apiUrl">) {
     try {
@@ -485,7 +440,14 @@ export class AcrossClient {
     }
   }
 
-  async getDepositLogs(params: GetDepositLogsParams) {
+  /**
+   * Get the deposit logs for a given deposit. See {@link getDepositLogs}.
+   * @param params - See {@link GetDepositLogsParams}.
+   * @returns See {@link GetDepositLogsReturnType}.
+   */
+  async getDepositLogs(
+    params: GetDepositLogsParams,
+  ): Promise<GetDepositLogsReturnType> {
     return getDepositLogs(params);
   }
 
@@ -609,6 +571,22 @@ export class AcrossClient {
   }
 }
 
-export function getClient() {
+/**
+ * Get the existing `AcrossClient` singleton instance.
+ * @returns The existing `AcrossClient` instance.
+ * @throws If the instance is not initialized.
+ * @public
+ */
+export function getAcrossClient() {
   return AcrossClient.getInstance();
+}
+
+/**
+ * Create a singleton `AcrossClient` instance.
+ * @param options - See {@link AcrossClientOptions}.
+ * @returns A new `AcrossClient` instance.
+ * @public
+ */
+export function createAcrossClient(options: AcrossClientOptions) {
+  return AcrossClient.create(options);
 }

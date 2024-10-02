@@ -10,7 +10,7 @@ import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
 import { useQuote } from "@/lib/hooks/useQuote";
 import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
 import { getExplorerLink, isNativeToken } from "@/lib/utils";
-import { TokenInfo } from "@across-toolkit/sdk";
+import { TokenInfo } from "@across-protocol/integrator-sdk";
 import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, useBalance, useChains } from "wagmi";

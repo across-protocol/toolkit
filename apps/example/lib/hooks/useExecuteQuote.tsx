@@ -1,14 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { useAcross } from "../across";
 import { buildQueryKey, getExplorerLink } from "../utils";
-import { AcrossClient, ExecutionProgress } from "@across-toolkit/sdk";
+import {
+  AcrossClient,
+  ExecutionProgress,
+} from "@across-protocol/integrator-sdk";
 import { useChainId, useChains, useConfig, useSwitchChain } from "wagmi";
 import { useState } from "react";
 import { TransactionReceipt } from "viem";
 import { getWalletClient } from "wagmi/actions";
 
 export type useExecuteQuoteParams =
-  | Omit<Parameters<AcrossClient["actions"]["executeQuote"]>[0], "walletClient">
+  | Omit<Parameters<AcrossClient["executeQuote"]>[0], "walletClient">
   | undefined;
 
 export function useExecuteQuote(params: useExecuteQuoteParams) {
@@ -51,7 +54,7 @@ export function useExecuteQuote(params: useExecuteQuoteParams) {
         return;
       }
 
-      return sdk.actions.executeQuote({
+      return sdk.executeQuote({
         ...params,
         walletClient,
         infiniteApproval: true,

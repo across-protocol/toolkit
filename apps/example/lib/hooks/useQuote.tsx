@@ -1,13 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAcross } from "../across";
-import { AcrossClient } from "@across-toolkit/sdk";
+import { AcrossClient } from "@across-protocol/integrator-sdk";
 import { buildQueryKey } from "../utils";
 
 export type useQuoteParams =
-  | Pick<
-      Parameters<AcrossClient["actions"]["getQuote"]>[0],
-      "inputAmount" | "route"
-    >
+  | Pick<Parameters<AcrossClient["getQuote"]>[0], "inputAmount" | "route">
   | undefined;
 
 export function useQuote(
@@ -21,7 +18,7 @@ export function useQuote(
     queryKey,
     queryFn: async () => {
       if (!params) return;
-      return await sdk.actions.getQuote(params);
+      return await sdk.getQuote(params);
     },
     enabled: Boolean(params),
     refetchInterval: 10_000,

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAcross } from "../across";
-import { AcrossClient } from "@across-toolkit/sdk";
+import { AcrossClient } from "@across-protocol/integrator-sdk";
 import { buildQueryKey } from "../utils";
 
 export type useAcrossChainsParams = Parameters<
-  AcrossClient["utils"]["getSupportedChains"]
+  AcrossClient["getSupportedChains"]
 >[0];
 
 export function useSupportedAcrossChains(params: useAcrossChainsParams) {
@@ -14,7 +14,7 @@ export function useSupportedAcrossChains(params: useAcrossChainsParams) {
   const { data: supportedChains, ...rest } = useQuery({
     queryKey,
     queryFn: () => {
-      return sdk.utils.getSupportedChains(params);
+      return sdk.getSupportedChains(params);
     },
     enabled: true,
     refetchInterval: Infinity,
