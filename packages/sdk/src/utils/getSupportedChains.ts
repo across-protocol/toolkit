@@ -1,11 +1,12 @@
 import { MAINNET_API_URL } from "../constants";
 import { TokenInfo } from "../types";
 import { LoggerT, fetchAcrossApi } from ".";
+import { Address } from "viem";
 
 export type ChainsQueryParams = Partial<{
   inputTokenSymbol: string;
   outputTokenSymbol: string;
-  chainId: number; // origin chainId
+  chainId: number | number[];
   omitTokens: boolean;
 }>;
 
@@ -33,7 +34,7 @@ export type AcrossChain = {
   publicRpcUrl: string;
   explorerUrl: string;
   logoUrl: string;
-  spokePool: string;
+  spokePool: Address;
   inputTokens: TokenInfo[];
   outputTokens: TokenInfo[];
 };
