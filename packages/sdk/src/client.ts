@@ -1,4 +1,5 @@
 import {
+  Address,
   Chain,
   ContractFunctionExecutionError,
   encodeFunctionData,
@@ -45,6 +46,7 @@ import {
   simulateTxOnTenderly,
   TenderlySimulateTxParams,
   assertValidIntegratorId,
+  AcrossChain,
 } from "./utils";
 import {
   AcrossApiSimulationError,
@@ -52,6 +54,7 @@ import {
   SimulationError,
 } from "./errors";
 import {
+  ChainInfoMap,
   ConfiguredPublicClient,
   ConfiguredPublicClientMap,
   ConfiguredWalletClient,
@@ -138,6 +141,7 @@ export class AcrossClient {
 
   private integratorId: Hex;
   private publicClients: ConfiguredPublicClientMap;
+  private chainInfo?: ChainInfoMap;
   private walletClient?: ConfiguredWalletClient;
   private apiUrl: string;
   private indexerUrl: string;
@@ -226,6 +230,32 @@ export class AcrossClient {
     }
     this.logger.debug(`Using configured public client for chain ${chainId}.`);
     return client;
+  }
+
+  async getSpokePoolAddress(chainId: number): Promise<Address> {
+    const chainInfo = await this.getChainInfo(chainId);
+    return chainInfo.spokePool;
+  }
+
+  /**
+   * @param chainId - number
+   * @returns See {@link AcrossChain}.
+   */
+  async getChainInfo(chainId: number): Promise<AcrossChain> {
+    if (!this.chainInfo) {
+      const acrossChains = await this.getSupportedChains({
+        chainId: Array.from(this.publicClients.keys()),
+      });
+      // cache across chain info in memory
+      this.chainInfo = new Map(
+        acrossChains.map((acrossChain) => [acrossChain.chainId, acrossChain]),
+      );
+    }
+    if (this.chainInfo.has(chainId)) {
+      throw new Error(`Could not find chainInfo for chain with id ${chainId}`);
+    }
+
+    return this.chainInfo.get(chainId)!;
   }
 
   /**
