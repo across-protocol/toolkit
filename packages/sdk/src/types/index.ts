@@ -9,6 +9,7 @@ import {
   WalletClient,
 } from "viem";
 import { STATUS } from "../constants";
+import { AcrossChain } from "../utils/getSupportedChains";
 
 export type Status = keyof typeof STATUS;
 
@@ -73,3 +74,5 @@ export type Deposit = {
   fillTxBlock?: bigint;
   actionSuccess?: boolean;
 };
+
+export type ChainInfoMap = Map<number, AcrossChain>;
