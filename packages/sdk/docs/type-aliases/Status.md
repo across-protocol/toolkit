@@ -1,8 +1,8 @@
-[@across-protocol/integrator-sdk](../README.md) / Status
+[@across-protocol/app-sdk](../README.md) / Status
 
 # Type Alias: Status
 
-> **Status**: keyof *typeof* `STATUS`
+> **Status**: keyof _typeof_ `STATUS`
 
 ## Defined in
 

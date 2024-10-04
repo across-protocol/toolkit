@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / ExecuteQuoteParams
+[@across-protocol/app-sdk](../README.md) / ExecuteQuoteParams
 
 # Type Alias: ExecuteQuoteParams
 

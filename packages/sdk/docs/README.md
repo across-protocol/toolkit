@@ -1,4 +1,4 @@
-# @across-protocol/integrator-sdk
+# @across-protocol/app-sdk
 
 ## Classes
 
@@ -64,7 +64,7 @@
 
 ## Variables
 
-- [DOMAIN\_CALLDATA\_DELIMITER](variables/DOMAIN_CALLDATA_DELIMITER.md)
+- [DOMAIN_CALLDATA_DELIMITER](variables/DOMAIN_CALLDATA_DELIMITER.md)
 - [LogLevels](variables/LogLevels.md)
 
 ## Functions

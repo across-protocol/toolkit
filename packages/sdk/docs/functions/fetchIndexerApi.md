@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / fetchIndexerApi
+[@across-protocol/app-sdk](../README.md) / fetchIndexerApi
 
 # Function: fetchIndexerApi()
 

@@ -1,5 +1,5 @@
 {
-  "name": "@across-protocol/integrator-sdk",
+  "name": "@across-protocol/app-sdk",
   "version": "0.0.1",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",

@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / Amount
+[@across-protocol/app-sdk](../README.md) / Amount
 
 # Type Alias: Amount
 

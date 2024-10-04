@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / SimulateApproveTxParams
+[@across-protocol/app-sdk](../README.md) / SimulateApproveTxParams
 
 # Type Alias: SimulateApproveTxParams
 

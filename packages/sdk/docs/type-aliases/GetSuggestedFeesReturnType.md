@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetSuggestedFeesReturnType
+[@across-protocol/app-sdk](../README.md) / GetSuggestedFeesReturnType
 
 # Type Alias: GetSuggestedFeesReturnType
 

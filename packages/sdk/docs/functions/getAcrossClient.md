@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getAcrossClient
+[@across-protocol/app-sdk](../README.md) / getAcrossClient
 
 # Function: getAcrossClient()
 

@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getCurrentTimeSeconds
+[@across-protocol/app-sdk](../README.md) / getCurrentTimeSeconds
 
 # Function: getCurrentTimeSeconds()
 

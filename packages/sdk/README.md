@@ -14,10 +14,10 @@
 <p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@across-protocol/integrator-sdk">
+  <a href="https://www.npmjs.com/package/@across-protocol/app-sdk">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/v/@across-protocol/integrator-sdk?colorA=21262d&colorB=21262d&style=flat">
-      <img src="https://img.shields.io/npm/v/@across-protocol/integrator-sdk?colorA=f6f8fa&colorB=f6f8fa&style=flat" alt="Version">
+      <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/v/@across-protocol/app-sdk?colorA=21262d&colorB=21262d&style=flat">
+      <img src="https://img.shields.io/npm/v/@across-protocol/app-sdk?colorA=f6f8fa&colorB=f6f8fa&style=flat" alt="Version">
     </picture>
   </a>
   <a href="https://github.com/across-protocol/toolkit/blob/master/LICENSE">
@@ -32,7 +32,7 @@
 
 # Getting Started
 
-The `@across-protocol/integrator-sdk` provides useful abstractions on top of Across' Smart Contracts and Quotes API.
+The `@across-protocol/app-sdk` provides useful abstractions on top of Across' Smart Contracts and Quotes API.
 
 To learn more visit our [docs](https://docs.across.to/).
 
@@ -41,7 +41,7 @@ To learn more visit our [docs](https://docs.across.to/).
 To get started, install the integrator sdk and its peer dependency [viem](https://viem.sh/).
 
 ```bash
-pnpm i @across-protocol/integrator-sdk viem
+pnpm i @across-protocol/app-sdk viem
 ```
 
 ## Quick Start
@@ -51,7 +51,7 @@ pnpm i @across-protocol/integrator-sdk viem
 Firstly, you need to set up the `AcrossClient` and configure the chains you want to support.
 
 ```ts
-import { createAcrossClient } from "@across-protocol/integrator-sdk";
+import { createAcrossClient } from "@across-protocol/app-sdk";
 import { mainnet, optimism, arbitrum } from "viem/chains";
 
 const client = createAcrossClient({
@@ -124,7 +124,7 @@ TODO
 
 TODO
 
-# `@across-protocol/integrator-sdk` Reference
+# `@across-protocol/app-sdk` Reference
 
 For the full detailed reference see [here](./docs/README.md).
 

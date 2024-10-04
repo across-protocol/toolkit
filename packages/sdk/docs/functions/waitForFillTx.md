@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / waitForFillTx
+[@across-protocol/app-sdk](../README.md) / waitForFillTx
 
 # Function: waitForFillTx()
 

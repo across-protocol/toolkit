@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / TransactionProgress
+[@across-protocol/app-sdk](../README.md) / TransactionProgress
 
 # Type Alias: TransactionProgress
 

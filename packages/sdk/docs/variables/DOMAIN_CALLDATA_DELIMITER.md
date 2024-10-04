@@ -1,8 +1,8 @@
-[@across-protocol/integrator-sdk](../README.md) / DOMAIN\_CALLDATA\_DELIMITER
+[@across-protocol/app-sdk](../README.md) / DOMAIN_CALLDATA_DELIMITER
 
-# Variable: DOMAIN\_CALLDATA\_DELIMITER
+# Variable: DOMAIN_CALLDATA_DELIMITER
 
-> `const` **DOMAIN\_CALLDATA\_DELIMITER**: `"0x1dc0de"` = `"0x1dc0de"`
+> `const` **DOMAIN_CALLDATA_DELIMITER**: `"0x1dc0de"` = `"0x1dc0de"`
 
 ## Defined in
 

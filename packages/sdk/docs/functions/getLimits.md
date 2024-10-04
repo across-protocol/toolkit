@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getLimits
+[@across-protocol/app-sdk](../README.md) / getLimits
 
 # Function: getLimits()
 

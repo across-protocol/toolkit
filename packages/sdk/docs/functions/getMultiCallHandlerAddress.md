@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getMultiCallHandlerAddress
+[@across-protocol/app-sdk](../README.md) / getMultiCallHandlerAddress
 
 # Function: getMultiCallHandlerAddress()
 

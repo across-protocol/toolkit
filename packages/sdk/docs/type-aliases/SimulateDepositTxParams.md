@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / SimulateDepositTxParams
+[@across-protocol/app-sdk](../README.md) / SimulateDepositTxParams
 
 # Type Alias: SimulateDepositTxParams
 

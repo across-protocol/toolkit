@@ -12,7 +12,7 @@
     "ci": "pnpm run build && pnpm run lint"
   },
   "dependencies": {
-    "@across-protocol/integrator-sdk": "workspace:*",
+    "@across-protocol/app-sdk": "workspace:*",
     "@next/env": "^14.2.8",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-label": "^2.1.0",

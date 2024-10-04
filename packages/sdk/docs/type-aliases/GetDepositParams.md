@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetDepositParams
+[@across-protocol/app-sdk](../README.md) / GetDepositParams
 
 # Type Alias: GetDepositParams
 

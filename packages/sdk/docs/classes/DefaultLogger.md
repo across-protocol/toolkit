@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / DefaultLogger
+[@across-protocol/app-sdk](../README.md) / DefaultLogger
 
 # Class: DefaultLogger
 
@@ -34,7 +34,7 @@
 
 [packages/sdk/src/utils/logger.ts:12](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L12)
 
-***
+---
 
 ### logPrefix
 
@@ -44,11 +44,11 @@
 
 [packages/sdk/src/utils/logger.ts:14](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L14)
 
-***
+---
 
 ### secondaryLabel
 
-> `readonly` **secondaryLabel**: `"@across-protocol/integrator-sdk"` = `"@across-protocol/integrator-sdk"`
+> `readonly` **secondaryLabel**: `"@across-protocol/app-sdk"` = `"@across-protocol/app-sdk"`
 
 #### Defined in
 
@@ -80,7 +80,7 @@
 
 [packages/sdk/src/utils/logger.ts:20](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L20)
 
-***
+---
 
 ### debug()
 
@@ -102,7 +102,7 @@
 
 [packages/sdk/src/utils/logger.ts:42](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L42)
 
-***
+---
 
 ### error()
 
@@ -124,7 +124,7 @@
 
 [packages/sdk/src/utils/logger.ts:61](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L61)
 
-***
+---
 
 ### info()
 
@@ -146,7 +146,7 @@
 
 [packages/sdk/src/utils/logger.ts:49](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L49)
 
-***
+---
 
 ### log()
 
@@ -168,7 +168,7 @@ Description - creates an indentation group for each call to `logger.[logLevel]()
 
 [packages/sdk/src/utils/logger.ts:33](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L33)
 
-***
+---
 
 ### warn()
 

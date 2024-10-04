@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getQuote
+[@across-protocol/app-sdk](../README.md) / getQuote
 
 # Function: getQuote()
 

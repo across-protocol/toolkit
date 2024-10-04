@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / RoutesQueryParams
+[@across-protocol/app-sdk](../README.md) / RoutesQueryParams
 
 # Type Alias: RoutesQueryParams
 

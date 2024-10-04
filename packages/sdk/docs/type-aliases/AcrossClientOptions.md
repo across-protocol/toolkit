@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / AcrossClientOptions
+[@across-protocol/app-sdk](../README.md) / AcrossClientOptions
 
 # Type Alias: AcrossClientOptions
 
@@ -48,7 +48,7 @@ for the chain if not specified.
 
 #### Index Signature
 
- \[`chainId`: `number`\]: `string`
+\[`chainId`: `number`\]: `string`
 
 ### tenderly?
 

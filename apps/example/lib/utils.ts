@@ -1,7 +1,4 @@
-import {
-  ChainsQueryResponse,
-  TokenInfo,
-} from "@across-protocol/integrator-sdk";
+import { ChainsQueryResponse, TokenInfo } from "@across-protocol/app-sdk";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Address, Chain, Hash, Hex } from "viem";

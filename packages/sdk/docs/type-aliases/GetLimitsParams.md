@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetLimitsParams
+[@across-protocol/app-sdk](../README.md) / GetLimitsParams
 
 # Type Alias: GetLimitsParams
 

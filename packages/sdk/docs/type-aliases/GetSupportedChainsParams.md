@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetSupportedChainsParams
+[@across-protocol/app-sdk](../README.md) / GetSupportedChainsParams
 
 # Type Alias: GetSupportedChainsParams
 

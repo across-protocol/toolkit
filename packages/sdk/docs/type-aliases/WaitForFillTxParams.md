@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / WaitForFillTxParams
+[@across-protocol/app-sdk](../README.md) / WaitForFillTxParams
 
 # Type Alias: WaitForFillTxParams
 

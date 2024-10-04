@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / LogLevels
+[@across-protocol/app-sdk](../README.md) / LogLevels
 
 # Variable: LogLevels
 

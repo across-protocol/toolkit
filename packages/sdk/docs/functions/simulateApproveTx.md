@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / simulateApproveTx
+[@across-protocol/app-sdk](../README.md) / simulateApproveTx
 
 # Function: simulateApproveTx()
 

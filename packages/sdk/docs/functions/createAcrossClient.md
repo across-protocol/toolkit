@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / createAcrossClient
+[@across-protocol/app-sdk](../README.md) / createAcrossClient
 
 # Function: createAcrossClient()
 

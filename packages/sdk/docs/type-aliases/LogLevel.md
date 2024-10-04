@@ -1,8 +1,8 @@
-[@across-protocol/integrator-sdk](../README.md) / LogLevel
+[@across-protocol/app-sdk](../README.md) / LogLevel
 
 # Type Alias: LogLevel
 
-> **LogLevel**: keyof *typeof* [`LogLevels`](../variables/LogLevels.md)
+> **LogLevel**: keyof _typeof_ [`LogLevels`](../variables/LogLevels.md)
 
 ## Defined in
 

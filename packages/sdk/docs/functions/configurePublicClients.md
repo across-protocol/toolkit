@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / configurePublicClients
+[@across-protocol/app-sdk](../README.md) / configurePublicClients
 
 # Function: configurePublicClients()
 

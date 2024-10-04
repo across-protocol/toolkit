@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / ConfiguredPublicClientMap
+[@across-protocol/app-sdk](../README.md) / ConfiguredPublicClientMap
 
 # Type Alias: ConfiguredPublicClientMap
 

@@ -1,8 +1,8 @@
-[@across-protocol/integrator-sdk](../README.md) / GetDepositLogsReturnType
+[@across-protocol/app-sdk](../README.md) / GetDepositLogsReturnType
 
 # Type Alias: GetDepositLogsReturnType
 
-> **GetDepositLogsReturnType**: `ReturnType`\<*typeof* [`getDepositFromLogs`](../functions/getDepositFromLogs.md)\>
+> **GetDepositLogsReturnType**: `ReturnType`\<_typeof_ [`getDepositFromLogs`](../functions/getDepositFromLogs.md)\>
 
 ## Defined in
 

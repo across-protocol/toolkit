@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / Quote
+[@across-protocol/app-sdk](../README.md) / Quote
 
 # Type Alias: Quote
 

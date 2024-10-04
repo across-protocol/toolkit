@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / ChainsQueryResponse
+[@across-protocol/app-sdk](../README.md) / ChainsQueryResponse
 
 # Type Alias: ChainsQueryResponse
 

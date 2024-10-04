@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / TenderlySimulateTxParams
+[@across-protocol/app-sdk](../README.md) / TenderlySimulateTxParams
 
 # Type Alias: TenderlySimulateTxParams
 

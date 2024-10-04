@@ -1,10 +1,11 @@
-[@across-protocol/integrator-sdk](../README.md) / executeQuote
+[@across-protocol/app-sdk](../README.md) / executeQuote
 
 # Function: executeQuote()
 
 > **executeQuote**(`params`): `Promise`\<`object` \| `object`\>
 
 Executes a quote by:
+
 1. Approving the SpokePool contract if necessary
 2. Depositing the input token on the origin chain
 3. Waiting for the deposit to be filled on the destination chain

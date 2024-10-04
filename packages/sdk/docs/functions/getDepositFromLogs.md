@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getDepositFromLogs
+[@across-protocol/app-sdk](../README.md) / getDepositFromLogs
 
 # Function: getDepositFromLogs()
 

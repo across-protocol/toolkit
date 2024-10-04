@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / IndexerError
+[@across-protocol/app-sdk](../README.md) / IndexerError
 
 # Class: IndexerError
 
@@ -44,9 +44,9 @@
 
 #### Defined in
 
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.error.d.ts:24
+node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2022.error.d.ts:24
 
-***
+---
 
 ### message
 
@@ -58,9 +58,9 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.err
 
 #### Defined in
 
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1076
+node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:1076
 
-***
+---
 
 ### name
 
@@ -72,9 +72,9 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 #### Defined in
 
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1075
+node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:1075
 
-***
+---
 
 ### stack?
 
@@ -86,9 +86,9 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 #### Defined in
 
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1077
+node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:1077
 
-***
+---
 
 ### url
 
@@ -98,7 +98,7 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 [packages/sdk/src/errors/index.ts:107](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/errors/index.ts#L107)
 
-***
+---
 
 ### prepareStackTrace()?
 
@@ -126,9 +126,9 @@ https://v8.dev/docs/stack-trace-api#customizing-stack-traces
 
 #### Defined in
 
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:28
+node_modules/.pnpm/@types+node@20.16.2/node_modules/@types/node/globals.d.ts:28
 
-***
+---
 
 ### stackTraceLimit
 
@@ -140,7 +140,7 @@ node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:2
 
 #### Defined in
 
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:30
+node_modules/.pnpm/@types+node@20.16.2/node_modules/@types/node/globals.d.ts:30
 
 ## Methods
 
@@ -166,4 +166,4 @@ Create .stack property on a target object
 
 #### Defined in
 
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:21
+node_modules/.pnpm/@types+node@20.16.2/node_modules/@types/node/globals.d.ts:21

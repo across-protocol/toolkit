@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetFillByDepositTxParams
+[@across-protocol/app-sdk](../README.md) / GetFillByDepositTxParams
 
 # Type Alias: GetFillByDepositTxParams
 
