@@ -194,8 +194,6 @@ async function main() {
   const depositFilter = {
     originChainId: 42161,
     destinationChainId: 10,
-    originSpokePoolAddress: "0xe35e9842fceaCA96570B734083f4a58e8F7C5f2A",
-    destinationSpokePoolAddress: "0x6f26Bf09B1C792e3228e5467807a900A503c0281",
   } as const;
   const depositByTxHash = await client.getDeposit({
     findBy: {

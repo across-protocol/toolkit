@@ -145,6 +145,7 @@ export class AcrossClient {
   private walletClient?: ConfiguredWalletClient;
   private apiUrl: string;
   private indexerUrl: string;
+
   logger: LoggerT;
 
   // Tenderly related options
@@ -251,7 +252,7 @@ export class AcrossClient {
         acrossChains.map((acrossChain) => [acrossChain.chainId, acrossChain]),
       );
     }
-    if (this.chainInfo.has(chainId)) {
+    if (!this.chainInfo.has(chainId)) {
       throw new Error(`Could not find chainInfo for chain with id ${chainId}`);
     }
 
@@ -566,11 +567,32 @@ export class AcrossClient {
   async getDeposit(
     params: Omit<
       GetDepositParams,
-      "originChainClient" | "destinationChainClient" | "indexerUrl"
-    >,
+      "originChainClient" | "destinationChainClient" | "indexerUrl" | "findBy"
+    > & {
+      findBy: {
+        originSpokePoolAddress?: Address;
+        destinationSpokePoolAddress?: Address;
+        originChainId: number;
+        destinationChainId: number;
+        depositId?: number;
+        depositTxHash?: Hex;
+      };
+    },
   ) {
+    const originSpokePoolAddress =
+      params.findBy.originSpokePoolAddress ??
+      (await this.getSpokePoolAddress(params.findBy.originChainId));
+    const destinationSpokePoolAddress =
+      params.findBy.destinationSpokePoolAddress ??
+      (await this.getSpokePoolAddress(params.findBy.destinationChainId));
+
     return getDeposit({
       ...params,
+      findBy: {
+        ...params.findBy,
+        originSpokePoolAddress,
+        destinationSpokePoolAddress,
+      },
       indexerUrl: this.indexerUrl,
       originChainClient: this.getPublicClient(params.findBy.originChainId),
       destinationChainClient: this.getPublicClient(
