@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAcross } from "../across";
-import { AcrossClient } from "@across-protocol/integrator-sdk";
+import { AcrossClient } from "@across-protocol/app-sdk";
 import { buildQueryKey } from "../utils";
 
 export type useAvailableRoutesParams = Parameters<

@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getSupportedChains
+[@across-protocol/app-sdk](../README.md) / getSupportedChains
 
 # Function: getSupportedChains()
 

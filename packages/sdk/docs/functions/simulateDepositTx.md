@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / simulateDepositTx
+[@across-protocol/app-sdk](../README.md) / simulateDepositTx
 
 # Function: simulateDepositTx()
 

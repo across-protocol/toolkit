@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getFillByDepositTx
+[@across-protocol/app-sdk](../README.md) / getFillByDepositTx
 
 # Function: getFillByDepositTx()
 

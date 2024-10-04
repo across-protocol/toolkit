@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / LoggerT
+[@across-protocol/app-sdk](../README.md) / LoggerT
 
 # Type Alias: LoggerT
 

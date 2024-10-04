@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / buildSearchParams
+[@across-protocol/app-sdk](../README.md) / buildSearchParams
 
 # Function: buildSearchParams()
 
@@ -8,7 +8,7 @@ Builds a URL search string from an object of query parameters.
 
 ## Type Parameters
 
-• **T** *extends* `Record`\<`string`, `ParamBaseValue` \| `ParamBaseValue`[]\>
+• **T** _extends_ `Record`\<`string`, `ParamBaseValue` \| `ParamBaseValue`[]\>
 
 ## Parameters
 

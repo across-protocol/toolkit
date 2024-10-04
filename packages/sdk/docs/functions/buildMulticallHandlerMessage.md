@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / buildMulticallHandlerMessage
+[@across-protocol/app-sdk](../README.md) / buildMulticallHandlerMessage
 
 # Function: buildMulticallHandlerMessage()
 

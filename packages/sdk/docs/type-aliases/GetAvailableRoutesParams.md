@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetAvailableRoutesParams
+[@across-protocol/app-sdk](../README.md) / GetAvailableRoutesParams
 
 # Type Alias: GetAvailableRoutesParams
 

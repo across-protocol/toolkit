@@ -1,4 +1,4 @@
-import { Amount } from "@across-protocol/integrator-sdk";
+import { Amount } from "@across-protocol/app-sdk";
 import { encodeFunctionData } from "viem";
 import { optimism } from "viem/chains";
 

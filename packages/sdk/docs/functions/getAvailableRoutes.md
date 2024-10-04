@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getAvailableRoutes
+[@across-protocol/app-sdk](../README.md) / getAvailableRoutes
 
 # Function: getAvailableRoutes()
 

@@ -38,7 +38,7 @@
 Quickly integrate with a few lines of code. See [here](./packages/sdk/README.md) for more details.
 
 ```ts
-import { createAcrossClient } from "@across-protocol/integrator-sdk";
+import { createAcrossClient } from "@across-protocol/app-sdk";
 import { mainnet, optimism, arbitrum } from "viem/chains";
 import { useWalletClient } from "wagmi";
 
@@ -74,9 +74,9 @@ await client.executeQuote({
 
 ## Tools
 
-| Package                                                       | Description                                                                                |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [`@across-protocol/integrator-sdk`](./packages/sdk/README.md) | TypeScript package for building on top of Across Protocol's Smart Contracts and Quotes API |
+| Package                                                | Description                                                                                |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| [`@across-protocol/app-sdk`](./packages/sdk/README.md) | TypeScript package for building on top of Across Protocol's Smart Contracts and Quotes API |
 
 ## Examples
 

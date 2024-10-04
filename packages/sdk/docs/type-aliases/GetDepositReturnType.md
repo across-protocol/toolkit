@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetDepositReturnType
+[@across-protocol/app-sdk](../README.md) / GetDepositReturnType
 
 # Type Alias: GetDepositReturnType
 

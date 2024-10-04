@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / SuggestedFeesResponse
+[@across-protocol/app-sdk](../README.md) / SuggestedFeesResponse
 
 # Type Alias: SuggestedFeesResponse
 

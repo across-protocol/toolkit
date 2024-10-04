@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / ConfiguredPublicClient
+[@across-protocol/app-sdk](../README.md) / ConfiguredPublicClient
 
 # Type Alias: ConfiguredPublicClient
 

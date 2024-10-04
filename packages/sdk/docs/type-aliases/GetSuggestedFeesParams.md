@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetSuggestedFeesParams
+[@across-protocol/app-sdk](../README.md) / GetSuggestedFeesParams
 
 # Type Alias: GetSuggestedFeesParams
 

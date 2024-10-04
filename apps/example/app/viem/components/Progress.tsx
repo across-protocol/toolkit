@@ -1,6 +1,6 @@
 import { LoadingIndicator, Status } from "@/components/LoadingIndicator";
 import { cn } from "@/lib/utils";
-import { ExecutionProgress } from "@across-protocol/integrator-sdk";
+import { ExecutionProgress } from "@across-protocol/app-sdk";
 
 export type ProgressProps = {
   progress: ExecutionProgress;

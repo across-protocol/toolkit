@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / waitForDepositTx
+[@across-protocol/app-sdk](../README.md) / waitForDepositTx
 
 # Function: waitForDepositTx()
 

@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetDepositLogsParams
+[@across-protocol/app-sdk](../README.md) / GetDepositLogsParams
 
 # Type Alias: GetDepositLogsParams
 

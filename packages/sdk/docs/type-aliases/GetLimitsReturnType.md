@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetLimitsReturnType
+[@across-protocol/app-sdk](../README.md) / GetLimitsReturnType
 
 # Type Alias: GetLimitsReturnType
 

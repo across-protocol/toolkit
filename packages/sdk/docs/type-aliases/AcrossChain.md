@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / AcrossChain
+[@across-protocol/app-sdk](../README.md) / AcrossChain
 
 # Type Alias: AcrossChain
 

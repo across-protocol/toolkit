@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / ConfiguredWalletClient
+[@across-protocol/app-sdk](../README.md) / ConfiguredWalletClient
 
 # Type Alias: ConfiguredWalletClient
 

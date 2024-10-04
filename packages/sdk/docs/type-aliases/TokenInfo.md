@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / TokenInfo
+[@across-protocol/app-sdk](../README.md) / TokenInfo
 
 # Type Alias: TokenInfo
 

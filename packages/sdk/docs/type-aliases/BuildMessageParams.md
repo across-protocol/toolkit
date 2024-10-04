@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / BuildMessageParams
+[@across-protocol/app-sdk](../README.md) / BuildMessageParams
 
 # Type Alias: BuildMessageParams
 

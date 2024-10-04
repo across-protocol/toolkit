@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / IndexerStatusResponse
+[@across-protocol/app-sdk](../README.md) / IndexerStatusResponse
 
 # Type Alias: IndexerStatusResponse
 

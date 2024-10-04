@@ -1,8 +1,8 @@
-[@across-protocol/integrator-sdk](../README.md) / AcrossErrorCodeType
+[@across-protocol/app-sdk](../README.md) / AcrossErrorCodeType
 
 # Type Alias: AcrossErrorCodeType
 
-> **AcrossErrorCodeType**: keyof *typeof* `AcrossErrorCode`
+> **AcrossErrorCodeType**: keyof _typeof_ `AcrossErrorCode`
 
 ## Defined in
 

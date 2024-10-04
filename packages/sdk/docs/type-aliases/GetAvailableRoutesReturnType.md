@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetAvailableRoutesReturnType
+[@across-protocol/app-sdk](../README.md) / GetAvailableRoutesReturnType
 
 # Type Alias: GetAvailableRoutesReturnType
 

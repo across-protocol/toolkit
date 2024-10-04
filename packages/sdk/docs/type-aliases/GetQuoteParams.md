@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / GetQuoteParams
+[@across-protocol/app-sdk](../README.md) / GetQuoteParams
 
 # Type Alias: GetQuoteParams
 

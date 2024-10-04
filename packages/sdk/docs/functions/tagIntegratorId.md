@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / tagIntegratorId
+[@across-protocol/app-sdk](../README.md) / tagIntegratorId
 
 # Function: tagIntegratorId()
 

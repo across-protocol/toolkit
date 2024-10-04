@@ -1,4 +1,4 @@
-# @across-protocol/integrator-sdk
+# @across-protocol/app-sdk
 
 ## 0.0.1
 

@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getSuggestedFees
+[@across-protocol/app-sdk](../README.md) / getSuggestedFees
 
 # Function: getSuggestedFees()
 

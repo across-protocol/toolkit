@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / Deposit
+[@across-protocol/app-sdk](../README.md) / Deposit
 
 # Type Alias: Deposit
 

@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / WaitForDepositTxParams
+[@across-protocol/app-sdk](../README.md) / WaitForDepositTxParams
 
 # Type Alias: WaitForDepositTxParams
 

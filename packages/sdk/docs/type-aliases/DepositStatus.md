@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / DepositStatus
+[@across-protocol/app-sdk](../README.md) / DepositStatus
 
 # Type Alias: DepositStatus
 

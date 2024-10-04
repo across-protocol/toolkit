@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / getIntegratorDataSuffix
+[@across-protocol/app-sdk](../README.md) / getIntegratorDataSuffix
 
 # Function: getIntegratorDataSuffix()
 

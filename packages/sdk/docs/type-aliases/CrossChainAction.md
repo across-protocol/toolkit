@@ -1,4 +1,4 @@
-[@across-protocol/integrator-sdk](../README.md) / CrossChainAction
+[@across-protocol/app-sdk](../README.md) / CrossChainAction
 
 # Type Alias: CrossChainAction
 

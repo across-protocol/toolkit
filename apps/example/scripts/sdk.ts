@@ -1,4 +1,4 @@
-import { AcrossClient } from "@across-protocol/integrator-sdk";
+import { AcrossClient } from "@across-protocol/app-sdk";
 import {
   encodeFunctionData,
   parseAbiItem,
