@@ -1,5 +1,12 @@
 # @across-protocol/app-sdk
 
+## 0.0.2
+
+### Patch Changes
+
+- 790c7b9: stricter integrator id check
+- 8d48bd4: decrease required `getDeposit` params
+
 ## 0.0.1
 
 ### Patch Changes
