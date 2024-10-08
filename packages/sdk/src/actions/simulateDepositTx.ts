@@ -6,11 +6,7 @@ import {
   zeroAddress,
 } from "viem";
 import { Quote } from "./getQuote";
-import {
-  getCurrentTimeSeconds,
-  getIntegratorDataSuffix,
-  LoggerT,
-} from "../utils";
+import { getIntegratorDataSuffix, LoggerT } from "../utils";
 import { spokePoolAbi } from "../abis/SpokePool";
 
 export type SimulateDepositTxParams = {
@@ -62,12 +58,30 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
   let fillDeadline = _fillDeadline;
 
   if (!fillDeadline) {
-    const fillDeadlineBuffer = await publicClient.readContract({
-      address: spokePoolAddress,
-      abi: spokePoolAbi,
-      functionName: "fillDeadlineBuffer",
-    });
-    fillDeadline = getCurrentTimeSeconds() - 60 + fillDeadlineBuffer;
+    const [fillDeadlineBufferResult, getCurrentTimeResult] =
+      await publicClient.multicall({
+        contracts: [
+          {
+            address: spokePoolAddress,
+            abi: spokePoolAbi,
+            functionName: "fillDeadlineBuffer",
+          },
+          {
+            address: spokePoolAddress,
+            abi: spokePoolAbi,
+            functionName: "getCurrentTime",
+          },
+        ],
+      });
+    if (fillDeadlineBufferResult.error || getCurrentTimeResult.error) {
+      const error =
+        fillDeadlineBufferResult.error || getCurrentTimeResult.error;
+      throw new Error(
+        `Failed to fetch 'fillDeadlineBuffer' or 'getCurrentTime': ${error}`,
+      );
+    }
+    fillDeadline =
+      Number(getCurrentTimeResult.result) + fillDeadlineBufferResult.result;
   }
 
   const useExclusiveRelayer =
