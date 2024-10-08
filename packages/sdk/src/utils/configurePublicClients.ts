@@ -1,25 +1,31 @@
-import { Chain, createPublicClient, http } from "viem";
+import { Chain, createPublicClient, http, Transport, webSocket } from "viem";
 import { ConfiguredPublicClientMap } from "../types";
 
 // creates a mapping chainId => publicClient
 export function configurePublicClients(
   chains: Chain[],
-  pollingInterval: number, // milliseconds
+  pollingInterval?: number, // milliseconds
   rpcUrls?: {
     [key: number]: string;
+  },
+  transports?: {
+    [key: number]: Transport;
   },
 ): ConfiguredPublicClientMap {
   return new Map(
     chains.map((chain) => {
-      // get custom rpc if one is specified, or use default
       const rpcUrl = rpcUrls?.[chain.id];
+      const customTransport = transports?.[chain.id];
+      const transport =
+        customTransport ??
+        (rpcUrl?.startsWith("wss") ? webSocket(rpcUrl) : http(rpcUrl));
       return [
         chain.id,
         createPublicClient({
           chain,
           pollingInterval,
           key: chain.id.toString(),
-          transport: http(rpcUrl),
+          transport,
           batch: {
             multicall: true,
           },
