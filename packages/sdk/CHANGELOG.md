@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.0.3
+
+### Patch Changes
+
+- 78e0b66: fix `fillDeadline` calculation
+
 ## 0.0.2
 
 ### Patch Changes
