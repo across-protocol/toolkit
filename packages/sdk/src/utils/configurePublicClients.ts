@@ -4,7 +4,7 @@ import { ConfiguredPublicClientMap } from "../types";
 // creates a mapping chainId => publicClient
 export function configurePublicClients(
   chains: Chain[],
-  pollingInterval: number, // milliseconds
+  pollingInterval?: number, // milliseconds
   rpcUrls?: {
     [key: number]: string;
   },

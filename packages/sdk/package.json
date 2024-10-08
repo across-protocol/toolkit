@@ -37,7 +37,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "type-check": "tsc",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
-    "test": "vitest run",
+    "test": "vitest run --reporter=verbose",
     "ci": "pnpm run build && pnpm run check-exports pnpm npm run lint && pnpm run test",
     "typedoc": "typedoc --out docs src/index.ts"
   },
