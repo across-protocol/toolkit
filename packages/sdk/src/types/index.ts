@@ -25,6 +25,8 @@ export type CrossChainAction = {
   callData: Hex;
   value: Amount;
   update?: (outputAmount: bigint) => { callData: Hex; value: bigint };
+  updateCallData?: (outputAmount: bigint) => Hex;
+  updateValue?: (outputAmount: bigint) => bigint;
 };
 
 export type IndexerStatusResponse = {

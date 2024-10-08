@@ -160,11 +160,27 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
   // If a given cross-chain message is dependent on the outputAmount, update it
   if (crossChainMessage && typeof crossChainMessage === "object") {
     for (const action of crossChainMessage.actions) {
-      if (action.update) {
-        const { callData, value } = action.update(outputAmount);
+      if (action.update || action.updateCallData || action.updateValue) {
+        let callData: Hex;
+        let value: bigint;
+
+        if (action.update) {
+          const updated = action.update(outputAmount);
+          callData = updated.callData;
+          value = updated.value;
+        } else {
+          callData = action.updateCallData
+            ? action.updateCallData(outputAmount)
+            : action.callData;
+          value = action.updateValue
+            ? action.updateValue(outputAmount)
+            : BigInt(action.value);
+        }
         action.callData = callData;
         action.value = value;
+
         logger?.debug("Updated calldata:", action.callData);
+        logger?.debug("Updated value:", action.value);
       }
     }
     message = buildMulticallHandlerMessage({
