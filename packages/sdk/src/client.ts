@@ -59,6 +59,10 @@ import {
   ConfiguredPublicClientMap,
   ConfiguredWalletClient,
 } from "./types";
+import {
+  simulateUpdateDepositTx,
+  SimulateUpdateDepositTxParams,
+} from "./actions/simulateUpdateDepositTx";
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
@@ -515,6 +519,51 @@ export class AcrossClient {
         simulationId,
         simulationUrl,
         message: `deposit simulation failed: ${e.shortMessage}`,
+      });
+    }
+  }
+
+  async simulateUpdateDepositTx(
+    params: Omit<
+      SimulateUpdateDepositTxParams,
+      "originChainClient" | "destinationChainClient" | "logger" | "apiUrl"
+    >,
+  ) {
+    try {
+      const result = await simulateUpdateDepositTx({
+        ...params,
+        originChainClient: this.getPublicClient(params.deposit.originChainId),
+        destinationChainClient: this.getPublicClient(
+          params.deposit.destinationChainId,
+        ),
+        logger: this.logger,
+        apiUrl: this.apiUrl,
+      });
+      return result;
+    } catch (e) {
+      if (
+        !this.tenderly?.simOnError ||
+        !this.isTenderlyEnabled ||
+        !(e instanceof ContractFunctionExecutionError)
+      ) {
+        throw e;
+      }
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.deposit.originChainId.toString(),
+        from: e.sender!,
+        to: e.contractAddress!,
+        data: encodeFunctionData({
+          abi: e.abi,
+          functionName: e.functionName,
+          args: e.args,
+        }),
+        value: "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `speedUpV3Deposit simulation failed: ${e.shortMessage}`,
       });
     }
   }
