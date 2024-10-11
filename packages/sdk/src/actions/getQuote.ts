@@ -160,24 +160,35 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
   // If a given cross-chain message is dependent on the outputAmount, update it
   if (crossChainMessage && typeof crossChainMessage === "object") {
     for (const action of crossChainMessage.actions) {
-      if (action.update || action.updateCallData || action.updateValue) {
-        let callData: Hex;
-        let value: bigint;
+      if (action.update || action.updateCallData || action.updateValue || action.updateAsync || action.updateCallDataAsync || action.updateValueAsync) {
+        let _callData: Hex = action.callData;
+        let _value: bigint = BigInt(action.value);
 
         if (action.update) {
           const updated = action.update(outputAmount);
-          callData = updated.callData;
-          value = updated.value;
-        } else {
-          callData = action.updateCallData
-            ? action.updateCallData(outputAmount)
-            : action.callData;
-          value = action.updateValue
-            ? action.updateValue(outputAmount)
-            : BigInt(action.value);
+          _callData = updated.callData;
+          _value = updated.value;
+        } 
+        if (action.updateCallData) { 
+          _callData = action.updateCallData(outputAmount);
         }
-        action.callData = callData;
-        action.value = value;
+        if (action.updateValue) {
+          _value = action.updateValue(outputAmount)
+        }
+        if (action.updateAsync) {
+          const updated = await action.updateAsync(outputAmount);
+          _callData = updated.callData;
+          _value = updated.value;
+        } 
+        if (action.updateCallDataAsync) { 
+          _callData = await action.updateCallDataAsync(outputAmount);
+        }
+        if (action.updateValueAsync) {
+          _value = await action.updateValueAsync(outputAmount)
+        }
+        
+        action.callData = _callData;
+        action.value = _value;
 
         logger?.debug("Updated calldata:", action.callData);
         logger?.debug("Updated value:", action.value);

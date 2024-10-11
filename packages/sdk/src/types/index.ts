@@ -27,6 +27,9 @@ export type CrossChainAction = {
   update?: (outputAmount: bigint) => { callData: Hex; value: bigint };
   updateCallData?: (outputAmount: bigint) => Hex;
   updateValue?: (outputAmount: bigint) => bigint;
+  updateAsync?: (outputAmount: bigint) => Promise<{ callData: Hex; value: bigint }>;
+  updateCallDataAsync?: (outputAmount: bigint) => Promise<Hex>;
+  updateValueAsync?: (outputAmount: bigint) => Promise<bigint>;
 };
 
 export type IndexerStatusResponse = {
