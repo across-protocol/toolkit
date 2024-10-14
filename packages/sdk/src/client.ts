@@ -579,8 +579,8 @@ export class AcrossClient {
    */
   async getDeposit(
     params: MakeOptional<
-      GetDepositParams,
-      "originChainClient" | "destinationChainClient" | "indexerUrl" | "findBy"
+      Omit<GetDepositParams, "findBy">,
+      "originChainClient" | "destinationChainClient" | "indexerUrl"
     > & {
       findBy: {
         originSpokePoolAddress?: Address;
