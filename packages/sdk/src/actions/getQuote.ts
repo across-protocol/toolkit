@@ -164,28 +164,25 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
       let _value: bigint = BigInt(action.value);
 
       if (action?.update) {
-        const updated = action.update(outputAmount);
-        _callData = updated.callData;
-        _value = updated.value;
-      }
-      if (action?.updateCallData) {
-        _callData = action.updateCallData(outputAmount);
-      }
-      if (action?.updateValue) {
-        _value = action.updateValue(outputAmount);
-      }
-      if (action?.updateAsync) {
-        const updated = await action.updateAsync(outputAmount);
-        _callData = updated.callData;
-        _value = updated.value;
-      }
-      if (action?.updateCallDataAsync) {
-        _callData = await action.updateCallDataAsync(outputAmount);
+        const maybePromise = action.update(outputAmount);
+        if (maybePromise instanceof Promise) {
+          const updated = await maybePromise;
+          if (updated?.callData) {
+            _callData = updated.callData;
+          }
+          if (updated?.value) {
+            _value = updated?.value;
+          }
+        } else {
+          if (maybePromise?.callData) {
+            _callData = maybePromise.callData;
+          }
+          if (maybePromise?.value) {
+            _value = maybePromise?.value;
+          }
+        }
       }
 
-      if (action?.updateValueAsync) {
-        _value = await action.updateValueAsync(outputAmount);
-      }
       action.callData = _callData;
       action.value = _value;
 

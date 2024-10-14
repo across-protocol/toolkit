@@ -31,7 +31,6 @@ export function useStakeQuote(
           update: (updatedOutputAmount) => {
             return {
               callData: generateUnwrapCallData(updatedOutputAmount),
-              value: 0n,
             };
           },
         },
@@ -41,7 +40,6 @@ export function useStakeQuote(
           value: inputAmount,
           update: (updatedOutputAmount) => {
             return {
-              callData: generateStakeCallData(address),
               value: updatedOutputAmount,
             };
           },
