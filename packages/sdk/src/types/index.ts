@@ -20,17 +20,68 @@ export type ConfiguredPublicClient = PublicClient<Transport, Chain>;
 
 export type ConfiguredPublicClientMap = Map<number, ConfiguredPublicClient>;
 
-export type CrossChainAction = {
+type CrossChainBase = {
   target: Address;
   callData: Hex;
   value: Amount;
-  update?: (outputAmount: bigint) => { callData: Hex; value: bigint };
-  updateCallData?: (outputAmount: bigint) => Hex;
-  updateValue?: (outputAmount: bigint) => bigint;
-  updateAsync?: (outputAmount: bigint) => Promise<{ callData: Hex; value: bigint }>;
-  updateCallDataAsync?: (outputAmount: bigint) => Promise<Hex>;
-  updateValueAsync?: (outputAmount: bigint) => Promise<bigint>;
 };
+
+// This convoluted type ensures we restrict some update functions
+type UpdateBothOption =
+  | {
+      update: (outputAmount: bigint) => { callData: Hex; value: bigint };
+      updateAsync?: undefined;
+      updateValue?: undefined;
+      updateValueAsync?: undefined;
+      updateCallData?: undefined;
+      updateCallDataAsync?: undefined;
+    }
+  | {
+      updateAsync: (
+        outputAmount: bigint,
+      ) => Promise<{ callData: Hex; value: bigint }>;
+      update?: undefined;
+      updateValue?: undefined;
+      updateValueAsync?: undefined;
+      updateCallData?: undefined;
+      updateCallDataAsync?: undefined;
+    };
+
+type UpdateValueOption =
+  | {
+      updateValue: (outputAmount: bigint) => bigint;
+      updateValueAsync?: undefined;
+    }
+  | {
+      updateValueAsync: (outputAmount: bigint) => Promise<bigint>;
+      updateValue?: undefined;
+    }
+  | {
+      updateValue?: undefined;
+      updateValueAsync?: undefined;
+    };
+
+type UpdateCallDataOption =
+  | {
+      updateCallData: (outputAmount: bigint) => Hex;
+      updateCallDataAsync?: undefined;
+    }
+  | {
+      updateCallDataAsync: (outputAmount: bigint) => Promise<Hex>;
+      updateCallData?: undefined;
+    }
+  | {
+      updateCallData?: undefined;
+      updateCallDataAsync?: undefined;
+    };
+
+export type CrossChainAction =
+  | (CrossChainBase & UpdateBothOption)
+  | (CrossChainBase & {
+      update?: undefined;
+      updateAsync?: undefined;
+    } & UpdateValueOption &
+      UpdateCallDataOption);
 
 export type IndexerStatusResponse = {
   error?: string;
