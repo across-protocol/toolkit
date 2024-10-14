@@ -4,6 +4,7 @@ import { LoggerT } from "../utils";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { ConfiguredPublicClient, CrossChainAction } from "../types";
 import { getDeposit } from "./getDeposit";
+import { signUpdateDepositTypedData } from "./signUpdateDeposit";
 
 export type SimulateUpdateDepositTxParams = {
   walletClient: WalletClient;
@@ -138,30 +139,13 @@ export async function simulateUpdateDepositTx(
   const updatedOutputAmount =
     update.outputAmount ?? newQuote.deposit.outputAmount;
   const updatedMessage = newQuote.deposit.message;
-  const signature = await walletClient.signTypedData({
-    account: account.address,
-    domain: {
-      name: "ACROSS-V2",
-      version: "1.0.0",
-      chainId: originChainId,
-    },
-    types: {
-      UpdateDepositDetails: [
-        { name: "depositId", type: "uint32" },
-        { name: "originChainId", type: "uint256" },
-        { name: "updatedOutputAmount", type: "uint256" },
-        { name: "updatedRecipient", type: "address" },
-        { name: "updatedMessage", type: "bytes" },
-      ],
-    },
-    primaryType: "UpdateDepositDetails",
-    message: {
-      depositId,
-      originChainId: BigInt(originChainId),
-      updatedOutputAmount,
-      updatedRecipient,
-      updatedMessage,
-    },
+  const signature = await signUpdateDepositTypedData({
+    walletClient,
+    updatedMessage,
+    updatedOutputAmount,
+    updatedRecipient,
+    originChainId,
+    depositId,
   });
 
   const result = await originChainClient.simulateContract({

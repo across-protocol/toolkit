@@ -6,3 +6,4 @@ export * from "./hex";
 export * from "./configurePublicClients";
 export * from "./getSupportedChains";
 export * from "./tenderly";
+export * from "./typedData";

@@ -63,6 +63,10 @@ import {
   simulateUpdateDepositTx,
   SimulateUpdateDepositTxParams,
 } from "./actions/simulateUpdateDepositTx";
+import {
+  signUpdateDepositTypedData,
+  SignUpdateDepositTypedDataParams,
+} from "./actions/signUpdateDeposit";
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
@@ -566,6 +570,19 @@ export class AcrossClient {
         message: `speedUpV3Deposit simulation failed: ${e.shortMessage}`,
       });
     }
+  }
+
+  async signUpdateDepositTypedData(
+    params: Omit<SignUpdateDepositTypedDataParams, "walletClient">,
+  ) {
+    if (!this.walletClient) {
+      throw new ConfigError(`'walletClient' needs to be set to sign`);
+    }
+
+    return signUpdateDepositTypedData({
+      ...params,
+      walletClient: this.walletClient,
+    });
   }
 
   async waitForDepositTx(params: Omit<WaitForDepositTxParams, "publicClient">) {
