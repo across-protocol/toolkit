@@ -26,7 +26,7 @@ type CrossChainBase = {
   value: Amount;
 };
 
-// This convoluted type ensures we restrict some update functions
+// This convoluted type ensures we make some updaters mutually exclusive
 type UpdateBothOption =
   | {
       update: (outputAmount: bigint) => { callData: Hex; value: bigint };
