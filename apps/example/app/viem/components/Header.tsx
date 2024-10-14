@@ -1,15 +1,20 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icon";
 import { ConnectButton } from "./ConnectButton";
+import { useScrollPosition } from "@/lib/hooks/useScrollPosition";
 
 export const Header = ({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) => {
+  const scrollPosition = useScrollPosition();
+
   return (
     <div
       className={cn(
-        "fixed top-0 z-20 h-[72px] flex w-full items-center justify-between bg-transparent px-4 md:px-6",
+        "fixed bg-background border-b border-transparent top-0 z-20 h-[72px] flex w-full items-center justify-between px-4 md:px-6",
+        { "border-b-border": scrollPosition > 72 },
         className,
       )}
       {...props}
