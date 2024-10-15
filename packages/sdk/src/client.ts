@@ -365,7 +365,7 @@ export class AcrossClient {
   ): Promise<GetAvailableRoutesReturnType> {
     return getAvailableRoutes({
       ...params,
-      apiUrl: params?.apiUrl ?? this.apiUrl,
+      apiUrl: params?.apiUrl || this.apiUrl,
       logger: params?.logger ?? this.logger,
     });
   }
