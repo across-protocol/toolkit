@@ -59,6 +59,7 @@ import {
   ConfiguredPublicClientMap,
   ConfiguredWalletClient,
 } from "./types";
+import { MakeOptional } from "./utils/typeUtils";
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
@@ -277,13 +278,22 @@ export class AcrossClient {
    * @returns The deposit ID and receipts for the deposit and fill transactions.
    */
   async executeQuote(
-    params: Omit<
+    params: MakeOptional<
       ExecuteQuoteParams,
       "logger" | "originClient" | "destinationClient" | "integratorId"
     >,
   ) {
-    const _walletClient = params?.walletClient ?? this?.walletClient;
-    if (!_walletClient) {
+    const logger = params?.logger ?? this.logger;
+    const originClient =
+      params?.originClient ??
+      this.getPublicClient(params.deposit.originChainId);
+    const destinationClient =
+      params?.destinationClient ??
+      this.getPublicClient(params.deposit.destinationChainId);
+    const integratorId = params?.integratorId ?? this.integratorId;
+    const walletClient = params?.walletClient ?? this?.walletClient;
+
+    if (!walletClient) {
       throw new ConfigError(
         "WalletClient needs to be set to call 'executeQuote'",
       );
@@ -292,13 +302,11 @@ export class AcrossClient {
     try {
       await executeQuote({
         ...params,
-        integratorId: this.integratorId,
-        logger: this.logger,
-        walletClient: _walletClient,
-        originClient: this.getPublicClient(params.deposit.originChainId),
-        destinationClient: this.getPublicClient(
-          params.deposit.destinationChainId,
-        ),
+        integratorId,
+        logger,
+        walletClient,
+        originClient,
+        destinationClient,
       });
     } catch (e) {
       if (
@@ -353,12 +361,12 @@ export class AcrossClient {
    * @returns See {@link GetAvailableRoutesReturnType}.
    */
   async getAvailableRoutes(
-    params: Omit<GetAvailableRoutesParams, "apiUrl" | "logger">,
+    params: MakeOptional<GetAvailableRoutesParams, "apiUrl" | "logger">,
   ): Promise<GetAvailableRoutesReturnType> {
     return getAvailableRoutes({
       ...params,
-      apiUrl: this.apiUrl,
-      logger: this.logger,
+      apiUrl: params?.apiUrl || this.apiUrl,
+      logger: params?.logger ?? this.logger,
     });
   }
 
@@ -368,13 +376,13 @@ export class AcrossClient {
    * @returns See {@link GetSuggestedFeesReturnType}.
    */
   async getSuggestedFees(
-    params: Omit<GetSuggestedFeesParams, "apiUrl" | "logger">,
+    params: MakeOptional<GetSuggestedFeesParams, "apiUrl" | "logger">,
   ): Promise<GetSuggestedFeesReturnType> {
     try {
       const fees = await getSuggestedFees({
         ...params,
-        apiUrl: this.apiUrl,
-        logger: this.logger,
+        apiUrl: params?.apiUrl ?? this.apiUrl,
+        logger: params?.logger ?? this.logger,
       });
       return fees;
     } catch (e) {
@@ -407,13 +415,13 @@ export class AcrossClient {
    * @returns See {@link GetLimitsReturnType}.
    */
   async getLimits(
-    params: Omit<GetLimitsParams, "apiUrl" | "logger">,
+    params: MakeOptional<GetLimitsParams, "apiUrl" | "logger">,
   ): Promise<GetLimitsReturnType> {
     try {
       const limits = await getLimits({
         ...params,
-        apiUrl: this.apiUrl,
-        logger: this.logger,
+        apiUrl: params?.apiUrl ?? this.apiUrl,
+        logger: params?.logger ?? this.logger,
       });
       return limits;
     } catch (e) {
@@ -444,12 +452,12 @@ export class AcrossClient {
    * @param params - See {@link GetQuoteParams}.
    * @returns See {@link Quote}.
    */
-  async getQuote(params: Omit<GetQuoteParams, "logger" | "apiUrl">) {
+  async getQuote(params: MakeOptional<GetQuoteParams, "logger" | "apiUrl">) {
     try {
       const quote = await getQuote({
         ...params,
-        logger: this.logger,
-        apiUrl: this.apiUrl,
+        logger: params?.logger ?? this.logger,
+        apiUrl: params?.apiUrl ?? this.apiUrl,
       });
       return quote;
     } catch (e) {
@@ -476,7 +484,7 @@ export class AcrossClient {
   }
 
   async simulateDepositTx(
-    params: Omit<
+    params: MakeOptional<
       SimulateDepositTxParams,
       "integratorId" | "publicClient" | "logger"
     >,
@@ -484,9 +492,11 @@ export class AcrossClient {
     try {
       const result = await simulateDepositTx({
         ...params,
-        integratorId: this.integratorId,
-        publicClient: this.getPublicClient(params.deposit.originChainId),
-        logger: this.logger,
+        integratorId: params?.integratorId ?? this.integratorId,
+        publicClient:
+          params?.publicClient ??
+          this.getPublicClient(params.deposit.originChainId),
+        logger: params?.logger ?? this.logger,
       });
       return result;
     } catch (e) {
@@ -519,10 +529,13 @@ export class AcrossClient {
     }
   }
 
-  async waitForDepositTx(params: Omit<WaitForDepositTxParams, "publicClient">) {
+  async waitForDepositTx(
+    params: MakeOptional<WaitForDepositTxParams, "publicClient">,
+  ) {
     return waitForDepositTx({
       ...params,
-      publicClient: this.getPublicClient(params.originChainId),
+      publicClient:
+        params?.publicClient ?? this.getPublicClient(params.originChainId),
     });
   }
 
@@ -532,30 +545,30 @@ export class AcrossClient {
    * @returns See {@link FillStatus}.
    */
   async getFillByDepositTx(
-    params: Omit<
+    params: MakeOptional<
       GetFillByDepositTxParams,
-      "originChainClient" | "destinationChainClient" | "indexerUrl" | "logger"
+      "destinationChainClient" | "indexerUrl" | "logger"
     >,
   ) {
     return getFillByDepositTx({
       ...params,
-      destinationChainClient: this.getPublicClient(
-        params.deposit.destinationChainId,
-      ),
-      indexerUrl: this.indexerUrl,
-      logger: this.logger,
+      destinationChainClient:
+        params?.destinationChainClient ??
+        this.getPublicClient(params.deposit.destinationChainId),
+      indexerUrl: params?.indexerUrl ?? this.indexerUrl,
+      logger: params?.logger ?? this.logger,
     });
   }
 
   async waitForFillTx(
-    params: Omit<WaitForFillTxParams, "destinationChainClient">,
+    params: MakeOptional<WaitForFillTxParams, "destinationChainClient">,
   ) {
     return waitForFillTx({
       ...params,
-      destinationChainClient: this.getPublicClient(
-        params.deposit.destinationChainId,
-      ),
-      logger: this.logger,
+      destinationChainClient:
+        params?.destinationChainClient ??
+        this.getPublicClient(params.deposit.destinationChainId),
+      logger: params?.logger ?? this.logger,
     });
   }
 
@@ -565,9 +578,9 @@ export class AcrossClient {
    * @returns See {@link Deposit}.
    */
   async getDeposit(
-    params: Omit<
-      GetDepositParams,
-      "originChainClient" | "destinationChainClient" | "indexerUrl" | "findBy"
+    params: MakeOptional<
+      Omit<GetDepositParams, "findBy">,
+      "originChainClient" | "destinationChainClient" | "indexerUrl"
     > & {
       findBy: {
         originSpokePoolAddress?: Address;
@@ -593,37 +606,40 @@ export class AcrossClient {
         originSpokePoolAddress,
         destinationSpokePoolAddress,
       },
-      indexerUrl: this.indexerUrl,
-      originChainClient: this.getPublicClient(params.findBy.originChainId),
-      destinationChainClient: this.getPublicClient(
-        params.findBy.destinationChainId,
-      ),
+      indexerUrl: params?.indexerUrl ?? this.indexerUrl,
+      originChainClient:
+        params?.originChainClient ??
+        this.getPublicClient(params.findBy.originChainId),
+      destinationChainClient:
+        params?.destinationChainClient ??
+        this.getPublicClient(params.findBy.destinationChainId),
     });
   }
 
   /* -------------------------------- Utilities ------------------------------- */
 
   async getSupportedChains(
-    params: Omit<GetSupportedChainsParams, "apiUrl" | "logger">,
+    params: MakeOptional<GetSupportedChainsParams, "apiUrl" | "logger">,
   ) {
     return getSupportedChains({
       ...params,
-      logger: this.logger,
-      apiUrl: this.apiUrl,
+      logger: params?.logger ?? this.logger,
+      apiUrl: params?.apiUrl ?? this.apiUrl,
     });
   }
 
   async simulateTxOnTenderly(
-    params: Omit<
+    params: MakeOptional<
       TenderlySimulateTxParams,
       "enableShare" | "accessKey" | "accountSlug" | "projectSlug"
     >,
   ) {
-    if (
-      !this.tenderly?.accessKey ||
-      !this.tenderly?.accountSlug ||
-      !this.tenderly?.projectSlug
-    ) {
+    const accessKey = params?.accessKey ?? this.tenderly?.accessKey;
+    const accountSlug = params?.accountSlug ?? this.tenderly?.accountSlug;
+    const projectSlug = params?.projectSlug ?? this.tenderly?.projectSlug;
+    const enableShare = params?.enableShare ?? true;
+
+    if (!accessKey || !accountSlug || !projectSlug) {
       throw new ConfigError(
         "Tenderly credentials not set. Client needs to be configured with " +
           "'tenderly.accessKey', 'tenderly.accountSlug', and 'tenderly.projectSlug'.",
@@ -632,10 +648,10 @@ export class AcrossClient {
 
     return simulateTxOnTenderly({
       ...params,
-      accessKey: this.tenderly?.accessKey,
-      accountSlug: this.tenderly?.accountSlug,
-      projectSlug: this.tenderly?.projectSlug,
-      enableShare: true,
+      accessKey,
+      accountSlug,
+      projectSlug,
+      enableShare,
     });
   }
 }
