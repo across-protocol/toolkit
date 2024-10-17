@@ -59,6 +59,14 @@ import {
   ConfiguredPublicClientMap,
   ConfiguredWalletClient,
 } from "./types";
+import {
+  simulateUpdateDepositTx,
+  SimulateUpdateDepositTxParams,
+} from "./actions/simulateUpdateDepositTx";
+import {
+  signUpdateDepositTypedData,
+  SignUpdateDepositTypedDataParams,
+} from "./actions/signUpdateDeposit";
 import { MakeOptional } from "./utils/typeUtils";
 
 const CLIENT_DEFAULTS = {
@@ -527,6 +535,95 @@ export class AcrossClient {
         message: `deposit simulation failed: ${e.shortMessage}`,
       });
     }
+  }
+
+  /**
+   * This function simulates the update of a deposit on the origin chain. Can be used to
+   * update:
+   * - the recipient address
+   * - the output amount, i.e. the fees
+   * - the cross-chain message
+   *
+   * Note that this requires a signature from the depositor.
+   *
+   * See {@link simulateUpdateDepositTx}.
+   *
+   * @param params - See {@link SimulateUpdateDepositTxParams}.
+   * @returns The result of the simulation.
+   * @example
+   * ```ts
+   * const result = await client.simulateUpdateDepositTx({
+   *   deposit: {
+   *     // deposit details
+   *   },
+   *   update: {
+   *     recipient: "0xNEW_RECIPIENT_ADDRESS",
+   *   },
+   *  });
+   * const txHash = await walletClient.writeContract({
+   *   account,
+   *   ...txRequest,
+   * });
+   * ```
+   */
+  async simulateUpdateDepositTx(
+    params: MakeOptional<
+      SimulateUpdateDepositTxParams,
+      "originChainClient" | "destinationChainClient" | "logger" | "apiUrl"
+    >,
+  ) {
+    try {
+      const result = await simulateUpdateDepositTx({
+        logger: this.logger,
+        apiUrl: this.apiUrl,
+        ...params,
+        originChainClient:
+          params.originChainClient ??
+          this.getPublicClient(params.deposit.originChainId),
+        destinationChainClient:
+          params.destinationChainClient ??
+          this.getPublicClient(params.deposit.destinationChainId),
+      });
+      return result;
+    } catch (e) {
+      if (
+        !this.tenderly?.simOnError ||
+        !this.isTenderlyEnabled ||
+        !(e instanceof ContractFunctionExecutionError)
+      ) {
+        throw e;
+      }
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.deposit.originChainId.toString(),
+        from: e.sender!,
+        to: e.contractAddress!,
+        data: encodeFunctionData({
+          abi: e.abi,
+          functionName: e.functionName,
+          args: e.args,
+        }),
+        value: "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `speedUpV3Deposit simulation failed: ${e.shortMessage}`,
+      });
+    }
+  }
+
+  async signUpdateDepositTypedData(
+    params: MakeOptional<SignUpdateDepositTypedDataParams, "walletClient">,
+  ) {
+    if (!this.walletClient) {
+      throw new ConfigError(`'walletClient' needs to be set to sign`);
+    }
+
+    return signUpdateDepositTypedData({
+      walletClient: this.walletClient,
+      ...params,
+    });
   }
 
   async waitForDepositTx(

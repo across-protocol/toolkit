@@ -1,12 +1,12 @@
-import { Address, Hex, isHash, PublicClient } from "viem";
+import { Address, Hex, isHash } from "viem";
 import { getDepositFromLogs } from "./getDepositFromLogs";
-import { Deposit } from "../types";
+import { ConfiguredPublicClient, Deposit } from "../types";
 import { getFillByDepositTx } from "./getFillByDepositTx";
 import { NoFillLogError } from "../errors";
 
 export type GetDepositParams = {
-  originChainClient: PublicClient;
-  destinationChainClient: PublicClient;
+  originChainClient: ConfiguredPublicClient;
+  destinationChainClient: ConfiguredPublicClient;
   findBy: {
     originChainId: number;
     destinationChainId: number;
