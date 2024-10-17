@@ -1,5 +1,13 @@
 # @across-protocol/app-sdk
 
+## 0.0.4
+
+### Patch Changes
+
+- 614d48c: add `updateDeposit` to allow updating message, recipient and output amount
+- 614d48c: add `simulateUpdateDeposit` for updating deposit
+- 0f96e3f: Allow async message update callbacks for `getQuote`
+
 ## 0.0.3
 
 ### Patch Changes
