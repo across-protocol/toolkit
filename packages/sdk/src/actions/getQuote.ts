@@ -160,29 +160,36 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
   // If a given cross-chain message is dependent on the outputAmount, update it
   if (crossChainMessage && typeof crossChainMessage === "object") {
     for (const action of crossChainMessage.actions) {
-      if (action.update || action.updateCallData || action.updateValue) {
-        let callData: Hex;
-        let value: bigint;
+      let _callData: Hex = action.callData;
+      let _value: bigint = BigInt(action.value);
 
-        if (action.update) {
-          const updated = action.update(outputAmount);
-          callData = updated.callData;
-          value = updated.value;
+      if (action?.update) {
+        const maybePromise = action.update(outputAmount);
+        if (maybePromise instanceof Promise) {
+          const updated = await maybePromise;
+          if (updated?.callData) {
+            _callData = updated.callData;
+          }
+          if (updated?.value) {
+            _value = updated?.value;
+          }
         } else {
-          callData = action.updateCallData
-            ? action.updateCallData(outputAmount)
-            : action.callData;
-          value = action.updateValue
-            ? action.updateValue(outputAmount)
-            : BigInt(action.value);
+          if (maybePromise?.callData) {
+            _callData = maybePromise.callData;
+          }
+          if (maybePromise?.value) {
+            _value = maybePromise?.value;
+          }
         }
-        action.callData = callData;
-        action.value = value;
-
-        logger?.debug("Updated calldata:", action.callData);
-        logger?.debug("Updated value:", action.value);
       }
+
+      action.callData = _callData;
+      action.value = _value;
+
+      logger?.debug("Updated calldata:", action.callData);
+      logger?.debug("Updated value:", action.value);
     }
+
     message = buildMulticallHandlerMessage({
       actions: crossChainMessage.actions,
       fallbackRecipient: crossChainMessage.fallbackRecipient,
