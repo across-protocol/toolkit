@@ -537,6 +537,35 @@ export class AcrossClient {
     }
   }
 
+  /**
+   * This function simulates the update of a deposit on the origin chain. Can be used to
+   * update:
+   * - the recipient address
+   * - the output amount, i.e. the fees
+   * - the cross-chain message
+   *
+   * Note that this requires a signature from the depositor.
+   *
+   * See {@link simulateUpdateDepositTx}.
+   *
+   * @param params - See {@link SimulateUpdateDepositTxParams}.
+   * @returns The result of the simulation.
+   * @example
+   * ```ts
+   * const result = await client.simulateUpdateDepositTx({
+   *   deposit: {
+   *     // deposit details
+   *   },
+   *   update: {
+   *     recipient: "0xNEW_RECIPIENT_ADDRESS",
+   *   },
+   *  });
+   * const txHash = await walletClient.writeContract({
+   *   account,
+   *   ...txRequest,
+   * });
+   * ```
+   */
   async simulateUpdateDepositTx(
     params: MakeOptional<
       SimulateUpdateDepositTxParams,
