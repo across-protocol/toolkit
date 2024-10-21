@@ -1,7 +1,6 @@
 {
   "extends": "@across-toolkit/typescript-config/base.json",
   "include": ["."],
-  "exclude": ["dist", "build", "node_modules", "test"],
   "compilerOptions": {
     "noEmit": true
   }
