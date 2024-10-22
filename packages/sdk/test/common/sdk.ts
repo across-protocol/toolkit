@@ -1,5 +1,4 @@
 import { AcrossClient } from "../../src/client";
-import { hardhat } from "viem/chains";
 
 import {
   arbitrum,
@@ -29,14 +28,18 @@ export const MAINNET_SUPPORTED_CHAINS = [
   zora,
 ] as const;
 
+const tenderly = TENDERLY_KEY
+  ? {
+      simOnError: true,
+      accessKey: TENDERLY_KEY,
+      accountSlug: "account",
+      projectSlug: "project",
+    }
+  : undefined;
+
 export const testClient = AcrossClient.create({
   useTestnet: false,
   logLevel: "DEBUG",
   chains: Object.values(chains),
-  tenderly: {
-    simOnError: true,
-    accessKey: TENDERLY_KEY,
-    accountSlug: "gsteenkamp",
-    projectSlug: "project",
-  },
+  tenderly,
 });
