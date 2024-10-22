@@ -20,36 +20,28 @@ export const PRIVATE_KEY =
 // Named accounts
 export const [ALICE, BOB, RELAYER] = ACCOUNTS;
 
-if (!process.env.VITE_ANVIL_FORK_URL_OPTIMISM) {
-  throw new Error(
-    'Missing environment variable "VITE_ANVIL_FORK_URL_OPTIMISM"',
-  );
+function getEnv(key: string): string {
+  if (!process.env[key]) {
+    throw new Error(`Missing environment variable "${key}"`);
+  }
+  return process.env[key];
 }
+// FORK URLs
+export const FORK_URL_OPTIMISM = getEnv("VITE_ANVIL_FORK_URL_OPTIMISM");
+export const FORK_URL_BASE = getEnv("VITE_ANVIL_FORK_URL_BASE");
+export const FORK_URL_MAINNET = getEnv("VITE_ANVIL_FORK_URL_MAINNET");
+export const FORK_URL_ARBITRUM = getEnv("VITE_ANVIL_FORK_URL_ARBITRUM");
 
-export const FORK_URL_OPTIMISM = process.env.VITE_ANVIL_FORK_URL_OPTIMISM;
-
-if (!process.env.VITE_ANVIL_FORK_URL_BASE) {
-  throw new Error('Missing environment variable "VITE_ANVIL_FORK_URL_BASE"');
-}
-
-export const FORK_URL_BASE = process.env.VITE_ANVIL_FORK_URL_BASE;
-
-if (!process.env.VITE_ANVIL_BLOCK_NUMBER_OPTIMISM) {
-  throw new Error(
-    'Missing environment variable "VITE_ANVIL_BLOCK_NUMBER_OPTIMISM"',
-  );
-}
-
+// FORK BLOCK NUMBERS
 export const BLOCK_NUMBER_OPTIMISM = BigInt(
-  Number(process.env.VITE_ANVIL_BLOCK_NUMBER_OPTIMISM),
+  Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_OPTIMISM")),
 );
-
-if (!process.env.VITE_ANVIL_BLOCK_NUMBER_BASE) {
-  throw new Error(
-    'Missing environment variable "VITE_ANVIL_BLOCK_NUMBER_BASE"',
-  );
-}
-
 export const BLOCK_NUMBER_BASE = BigInt(
-  Number(process.env.VITE_ANVIL_BLOCK_NUMBER_BASE),
+  Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_BASE")),
+);
+export const BLOCK_NUMBER_MAINNET = BigInt(
+  Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_MAINNET")),
+);
+export const BLOCK_NUMBER_ARBITRUM = BigInt(
+  Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_ARBITRUM")),
 );

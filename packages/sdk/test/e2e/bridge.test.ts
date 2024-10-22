@@ -1,19 +1,22 @@
 import {
   assert,
   assertType,
-  beforeEach,
   describe,
   expect,
   expectTypeOf,
   test,
 } from "vitest";
-import { testClient } from "../common/client.ts";
-import { AcrossChain } from "../../src/utils/getSupportedChains.ts";
-import { ConfiguredPublicClient, Quote, Route } from "../../src/index.ts";
-import { Address, parseUnits } from "viem";
-import { chainClients } from "../common/anvil.mts";
-import { mainnetChainInfo } from "../mocks/data/getSupportedChains.ts";
-import { resetChainBeforeAll } from "../common/utils.ts";
+import { testClient } from "../common/client";
+import { type AcrossChain } from "../../src/utils/getSupportedChains";
+import {
+  type ConfiguredPublicClient,
+  type Quote,
+  type Route,
+} from "../../src/index";
+import { type Address, parseUnits } from "viem";
+import { chainClientMainnet } from "../common/anvil";
+import { mainnetChainInfo } from "../mocks/data/getSupportedChains";
+import { sleep } from "../common/utils";
 
 const inputToken = {
   address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
@@ -30,8 +33,6 @@ const testRoute = {
 
 let route: Route;
 let quote: Quote;
-
-resetChainBeforeAll();
 
 describe("Simple Bridge", async () => {
   describe("Client configured correctly", () => {
@@ -91,14 +92,11 @@ describe("Simple Bridge", async () => {
   });
 
   test("Executes with correct params", async () => {
-    const blockNumber1 =
-      await chainClients.chainClientOptimism?.getBlockNumber();
+    const blockNumber1 = await chainClientMainnet.getBlockNumber();
 
-    const blockNumber2 =
-      await chainClients.chainClientOptimism?.getBlockNumber();
+    await sleep(4_000);
+    const blockNumber2 = await chainClientMainnet.getBlockNumber();
 
-    console.log("blockNumber1", blockNumber1);
-    console.log("blockNumber2", blockNumber2);
     expect(blockNumber1).to.not.equal(blockNumber2);
   });
 });

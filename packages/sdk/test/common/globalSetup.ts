@@ -1,4 +1,4 @@
-import { chainClients } from "./anvil.mts";
+import { chainClients } from "./anvil";
 
 export default async function () {
   const servers = await Promise.all(
@@ -6,6 +6,6 @@ export default async function () {
   );
 
   return async () => {
-    await Promise.all(Object.values(chainClients).map((chain) => chain.stop()));
+    await Promise.all(servers.map((chain) => chain.stop()));
   };
 }
