@@ -19,14 +19,12 @@ import {
   http,
   publicActions,
   type PublicActions,
-  type PublicClient,
   type TestActions,
   type TestRpcSchema,
   type Transport,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { type Compute } from "./utils";
-import { type ConfiguredWalletClient } from "../../src/index";
 import { createServer } from "prool";
 import { anvil } from "prool/instances";
 import {
@@ -161,6 +159,16 @@ export const publicClientBase = createPublicClient({
   transport: http(),
 });
 
+// export const publicClientMainnet = createPublicClient({
+//   chain: mainnetAnvil,
+//   transport: http(),
+// });
+
+// export const publicClientArbitrum = createPublicClient({
+//   chain: arbitrumAnvil,
+//   transport: http(),
+// });
+
 // WALLET CLIENTS
 export const testWalletOptimism = createWalletClient({
   account,
@@ -168,9 +176,21 @@ export const testWalletOptimism = createWalletClient({
   transport: http(),
 });
 
-const testWalletBase = createWalletClient({
+export const testWalletBase = createWalletClient({
   account,
   chain: baseAnvil,
+  transport: http(),
+});
+
+export const testWalletMainnet = createWalletClient({
+  account,
+  chain: mainnetAnvil,
+  transport: http(),
+});
+
+export const testWalletArbitrum = createWalletClient({
+  account,
+  chain: arbitrumAnvil,
   transport: http(),
 });
 
@@ -218,7 +238,6 @@ function forkMethods(
           forkUrl: client.chain.fork.url,
           forkBlockNumber: client.chain.fork.blockNumber,
           blockTime: 2,
-          optimism: client.chain.fork?.opStack ? true : false,
         }),
         port: client.chain.port,
       });
@@ -252,14 +271,4 @@ export const opStackChainClients: Record<string, OpStackChainClient> = {
 export const chainClients: Record<string, ChainClient> = {
   chainClientMainnet,
   chainClientArbitrum,
-};
-
-export const publicClients = {
-  publicClientOptimism,
-  publicClientBase,
-} as Record<string, PublicClient>;
-
-export const walletClients: Record<string, ConfiguredWalletClient> = {
-  testWalletOptimism,
-  testWalletBase,
 };

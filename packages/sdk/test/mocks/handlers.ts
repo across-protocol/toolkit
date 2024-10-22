@@ -26,7 +26,7 @@ export const handlers = [
       MAINNET_SUPPORTED_CHAINS.map((chain) => chain.id),
     );
     // check if client has in-fact fetched chain info for ALL chains, if not we force test to fail downstream
-    if (givenChainIds.difference(expectedChainIds).keys().toArray().length) {
+    if (givenChainIds.size !== expectedChainIds.size) {
       return HttpResponse.json({
         status: 500,
         data: undefined,

@@ -29,12 +29,12 @@ export const MAINNET_SUPPORTED_CHAINS = [
 
 export const testnetTestSDK = AcrossClient.create({
   useTestnet: true,
-  logLevel: "WARN",
+  logLevel: "DEBUG",
   chains: [hardhat],
 });
 
 export const mainnetTestSDK = AcrossClient.create({
   useTestnet: false,
-  logLevel: "WARN",
+  logLevel: "DEBUG",
   chains: [...MAINNET_SUPPORTED_CHAINS],
 });
