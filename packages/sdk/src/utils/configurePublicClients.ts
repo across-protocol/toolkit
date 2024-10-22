@@ -18,7 +18,7 @@ export function configurePublicClients(
       const customTransport = transports?.[chain.id];
       const transport =
         customTransport ??
-        (rpcUrl?.startsWith("wss") ? webSocket(rpcUrl) : http(rpcUrl));
+        (rpcUrl?.startsWith("ws") ? webSocket(rpcUrl) : http(rpcUrl));
       return [
         chain.id,
         createPublicClient({

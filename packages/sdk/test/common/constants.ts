@@ -45,3 +45,5 @@ export const BLOCK_NUMBER_MAINNET = BigInt(
 export const BLOCK_NUMBER_ARBITRUM = BigInt(
   Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_ARBITRUM")),
 );
+
+export const TENDERLY_KEY = getEnv("VITE_TENDERLY_KEY");

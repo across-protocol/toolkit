@@ -1,6 +1,6 @@
 {
   "extends": "@across-toolkit/typescript-config/base.json",
-  "include": ["."],
+  "include": [".", "test/mocks/data/available-routes/.ts"],
   "exclude": ["dist", "build", "node_modules", "test"],
   "compilerOptions": {
     "noEmit": true

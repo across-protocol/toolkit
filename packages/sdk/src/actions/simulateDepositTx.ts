@@ -100,7 +100,7 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
       inputToken,
       outputToken,
       BigInt(inputAmount),
-      outputAmount,
+      BigInt(outputAmount),
       BigInt(destinationChainId),
       exclusiveRelayer,
       quoteTimestamp,

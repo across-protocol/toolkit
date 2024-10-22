@@ -1,4 +1,4 @@
-import { Address, Hex, parseAbiItem, parseEventLogs } from "viem";
+import { Address, Hex, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types";
 import { spokePoolAbi } from "../abis/SpokePool";
 import { FillStatus } from "./getFillByDepositTx";

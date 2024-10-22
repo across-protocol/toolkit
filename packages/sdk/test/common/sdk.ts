@@ -13,6 +13,8 @@ import {
   redstone,
   zora,
 } from "viem/chains";
+import { chains } from "./anvil";
+import { TENDERLY_KEY } from "./constants";
 
 export const MAINNET_SUPPORTED_CHAINS = [
   arbitrum,
@@ -27,14 +29,14 @@ export const MAINNET_SUPPORTED_CHAINS = [
   zora,
 ] as const;
 
-export const testnetTestSDK = AcrossClient.create({
-  useTestnet: true,
-  logLevel: "DEBUG",
-  chains: [hardhat],
-});
-
-export const mainnetTestSDK = AcrossClient.create({
+export const testClient = AcrossClient.create({
   useTestnet: false,
   logLevel: "DEBUG",
-  chains: [...MAINNET_SUPPORTED_CHAINS],
+  chains: Object.values(chains),
+  tenderly: {
+    simOnError: true,
+    accessKey: TENDERLY_KEY,
+    accountSlug: "gsteenkamp",
+    projectSlug: "project",
+  },
 });
