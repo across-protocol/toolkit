@@ -1,3 +1,5 @@
+import { getAddress } from "viem";
+
 export const pool = Number(process.env.VITEST_POOL_ID ?? 1);
 
 // Test accounts
@@ -19,6 +21,13 @@ export const PRIVATE_KEY =
   "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 // Named accounts
 export const [ALICE, BOB, RELAYER] = ACCOUNTS;
+
+export const USDC_MAINNET = getAddress(
+  "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+);
+export const USDC_WHALE = getAddress(
+  "0x55fe002aeff02f77364de339a1292923a15844b8",
+);
 
 function getEnv(key: string): string {
   if (!process.env[key]) {

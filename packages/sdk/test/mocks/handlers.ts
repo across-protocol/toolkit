@@ -18,11 +18,9 @@ export const handlers = [
   //  getSupportedChains
   http.get(`${TEST_BASE_URL}/chains`, async ({ request }) => {
     const url = new URL(request.url);
-
     const givenChainIds = new Set(
       url.searchParams.getAll("chainId").map(Number),
     );
-
     const expectedChainIds = new Set(
       MAINNET_SUPPORTED_CHAINS.map((chain) => chain.id),
     );

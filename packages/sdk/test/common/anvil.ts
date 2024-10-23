@@ -12,6 +12,7 @@ import {
   PRIVATE_KEY,
 } from "./constants";
 import {
+  type Account,
   type Client,
   createPublicClient,
   createTestClient,
@@ -22,6 +23,8 @@ import {
   type TestActions,
   type TestRpcSchema,
   type Transport,
+  type WalletActions,
+  walletActions,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { type Compute } from "./utils";
@@ -115,72 +118,78 @@ const account = privateKeyToAccount(PRIVATE_KEY);
 // TEST (CHAIN) CLIENTS
 
 export const chainClientMainnet: ChainClient = createTestClient({
+  account,
   chain: mainnetAnvil,
   mode: "anvil",
   transport: http(),
 })
   .extend(forkMethods)
-  .extend(publicActions);
+  .extend(publicActions)
+  .extend(walletActions);
 
 export const chainClientArbitrum: ChainClient = createTestClient({
+  account,
   chain: arbitrumAnvil,
   mode: "anvil",
   transport: http(),
 })
   .extend(forkMethods)
-  .extend(publicActions);
+  .extend(publicActions)
+  .extend(walletActions);
 
-export const chainClientOptimism: OpStackChainClient = createTestClient({
-  chain: optimismAnvil,
-  mode: "anvil",
-  transport: http(),
-})
-  .extend(forkMethods)
-  .extend(publicActionsL1())
-  .extend(publicActionsL2());
+// export const chainClientOptimism: OpStackChainClient = createTestClient({
+//   account,
+//   chain: optimismAnvil,
+//   mode: "anvil",
+//   transport: http(),
+// })
+//   .extend(forkMethods)
+//   .extend(publicActionsL1())
+//   .extend(publicActionsL2());
 
-export const chainClientBase: OpStackChainClient = createTestClient({
-  chain: baseAnvil,
-  mode: "anvil",
-  transport: http(),
-})
-  .extend(forkMethods)
-  .extend(publicActionsL1())
-  .extend(publicActionsL2());
+// export const chainClientBase: OpStackChainClient = createTestClient({
+//   account,
+//   chain: baseAnvil,
+//   mode: "anvil",
+//   transport: http(),
+// })
+//   .extend(forkMethods)
+//   .extend(publicActionsL1())
+//   .extend(publicActionsL2());
 
 // PUBLIC CLIENTS
-export const publicClientOptimism = createPublicClient({
-  chain: optimismAnvil,
-  transport: http(),
-});
-
-export const publicClientBase = createPublicClient({
-  chain: baseAnvil,
-  transport: http(),
-});
-
-// export const publicClientMainnet = createPublicClient({
-//   chain: mainnetAnvil,
+// export const publicClientOptimism = createPublicClient({
+//   chain: optimismAnvil,
 //   transport: http(),
 // });
 
-// export const publicClientArbitrum = createPublicClient({
-//   chain: arbitrumAnvil,
+// export const publicClientBase = createPublicClient({
+//   chain: baseAnvil,
 //   transport: http(),
 // });
+
+export const publicClientMainnet = createPublicClient({
+  chain: mainnetAnvil,
+  transport: http(),
+});
+
+export const publicClientArbitrum = createPublicClient({
+  chain: arbitrumAnvil,
+  transport: http(),
+});
 
 // WALLET CLIENTS
-export const testWalletOptimism = createWalletClient({
-  account,
-  chain: optimismAnvil,
-  transport: http(),
-});
+// export const testWalletOptimism = createWalletClient({
+//   account,
+//   chain: optimismAnvil,
+//   transport: http(),
+// });
 
-export const testWalletBase = createWalletClient({
-  account,
-  chain: baseAnvil,
-  transport: http(),
-});
+// export const testWalletBase = createWalletClient({
+//   account,
+//   chain: baseAnvil,
+//   transport: http(),
+// });
 
 export const testWalletMainnet = createWalletClient({
   account,
@@ -194,20 +203,20 @@ export const testWalletArbitrum = createWalletClient({
   transport: http(),
 });
 
-export type OpStackChainClient = Client<
-  Transport,
-  AnvilChain,
-  undefined,
-  TestRpcSchema<"anvil">,
-  TestActions & ForkMethods & PublicActionsL1 & PublicActionsL2
->;
+// export type OpStackChainClient = Client<
+//   Transport,
+//   AnvilChain,
+//   Account,
+//   TestRpcSchema<"anvil">,
+//   TestActions & ForkMethods & PublicActionsL1 & PublicActionsL2
+// >;
 
 export type ChainClient = Client<
   Transport,
   AnvilChain,
-  undefined,
+  Account,
   TestRpcSchema<"anvil">,
-  TestActions & ForkMethods & PublicActions
+  TestActions & ForkMethods & PublicActions & WalletActions
 >;
 
 type ForkMethods = ReturnType<typeof forkMethods>;
@@ -216,7 +225,7 @@ function forkMethods(
   client: Client<
     Transport,
     AnvilChain,
-    undefined,
+    Account,
     TestRpcSchema<"anvil">,
     TestActions
   >,
@@ -263,10 +272,10 @@ export const chains = {
   mainnetAnvil,
 };
 
-export const opStackChainClients: Record<string, OpStackChainClient> = {
-  chainClientOptimism,
-  chainClientBase,
-};
+// export const opStackChainClients: Record<string, OpStackChainClient> = {
+//   chainClientOptimism,
+//   chainClientBase,
+// };
 
 export const chainClients: Record<string, ChainClient> = {
   chainClientMainnet,

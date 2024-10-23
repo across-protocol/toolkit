@@ -14,10 +14,12 @@ import {
   type Route,
   type TokenInfo,
 } from "../../src/index";
-import { type Address, parseUnits, type PublicClient } from "viem";
+import { type Address, formatUnits, parseEther, parseUnits } from "viem";
 import {
   chainClientArbitrum,
   chainClientMainnet,
+  publicClientArbitrum,
+  publicClientMainnet,
   testWalletMainnet,
 } from "../common/anvil";
 import { mainnetChainInfo } from "../mocks/data/chains";
@@ -25,6 +27,7 @@ import {
   BLOCK_NUMBER_ARBITRUM,
   BLOCK_NUMBER_MAINNET,
 } from "../common/constants";
+import { fundUsdc, getUsdcBalance } from "../common/utils";
 
 const inputToken = mainnetChainInfo
   .find((chain) => chain.chainId === 1)
@@ -107,18 +110,28 @@ describe("Simple Bridge", async () => {
     const blockNumberMainnet = await chainClientMainnet.getBlockNumber();
     expect(blockNumberMainnet).toBe(BLOCK_NUMBER_MAINNET);
 
+    // give wallet 1 ETH
     await chainClientMainnet.setBalance({
-      address: inputToken.address,
-      value: inputAmountBN * 2n,
+      address: chainClientMainnet.account.address,
+      value: parseEther("1"),
     });
+
+    await fundUsdc(chainClientMainnet, testWalletMainnet.account.address);
+
+    const usdcBalance = await getUsdcBalance(
+      testWalletMainnet.account.address,
+      publicClientMainnet,
+    );
+
+    console.log("USDC Balance", formatUnits(usdcBalance, inputToken.decimals));
 
     const result = await new Promise((res, rej) => {
       testClient.executeQuote({
         deposit: quote.deposit,
         walletClient: testWalletMainnet,
         // override publicClients because for some reason the configurePublicClients is not respecting the rpcUrls defined for each chain in anvil.ts
-        originClient: chainClientMainnet as ConfiguredPublicClient,
-        destinationClient: chainClientArbitrum as ConfiguredPublicClient,
+        originClient: publicClientMainnet as ConfiguredPublicClient,
+        destinationClient: publicClientArbitrum as ConfiguredPublicClient,
         infiniteApproval: true,
         onProgress: (progress) => {
           console.log(progress);
