@@ -50,12 +50,12 @@ const client = createAcrossClient({
   chains: [mainnet, optimism, arbitrum],
 });
 
-// 2. Retrieve quote for USDC from Optimism -> Arbitrum
+// 2. Retrieve quote for USDC from Arbitrum -> Optimism
 const route = {
-  originChainId: optimism.chainId
-  destinationChainId: arbitrum.chainId,
-  inputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-  outputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  originChainId: arbitrum.id,
+  destinationChainId: optimism.id,
+  inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  outputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
 };
 const quote = await client.getQuote({
   route,
