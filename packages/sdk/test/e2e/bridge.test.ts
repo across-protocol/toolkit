@@ -125,9 +125,21 @@ describe("Simple Bridge", async () => {
 
     console.log("USDC Balance", formatUnits(usdcBalance, inputToken.decimals));
 
+    const latestBlock = await chainClientMainnet.getBlock({
+      blockTag: "latest",
+    });
+
+    const depositTimestamp = latestBlock.timestamp - 20n;
+
+    // override quote timestamp
+    const deposit = {
+      ...quote.deposit,
+      quoteTimestamp: Number(depositTimestamp),
+    };
+
     const result = await new Promise((res, rej) => {
       testClient.executeQuote({
-        deposit: quote.deposit,
+        deposit: deposit,
         walletClient: testWalletMainnet,
         // override publicClients because for some reason the configurePublicClients is not respecting the rpcUrls defined for each chain in anvil.ts
         originClient: publicClientMainnet as ConfiguredPublicClient,
