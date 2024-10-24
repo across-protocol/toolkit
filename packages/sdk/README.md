@@ -112,7 +112,9 @@ Have a look at our [example app](../../apps/example) for a more detailed usage o
 
 Across enables users to seamlessly interact with your dApp or chain using assets from other chains.
 
-### 1. Craft a cross-chain message
+- ### Example A - _Stake an ERC20 on destination chain_
+
+### 1. Craft a cross-chain message (A)
 
 To implement this feature, you first need to specify a `crossChainMessage`.
 The example below shows a cross-chain message for staking USDC into a contract deployed
@@ -227,6 +229,119 @@ await client.executeQuote({
   onProgress: (progress) => {
     // handle progress
   },
+});
+```
+
+- ### **Example (B)** - _Stake Native ETH on destination chain_
+
+> This follows the logic in the example app.
+
+To implement this feature, we need to bridge either ETH or WETH from our origin chain to our destination chain. Across will always send WETH to the recipient on the destination chain, **unless the recipient is an EOA**. For our use-case, we want to stake native ETH, moreover we want to do this in one step. For this we recommend using Across's MulticallHandler contract (or deploying your own).
+
+So here's how we can stake ETH onto our staking contract:
+
+1. Bridge ETH => destination chain and send output tokens to MulticallHandler contract (this will be WETH since it's a contract).
+2. Unwrap WETH
+3. Stake ETH on the staking contract.
+
+The rest of the flow is exactly the same as the previous example.
+
+It is also worth noting that whenever our calldata is dependant on the output amount we **MUST** make use of the `update()` function.
+
+### 1. Craft a cross-chain message (B)
+
+```ts
+import { type Amount } from "@across-protocol/app-sdk";
+import { encodeFunctionData } from "viem";
+import { optimism } from "viem/chains";
+
+// constants
+const userAddress = "0xFoo";
+const multicallHandlerOptimism = "0x924a9f036260DdD5808007E1AA95f08eD08aA569";
+
+// WETH action
+export const WETH_OPTIMISM = {
+  chain: optimism,
+  abi: WethAbi,
+  token: {
+    address: "0x4200000000000000000000000000000000000006",
+    decimals: 18,
+    logoUrl:
+      "https://raw.githubusercontent.com/across-protocol/frontend/master/src/assets/token-logos/weth.svg",
+    name: "Wrapped Ether",
+    symbol: "WETH",
+  },
+  address: "0x4200000000000000000000000000000000000006",
+} as const;
+
+export const STAKE_CONTRACT = {
+  address: "0x733Debf51574c70CfCdb7918F032E16F686bd9f8",
+  chain: optimism,
+  token: {
+    address: "0x4200000000000000000000000000000000000006", // notice that ETH & WETH both have the same address
+    symbol: "ETH",
+    name: "Ether",
+    decimals: 18,
+    logoUrl:
+      "https://raw.githubusercontent.com/across-protocol/frontend/master/src/assets/token-logos/eth.svg",
+  },
+  abi: StakerContractABI,
+} as const;
+
+// WETH unwrap action
+function generateUnwrapCallData(wethAmount: Amount) {
+  return encodeFunctionData({
+    abi: WethAbi,
+    functionName: "withdraw",
+    args: [BigInt(wethAmount)],
+  });
+}
+
+// STAKE action
+function generateStakeCallData(userAddress: Address) {
+  return encodeFunctionData({
+    abi: STAKE_CONTRACT.abi,
+    functionName: "stake",
+    args: [userAddress],
+  });
+}
+
+const crossChainMessage = {
+  actions: [
+    {
+      target: WETH_OPTIMISM.address,
+      callData: generateUnwrapCallData(inputAmount),
+      value: 0n,
+      // we only update the calldata since the unwrap call is non-payable, but we DO care about the output amount.
+      update: (updatedOutputAmount) => {
+        return {
+          callData: generateUnwrapCallData(updatedOutputAmount),
+        };
+      },
+    },
+    {
+      target: STAKE_CONTRACT.address,
+      callData: generateStakeCallData(address),
+      // 🔔 the initial value may be set equal to the output amount. This MUST be updated via the `update()` function below oir this call will fail!
+      value: inputAmount,
+      // now we MUST update msg.value since this last call is calling a payable function.
+      update: (updatedOutputAmount) => {
+        return {
+          value: updatedOutputAmount,
+        };
+      },
+    },
+  ],
+  fallbackRecipient: userAddress,
+};
+
+// Then get a quote
+const quote = await client.getQuote({
+  route,
+  inputAmount: parseEther("1"),
+  // 🔔 Notice the recipient is not the staking contract itself or even the user, but is instead the contract that will execute our cross chain messages
+  recipient: multicallHandlerOptimism,
+  crossChainMessage: buildCrossChainMessage(parseEther("1")),
 });
 ```
 
