@@ -246,7 +246,7 @@ function forkMethods(
           chainId: client.chain.id,
           forkUrl: client.chain.fork.url,
           forkBlockNumber: client.chain.fork.blockNumber,
-          blockTime: 2,
+          blockTime: 1,
         }),
         port: client.chain.port,
       });
