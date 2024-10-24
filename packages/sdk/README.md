@@ -259,7 +259,6 @@ import { optimism } from "viem/chains";
 const userAddress = "0xFoo";
 const multicallHandlerOptimism = "0x924a9f036260DdD5808007E1AA95f08eD08aA569";
 
-// WETH action
 export const WETH_OPTIMISM = {
   chain: optimism,
   abi: WethAbi,
@@ -321,7 +320,7 @@ const crossChainMessage = {
     },
     {
       target: STAKE_CONTRACT.address,
-      callData: generateStakeCallData(address),
+      callData: generateStakeCallData(userAddress),
       // 🔔 the initial value may be set equal to the output amount. This MUST be updated via the `update()` function below oir this call will fail!
       value: inputAmount,
       // now we MUST update msg.value since this last call is calling a payable function.
