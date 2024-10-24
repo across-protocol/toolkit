@@ -132,21 +132,17 @@ export const StakerContractABI = [
 export const STAKE_CONTRACT = {
   address: "0x733Debf51574c70CfCdb7918F032E16F686bd9f8",
   chain: optimism,
-  token: stakeToken,
+  token: {
+    address: "0x4200000000000000000000000000000000000006", // notice that ETH & WETH both have the same address
+    symbol: "ETH",
+    name: "Ether",
+    decimals: 18,
+    logoUrl:
+      "https://raw.githubusercontent.com/across-protocol/frontend/master/src/assets/token-logos/eth.svg",
+  },
   multicallHandler: "0x924a9f036260DdD5808007E1AA95f08eD08aA569",
   abi: StakerContractABI,
 } as const;
-
-export function generateStakeAction(
-  userAddress: Address,
-  value: bigint,
-): CrossChainAction {
-  return {
-    target: STAKE_CONTRACT.address,
-    callData: generateStakeCallData(userAddress),
-    value,
-  };
-}
 
 export function generateStakeCallData(userAddress: Address) {
   return encodeFunctionData({
