@@ -9,19 +9,11 @@ import {
 } from "vitest";
 import { testClient } from "../common/client";
 import {
-  type ConfiguredPublicClient,
   type FilledV3RelayEvent,
   type Quote,
   type Route,
 } from "../../src/index";
-import {
-  parseEther,
-  parseEventLogs,
-  parseUnits,
-  type Hash,
-  type Log,
-  type TransactionReceipt,
-} from "viem";
+import { parseEther, parseEventLogs, parseUnits, type Hash } from "viem";
 import {
   chainClientArbitrum,
   chainClientMainnet,
@@ -65,7 +57,6 @@ let depositSimulationSuccess = false;
 let depositTxSuccess = false;
 let fillTxSuccess = false;
 let fillHash: Hash | undefined;
-let fillReceipt: TransactionReceipt | undefined;
 let fillLog: FilledV3RelayEvent | undefined;
 
 describe("executeQuote", async () => {
