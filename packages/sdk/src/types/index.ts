@@ -2,6 +2,7 @@ import {
   Account,
   Address,
   Chain,
+  GetEventArgs,
   Hash,
   Hex,
   PublicClient,
@@ -10,6 +11,8 @@ import {
 } from "viem";
 import { STATUS } from "../constants";
 import { AcrossChain } from "../utils/getSupportedChains";
+import { spokePoolAbi } from "../abis/SpokePool";
+import { NoNullValuesOfObject } from "../utils/typeUtils";
 
 export type Status = keyof typeof STATUS;
 
@@ -78,3 +81,17 @@ export type Deposit = {
 };
 
 export type ChainInfoMap = Map<number, AcrossChain>;
+
+type MaybeFilledV3RelayEvent = GetEventArgs<
+  typeof spokePoolAbi,
+  "FilledV3Relay",
+  { IndexedOnly: false }
+>;
+
+type MaybeDepositV3Event = GetEventArgs<
+  typeof spokePoolAbi,
+  "V3FundsDeposited",
+  { IndexedOnly: false }
+>;
+export type FilledV3RelayEvent = NoNullValuesOfObject<MaybeFilledV3RelayEvent>;
+export type V3FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositV3Event>;

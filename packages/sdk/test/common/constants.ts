@@ -35,6 +35,11 @@ function getEnv(key: string): string {
   }
   return process.env[key];
 }
+
+function getMaybeEnv(key: string): string | undefined {
+  return process.env[key];
+}
+
 // FORK URLs
 export const FORK_URL_OPTIMISM = getEnv("VITE_ANVIL_FORK_URL_OPTIMISM");
 export const FORK_URL_BASE = getEnv("VITE_ANVIL_FORK_URL_BASE");
@@ -56,3 +61,4 @@ export const BLOCK_NUMBER_ARBITRUM = BigInt(
 );
 
 export const TENDERLY_KEY = getEnv("VITE_TENDERLY_KEY");
+export const MOCK_API = Boolean(getMaybeEnv("VITE_MOCK_API")) ?? true;

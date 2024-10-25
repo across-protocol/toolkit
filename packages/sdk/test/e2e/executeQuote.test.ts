@@ -1,11 +1,27 @@
-import { assert, assertType, beforeAll, describe, expect, test } from "vitest";
+import {
+  afterAll,
+  assert,
+  assertType,
+  beforeAll,
+  describe,
+  expect,
+  test,
+} from "vitest";
 import { testClient } from "../common/client";
 import {
   type ConfiguredPublicClient,
+  type FilledV3RelayEvent,
   type Quote,
   type Route,
 } from "../../src/index";
-import { parseEther, parseUnits } from "viem";
+import {
+  parseEther,
+  parseEventLogs,
+  parseUnits,
+  type Hash,
+  type Log,
+  type TransactionReceipt,
+} from "viem";
 import {
   chainClientArbitrum,
   chainClientMainnet,
@@ -18,6 +34,8 @@ import {
   BLOCK_NUMBER_MAINNET,
 } from "../common/constants";
 import { fundUsdc } from "../common/utils";
+import { waitForDepositAndFill } from "../common/relayer";
+import { spokePoolAbi } from "../../src/abis/SpokePool";
 
 const inputToken = {
   address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -46,6 +64,9 @@ let approvalTxSuccess = false;
 let depositSimulationSuccess = false;
 let depositTxSuccess = false;
 let fillTxSuccess = false;
+let fillHash: Hash | undefined;
+let fillReceipt: TransactionReceipt | undefined;
+let fillLog: FilledV3RelayEvent | undefined;
 
 describe("executeQuote", async () => {
   test("Gets available routes for intent", async () => {
@@ -67,6 +88,12 @@ describe("executeQuote", async () => {
   });
 
   describe("Executes a quote", async () => {
+    afterAll(async () => {
+      await Promise.all([
+        chainClientArbitrum.resetFork(),
+        chainClientMainnet.resetFork(),
+      ]);
+    });
     beforeAll(async () => {
       // sanity check that we have fresh anvil instances running in this case
       const blockNumberArbitrum = await chainClientArbitrum.getBlockNumber();
@@ -80,12 +107,17 @@ describe("executeQuote", async () => {
           address: chainClientMainnet.account.address,
           value: parseEther("1"),
         }),
+        chainClientArbitrum.setBalance({
+          address: chainClientArbitrum.account.address,
+          value: parseEther("1"),
+        }),
         chainClientMainnet.setBalance({
           address: testWalletMainnet.account.address,
           value: parseEther("1"),
         }),
       ]);
 
+      // fund test wallet clients with 1000 USDC
       await fundUsdc(chainClientMainnet, testWalletMainnet.account.address);
 
       const latestBlock = await chainClientMainnet.getBlock({
@@ -105,10 +137,10 @@ describe("executeQuote", async () => {
           deposit: deposit,
           walletClient: testWalletMainnet,
           // override publicClients because for some reason the configurePublicClients is not respecting the rpcUrls defined for each chain in anvil.ts
-          originClient: publicClientMainnet as ConfiguredPublicClient,
-          destinationClient: publicClientArbitrum as ConfiguredPublicClient,
+          originClient: publicClientMainnet,
+          destinationClient: publicClientArbitrum,
           infiniteApproval: true,
-          onProgress: (progress) => {
+          onProgress: async (progress) => {
             console.log(progress);
 
             if (progress.step === "approve") {
@@ -126,15 +158,26 @@ describe("executeQuote", async () => {
               }
               if (progress.status === "txSuccess") {
                 depositTxSuccess = true;
-                // TODO: perform fill on destination chain
+                const { txReceipt } = progress;
+                const _fillHash = await waitForDepositAndFill({
+                  depositReceipt: txReceipt,
+                  acrossClient: testClient,
+                  originPublicClient: publicClientMainnet,
+                  destinationPublicClient: publicClientArbitrum,
+                  chainClient: chainClientArbitrum,
+                });
+
+                console.log(_fillHash);
+
+                fillHash = _fillHash;
               }
             }
 
             if (progress.step === "fill") {
               if (progress.status === "txSuccess") {
                 fillTxSuccess = true;
+                res(true);
               }
-              res(true);
             }
 
             if (progress.status === "error") {
@@ -143,6 +186,19 @@ describe("executeQuote", async () => {
           },
         });
       });
+
+      const fillReceipt = fillHash
+        ? await publicClientArbitrum.waitForTransactionReceipt({
+            hash: fillHash,
+          })
+        : undefined;
+
+      const _fillLog = parseEventLogs({
+        abi: spokePoolAbi,
+        eventName: "FilledV3Relay",
+        logs: fillReceipt?.logs!,
+      });
+      fillLog = _fillLog[0]?.args;
     });
 
     test("Deposit approval simulation succeeds", async () => {
@@ -160,6 +216,20 @@ describe("executeQuote", async () => {
 
     test("Fill tx succeeds", async () => {
       expect(fillTxSuccess).toBe(true);
+    });
+    describe("Fill Logs", async () => {
+      test("Fill Log defined", async () => {
+        expect(fillLog).toBeDefined();
+      });
+      test("Depositor address correct", async () => {
+        expect(fillLog?.depositor).toBe(testWalletMainnet.account.address);
+      });
+      test("Output amount correct", async () => {
+        expect(fillLog?.outputAmount).toBe(quote.deposit.outputAmount);
+      });
+      test("Output token correct", async () => {
+        expect(fillLog?.outputToken).toBe(quote.deposit.outputToken);
+      });
     });
   });
 });

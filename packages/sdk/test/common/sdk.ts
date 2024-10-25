@@ -1,4 +1,4 @@
-import { AcrossClient } from "../../src/client";
+import { createAcrossClient } from "../../src/client";
 
 import {
   arbitrum,
@@ -37,9 +37,10 @@ const tenderly = TENDERLY_KEY
     }
   : undefined;
 
-export const testClient = AcrossClient.create({
+export const testClient = createAcrossClient({
   useTestnet: false,
   logLevel: "DEBUG",
   chains: Object.values(chains),
+  pollingInterval: 1_000,
   tenderly,
 });
