@@ -1,5 +1,4 @@
 import { createAcrossClient } from "../../src/client";
-
 import {
   arbitrum,
   base,
@@ -12,8 +11,8 @@ import {
   redstone,
   zora,
 } from "viem/chains";
-import { chains } from "./anvil";
 import { TENDERLY_KEY } from "./constants";
+import { MAINNET_API_URL } from "../../src/constants";
 
 export const MAINNET_SUPPORTED_CHAINS = [
   arbitrum,
@@ -37,10 +36,12 @@ const tenderly = TENDERLY_KEY
     }
   : undefined;
 
+export const TEST_BASE_URL = MAINNET_API_URL;
+
 export const testClient = createAcrossClient({
   useTestnet: false,
-  logLevel: "DEBUG",
-  chains: Object.values(chains),
+  logLevel: "WARN",
+  chains: [...MAINNET_SUPPORTED_CHAINS],
   pollingInterval: 1_000,
   tenderly,
 });

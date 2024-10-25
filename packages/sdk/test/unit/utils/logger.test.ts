@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { testClient } from "../../common/client";
+import { testClient } from "../../common/sdk";
 
 test("Higher severity is logged", () => {
   const consoleLogSpy = vi.spyOn(console, "log");

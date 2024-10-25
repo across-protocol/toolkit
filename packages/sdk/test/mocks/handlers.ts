@@ -1,6 +1,6 @@
 // src/mocks/handlers.js
 import { http, HttpResponse } from "msw";
-import { MAINNET_SUPPORTED_CHAINS, TEST_BASE_URL } from "../common/client";
+import { MAINNET_SUPPORTED_CHAINS, TEST_BASE_URL } from "../common/sdk";
 import {
   usdcMainnetArbitrum as route,
   mainnetChainInfo,

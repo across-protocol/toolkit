@@ -26,7 +26,7 @@ type ApproveMeta = {
 type DepositMeta = {
   deposit: Quote["deposit"];
 };
-//
+
 type FillMeta = {
   deposit: Quote["deposit"];
   depositId: DepositStatus["depositId"];

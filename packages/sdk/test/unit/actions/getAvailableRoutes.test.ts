@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { testClient } from "../../common/client";
+import { testClient } from "../../common/sdk";
 
 // MAINNET => OPTIMISM
 const testnetRoute = {
