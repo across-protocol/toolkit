@@ -39,26 +39,20 @@ function getEnv(key: string): string {
 function getMaybeEnv(key: string): string | undefined {
   return process.env[key];
 }
-
+const ALCHEMY_KEY = getEnv("VITE_ANVIL_ALCHEMY_KEY");
 // FORK URLs
-export const FORK_URL_OPTIMISM = getEnv("VITE_ANVIL_FORK_URL_OPTIMISM");
-export const FORK_URL_BASE = getEnv("VITE_ANVIL_FORK_URL_BASE");
-export const FORK_URL_MAINNET = getEnv("VITE_ANVIL_FORK_URL_MAINNET");
-export const FORK_URL_ARBITRUM = getEnv("VITE_ANVIL_FORK_URL_ARBITRUM");
+export const FORK_URL_OPTIMISM = `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
+export const FORK_URL_BASE = `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
+export const FORK_URL_MAINNET = `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
+export const FORK_URL_ARBITRUM = `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
 
 // FORK BLOCK NUMBERS
-export const BLOCK_NUMBER_OPTIMISM = BigInt(
-  Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_OPTIMISM")),
-);
-export const BLOCK_NUMBER_BASE = BigInt(
-  Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_BASE")),
-);
-export const BLOCK_NUMBER_MAINNET = BigInt(
-  Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_MAINNET")),
-);
-export const BLOCK_NUMBER_ARBITRUM = BigInt(
-  Number(getEnv("VITE_ANVIL_BLOCK_NUMBER_ARBITRUM")),
-);
+export const BLOCK_NUMBER_OPTIMISM = BigInt(126951625);
+export const BLOCK_NUMBER_BASE = BigInt(21363706);
+export const BLOCK_NUMBER_MAINNET = BigInt(21020558);
+export const BLOCK_NUMBER_ARBITRUM = BigInt(266447962);
 
-export const TENDERLY_KEY = getEnv("VITE_TENDERLY_KEY");
-export const MOCK_API = Boolean(getMaybeEnv("VITE_MOCK_API")) ?? true;
+export const TENDERLY_KEY = getMaybeEnv("VITE_TENDERLY_KEY");
+export const MOCK_API = getMaybeEnv("VITE_MOCK_API")
+  ? Boolean(getMaybeEnv("VITE_MOCK_API"))
+  : true;
