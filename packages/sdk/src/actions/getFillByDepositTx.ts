@@ -15,7 +15,7 @@ import { IndexerStatusResponse } from "../types";
 export type GetFillByDepositTxParams = {
   deposit: {
     depositId: number;
-    depositTxHash: Hash;
+    depositTxHash?: Hash;
     originChainId: number;
     destinationChainId: number;
     destinationSpokePoolAddress: Address;
@@ -210,8 +210,8 @@ export async function getFillByDepositTx(
   if (!fillEvent) {
     throw new NoFillLogError(
       deposit.depositId,
-      deposit.depositTxHash,
       deposit.destinationChainId,
+      deposit.depositTxHash,
     );
   }
 

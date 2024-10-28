@@ -21,14 +21,38 @@ export type WaitForFillTxParams = {
 export async function waitForFillTx(
   params: WaitForFillTxParams,
 ): Promise<FillStatus> {
-  const {
-    depositId,
-    destinationChainClient,
-    deposit,
-    fromBlock,
-    logger,
-    depositTxHash,
-  } = params;
+  try {
+    const statusFromFilter = await waitForFillTxEvent(params);
+    return statusFromFilter;
+  } catch (e) {
+    const message =
+      "Event filtering currently disabled for this RPC provider, switching to getFIllByDepositTx()";
+
+    params?.logger
+      ? params.logger.error(message, {
+          cause: e,
+        })
+      : console.error(message, {
+          cause: e,
+        });
+
+    const statusFromLogs = await waitForFillByDepositTx({
+      ...params,
+      deposit: {
+        ...params.deposit,
+        depositTxHash: params.depositTxHash,
+        depositId: params.depositId,
+      },
+    });
+    return statusFromLogs;
+  }
+}
+
+export async function waitForFillTxEvent(
+  params: WaitForFillTxParams,
+): Promise<FillStatus> {
+  const { depositId, destinationChainClient, deposit, fromBlock, logger } =
+    params;
 
   return new Promise<FillStatus>((resolve, reject) => {
     const unwatch = destinationChainClient.watchContractEvent({
@@ -45,22 +69,8 @@ export async function waitForFillTx(
           ? logger.error("Watch FilledV3Relay event error", error)
           : console.error("Watch FilledV3Relay event error", error);
 
-        // If RPC errors when attempting to use an event filter, revert to using scraper/getLogs combo
-        if (error.name === "InvalidInputRpcError" && depositTxHash) {
-          logger?.debug("Error getFillByDepositTx()");
-
-          unwatch();
-          const response = await waitForFillByDepositTx({
-            deposit: {
-              ...deposit,
-              depositTxHash,
-              depositId,
-            },
-            destinationChainClient,
-            fromBlock,
-          });
-          resolve(response);
-        }
+        unwatch();
+        reject(error);
       },
       onLogs: async (fillLogs) => {
         if (fillLogs.length) {

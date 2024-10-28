@@ -127,9 +127,9 @@ export class NoDepositLogError extends Error {
 }
 
 export class NoFillLogError extends Error {
-  constructor(depositId: number, depositTxHash: Hash, chainId: number) {
+  constructor(depositId: number, chainId: number, depositTxHash?: Hash) {
     super(
-      `Unable to find fill log on chain ${chainId} for deposit id #${depositId} with depositTxHash ${depositTxHash}`,
+      `Unable to find fill log on chain ${chainId} for deposit id #${depositId} ${depositTxHash ? `with depositTxHash ${depositTxHash}` : "."}`,
     );
     this.name = "Fill Log Not Found";
   }
