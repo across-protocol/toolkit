@@ -252,3 +252,30 @@ export type FillStatus = {
   fillTxReceipt: TransactionReceipt;
   fillTxTimestamp: bigint;
 };
+
+export async function waitForFillByDepositTx(
+  params: GetFillByDepositTxParams & {
+    pollingInterval?: number;
+  },
+): ReturnType<typeof getFillByDepositTx> {
+  const interval =
+    params?.pollingInterval ?? params.destinationChainClient.pollingInterval;
+
+  return new Promise((res) => {
+    const poll = () => {
+      getFillByDepositTx(params)
+        .then((response) => {
+          if (response.fillTxReceipt) {
+            res(response);
+          } else {
+            setTimeout(poll, interval);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setTimeout(poll, interval);
+        });
+    };
+    poll();
+  });
+}

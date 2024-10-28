@@ -1,7 +1,7 @@
-import { Address, Hex, parseAbiItem, parseEventLogs } from "viem";
+import { Address, Hash, Hex, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types";
 import { spokePoolAbi } from "../abis/SpokePool";
-import { FillStatus } from "./getFillByDepositTx";
+import { FillStatus, waitForFillByDepositTx } from "./getFillByDepositTx";
 import { LoggerT, MulticallHandlerAbi } from "../utils";
 
 export type WaitForFillTxParams = {
@@ -14,14 +14,21 @@ export type WaitForFillTxParams = {
   };
   destinationChainClient: ConfiguredPublicClient;
   fromBlock: bigint;
+  depositTxHash?: Hash;
   logger?: LoggerT;
 };
 
 export async function waitForFillTx(
   params: WaitForFillTxParams,
 ): Promise<FillStatus> {
-  const { depositId, destinationChainClient, deposit, fromBlock, logger } =
-    params;
+  const {
+    depositId,
+    destinationChainClient,
+    deposit,
+    fromBlock,
+    logger,
+    depositTxHash,
+  } = params;
 
   return new Promise<FillStatus>((resolve, reject) => {
     const unwatch = destinationChainClient.watchContractEvent({
@@ -33,12 +40,33 @@ export async function waitForFillTx(
         originChainId: BigInt(deposit.originChainId),
       },
       fromBlock,
-      onError: (error) => {
-        console.log("Watch FilledV3Relay event error", error);
+      onError: async (error) => {
+        logger
+          ? logger.error("Watch FilledV3Relay event error", error)
+          : console.error("Watch FilledV3Relay event error", error);
+
+        // If RPC errors when attempting to use an event filter, revert to using scraper/getLogs combo
+        if (error.name === "InvalidInputRpcError" && depositTxHash) {
+          logger?.debug("Error getFillByDepositTx()");
+
+          unwatch();
+          const response = await waitForFillByDepositTx({
+            deposit: {
+              ...deposit,
+              depositTxHash,
+              depositId,
+            },
+            destinationChainClient,
+            fromBlock,
+          });
+          resolve(response);
+        }
       },
       onLogs: async (fillLogs) => {
         if (fillLogs.length) {
-          console.log("Fill events found in block", fillLogs);
+          logger
+            ? logger.debug("Fill events found in block", fillLogs)
+            : console.log("Fill events found in block", fillLogs);
         }
         const [fillLog] = fillLogs;
         if (fillLog) {
