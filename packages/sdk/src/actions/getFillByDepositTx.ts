@@ -272,7 +272,7 @@ export async function waitForFillByDepositTx(
           }
         })
         .catch((error) => {
-          console.log(error);
+          params?.logger ? params.logger.error(error) : console.log(error);
           setTimeout(poll, interval);
         });
     };
