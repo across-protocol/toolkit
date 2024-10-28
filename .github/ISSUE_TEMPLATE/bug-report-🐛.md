@@ -1,11 +1,11 @@
 ---
 name: "Bug report \U0001F41B"
-about:
-  Thank you for reporting an issue with the Across Integrator SDK. To help us
+about: Thank you for reporting an issue with the Across Integrator SDK. To help us
   address your problem efficiently, please fill out the following details.
-title: ""
+title: ''
 labels: bug
-assignees: ""
+assignees: ''
+
 ---
 
 ## Summary
@@ -28,13 +28,23 @@ assignees: ""
 
   - [ ] Getting a quote
   - [ ] Executing a quote
-  - [ ] Tracking bridge progress
+  - [ ] Tracking bridge progress & step affected (approval, deposit, fill)
   - [ ] Lower-level utilities
   - [ ] Other (please specify): <!-- Describe if other functionality is affected -->
 
-- **Network Environment**:
-  - [ ] Mainnet
-  - [ ] Testnet
+- **Route**:
+```ts
+const route = {
+  originChainId: 10,
+  destinationChainId: 42_161,
+  inputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+  outputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+}
+```
+
+- **Custom RPCs**:
+- optimism - https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}
+- arbitrum - https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}
 
 ## Steps to Reproduce
 
