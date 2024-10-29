@@ -9,6 +9,7 @@ import {
   scroll,
   redstone,
   zora,
+  blast,
 } from "wagmi/chains";
 
 export const MAINNET_SUPPORTED_CHAINS = [
@@ -22,4 +23,5 @@ export const MAINNET_SUPPORTED_CHAINS = [
   scroll,
   redstone,
   zora,
+  blast,
 ] as const;

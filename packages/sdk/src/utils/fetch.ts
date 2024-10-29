@@ -128,11 +128,8 @@ export const fetchAcrossApi = makeFetcher("Across API", (res, data, url) => {
   }
 });
 
-export const fetchIndexerApi = makeFetcher(
-  "Indexer API",
-  async (res, data, url) => {
-    if (typeof data === "object" && data !== null && "error" in data) {
-      throw new IndexerError(url, data?.message, data?.error);
-    }
-  },
-);
+export const fetchIndexerApi = makeFetcher("Indexer API", (res, data, url) => {
+  if (typeof data === "object" && data !== null && "error" in data) {
+    throw new IndexerError(url, data?.message, data?.error);
+  }
+});

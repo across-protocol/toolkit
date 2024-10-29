@@ -1,7 +1,7 @@
-import { Address, Hex, parseAbiItem, parseEventLogs } from "viem";
+import { Address, Hash, Hex, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types";
 import { spokePoolAbi } from "../abis/SpokePool";
-import { FillStatus } from "./getFillByDepositTx";
+import { FillStatus, waitForFillByDepositTx } from "./getFillByDepositTx";
 import { LoggerT, MulticallHandlerAbi } from "../utils";
 
 export type WaitForFillTxParams = {
@@ -14,10 +14,41 @@ export type WaitForFillTxParams = {
   };
   destinationChainClient: ConfiguredPublicClient;
   fromBlock: bigint;
+  depositTxHash?: Hash;
   logger?: LoggerT;
 };
 
 export async function waitForFillTx(
+  params: WaitForFillTxParams,
+): Promise<FillStatus> {
+  try {
+    const statusFromFilter = await waitForFillTxEvent(params);
+    return statusFromFilter;
+  } catch (e) {
+    const message =
+      "Event filtering currently disabled for this RPC provider, switching to getFillByDepositTx()";
+
+    params?.logger
+      ? params.logger.error(message, {
+          cause: e,
+        })
+      : console.error(message, {
+          cause: e,
+        });
+
+    const statusFromLogs = await waitForFillByDepositTx({
+      ...params,
+      deposit: {
+        ...params.deposit,
+        depositTxHash: params.depositTxHash,
+        depositId: params.depositId,
+      },
+    });
+    return statusFromLogs;
+  }
+}
+
+export async function waitForFillTxEvent(
   params: WaitForFillTxParams,
 ): Promise<FillStatus> {
   const { depositId, destinationChainClient, deposit, fromBlock, logger } =
@@ -33,12 +64,19 @@ export async function waitForFillTx(
         originChainId: BigInt(deposit.originChainId),
       },
       fromBlock,
-      onError: (error) => {
-        console.log("Watch FilledV3Relay event error", error);
+      onError: async (error) => {
+        logger
+          ? logger.error("Watch FilledV3Relay event error", error)
+          : console.error("Watch FilledV3Relay event error", error);
+
+        unwatch();
+        reject(error);
       },
       onLogs: async (fillLogs) => {
         if (fillLogs.length) {
-          console.log("Fill events found in block", fillLogs);
+          logger
+            ? logger.debug("Fill events found in block", fillLogs)
+            : console.log("Fill events found in block", fillLogs);
         }
         const [fillLog] = fillLogs;
         if (fillLog) {
