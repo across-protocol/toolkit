@@ -26,7 +26,7 @@ export async function waitForFillTx(
     return statusFromFilter;
   } catch (e) {
     const message =
-      "Event filtering currently disabled for this RPC provider, switching to getFIllByDepositTx()";
+      "Event filtering currently disabled for this RPC provider, switching to getFillByDepositTx()";
 
     params?.logger
       ? params.logger.error(message, {
