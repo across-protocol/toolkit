@@ -96,7 +96,19 @@ await client.executeQuote({
   walletClient: wallet,
   deposit: quote.deposit, // returned by `getQuote`
   onProgress: (progress) => {
-    // handle progress
+    if (progress.step === "approve" && progress.status === "txSuccess") {
+      // if approving an ERC20, you have access to the approval receipt
+      const { txReceipt } = progress;
+    }
+    if (progress.step === "deposit" && progress.status === "txSuccess") {
+      // once deposit is successful you have access to depositId and the receipt
+      const { depositId, txReceipt } = progress;
+    }
+    if (progress.step === "fill" && progress.status === "txSuccess") {
+      // if the fill is successful, you have access the following data
+      const { fillTxTimestamp, txReceipt, actionSuccess } = progress;
+      // actionSuccess is a boolean flag, telling us if your cross chain messages were successful
+    }
   },
 });
 ```
@@ -118,7 +130,7 @@ Across enables users to seamlessly interact with your dApp or chain using assets
 
 To stake native ETH in one step:
 
-1. Bridge ETH to the destination chain, sending the output tokens (WETH) to Across's MulticallHandler contract (since contracts receive WETH).
+1. Bridge WETH to the destination chain, sending the output tokens (WETH) to Across's MulticallHandler contract (since contracts receive WETH).
 2. Unwrap WETH to obtain native ETH.
 3. Stake the ETH on your staking contract.
 
