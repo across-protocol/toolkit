@@ -65,16 +65,16 @@ const client = createAcrossClient({
 Now, you can retrieve a quote for a given route.
 
 ```ts
-// USDC from Optimism -> Arbitrum
+// USDC from Arbitrum -> Optimism
 const route = {
-  originChainId: optimism.chainId
-  destinationChainId: arbitrum.chainId,
-  inputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-  outputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  originChainId: arbitrum.id,
+  destinationChainId: optimism.id,
+  inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  outputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
 };
 const quote = await client.getQuote({
   route,
-  inputAmount: parseUnit("1000", 6) // USDC decimals
+  inputAmount: parseUnits("1000", 6) // USDC decimals
 })
 ```
 
@@ -179,7 +179,7 @@ const crossChainMessage = {
   ]
 }
 
-function generateApproveCallData(spender: Address, amount: uint256) {
+function generateApproveCallData(spender: Address, amount: bigint) {
   const approveCallData = encodeFunctionData({
     abi: [parseAbiItem("function approve(address spender, uint256 value)")],
     args: [spender, amount],
@@ -188,9 +188,9 @@ function generateApproveCallData(spender: Address, amount: uint256) {
   return approveCallData;
 }
 
-function generateStakeCallData(userAddress: Address, amount: uint256) {
+function generateStakeCallData(userAddress: Address, amount: bigint) {
   return encodeFunctionData({
-    abi: [parseAbiItem("function stake(address stakerAddress, uint256 amount")],
+    abi: [parseAbiItem("function stake(address stakerAddress, uint256 amount)")],
     args: [userAddress, amount],
   });
 }
@@ -202,15 +202,15 @@ After specifying a cross-chain message, you simply can fetch a quote the same wa
 
 ```ts
 const route = {
-  originChainId: arbitrum.chainId
-  destinationChainId: optimism.chainId,
+  originChainId: arbitrum.id,
+  destinationChainId: optimism.id,
   inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
   outputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
 };
 const quote = await client.getQuote({
   route,
   inputAmount,
-  crossChainMessage // crated above
+  crossChainMessage // created above
 });
 ```
 

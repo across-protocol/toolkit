@@ -15,7 +15,7 @@ import { IndexerStatusResponse } from "../types";
 export type GetFillByDepositTxParams = {
   deposit: {
     depositId: number;
-    depositTxHash: Hash;
+    depositTxHash?: Hash;
     originChainId: number;
     destinationChainId: number;
     destinationSpokePoolAddress: Address;
@@ -210,8 +210,8 @@ export async function getFillByDepositTx(
   if (!fillEvent) {
     throw new NoFillLogError(
       deposit.depositId,
-      deposit.depositTxHash,
       deposit.destinationChainId,
+      deposit.depositTxHash,
     );
   }
 
@@ -252,3 +252,30 @@ export type FillStatus = {
   fillTxReceipt: TransactionReceipt;
   fillTxTimestamp: bigint;
 };
+
+export async function waitForFillByDepositTx(
+  params: GetFillByDepositTxParams & {
+    pollingInterval?: number;
+  },
+): ReturnType<typeof getFillByDepositTx> {
+  const interval =
+    params?.pollingInterval ?? params.destinationChainClient.pollingInterval;
+
+  return new Promise((res) => {
+    const poll = () => {
+      getFillByDepositTx(params)
+        .then((response) => {
+          if (response.fillTxReceipt) {
+            res(response);
+          } else {
+            setTimeout(poll, interval);
+          }
+        })
+        .catch((error) => {
+          params?.logger ? params.logger.error(error) : console.log(error);
+          setTimeout(poll, interval);
+        });
+    };
+    poll();
+  });
+}
