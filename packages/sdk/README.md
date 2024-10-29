@@ -71,12 +71,13 @@ import { parserEther } from "viem";
 const route = {
   originChainId: arbitrum.id,
   destinationChainId: optimism.id,
-  inputToken: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-  outputToken: "0x4200000000000000000000000000000000000006",
+  inputToken: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", // WETH arb
+  outputToken: "0x4200000000000000000000000000000000000006", // WETH opt
 };
+
 const quote = await client.getQuote({
   route,
-  inputAmount: parserEther("1"), // USDC decimals
+  inputAmount: parserEther("1"),
 });
 ```
 
