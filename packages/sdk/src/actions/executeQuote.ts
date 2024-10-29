@@ -367,6 +367,7 @@ export async function executeQuote(params: ExecuteQuoteParams) {
       await waitForFillTx({
         deposit,
         depositId,
+        depositTxHash,
         destinationChainClient: destinationClient,
         fromBlock: destinationBlock - 100n, // TODO: use dynamic block buffer based chain
       });
