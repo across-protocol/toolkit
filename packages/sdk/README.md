@@ -65,7 +65,7 @@ const client = createAcrossClient({
 Now, you can retrieve a quote for a given route.
 
 ```ts
-import { parserEther } from "viem";
+import { parseEther } from "viem";
 
 // WETH from Arbitrum -> Optimism
 const route = {
@@ -77,7 +77,7 @@ const route = {
 
 const quote = await client.getQuote({
   route,
-  inputAmount: parserEther("1"),
+  inputAmount: parseEther("1"),
 });
 ```
 
