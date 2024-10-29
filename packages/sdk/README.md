@@ -74,8 +74,8 @@ const route = {
 };
 const quote = await client.getQuote({
   route,
-  inputAmount: parseUnits("1000", 6) // USDC decimals
-})
+  inputAmount: parseUnits("1000", 6), // USDC decimals
+});
 ```
 
 Note that we provide additional utilities for retrieving available routes, chain details, and token infos.
@@ -112,143 +112,17 @@ Have a look at our [example app](../../apps/example) for a more detailed usage o
 
 Across enables users to seamlessly interact with your dApp or chain using assets from other chains.
 
-- ### Example A - _Stake an ERC20 on destination chain_
+### Example: Stake Native ETH on Destination Chain
 
-### 1. Craft a cross-chain message (A)
+To stake native ETH in one step:
 
-To implement this feature, you first need to specify a `crossChainMessage`.
-The example below shows a cross-chain message for staking USDC into a contract deployed
-on Optimism by:
+1. Bridge ETH to the destination chain, sending the output tokens (WETH) to Across's MulticallHandler contract (since contracts receive WETH).
+2. Unwrap WETH to obtain native ETH.
+3. Stake the ETH on your staking contract.
 
-1. Approve USDC to be pulled into staking
-2. Stake approved amount into contract
+**Note**: If your calldata depends on the output amount, you must use the `update()` function.
 
-```ts
-// Example staking contract on Optimism
-const stakingContractAddress = "0x733Debf51574c70CfCdb7918F032E16F686bd9f8";
-// USDC on Optimism
-const usdcAddress = "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85";
-// Example user address
-const userAddress = "0x924a9f036260DdD5808007E1AA95f08eD08aA569a";
-const inputAmount = parseUnits("200", 6);
-
-const crossChainMessage = {
-  // This address will receive the amount of bridged tokens on the destination chain if
-  // one of the cross-chain actions fail. Leftover tokens are here as well if all actions
-  // succeed.
-  fallbackRecipient: userAddress,
-  // List of actions that should be executed on the destination chain
-  actions: [
-    {
-      // Address of target contract on destination chain, i.e. USDC on Optimism
-      target: usdcAddress,
-      // Encoded function data, i.e. calldata for approving USDC to be pulled in by
-      // staking contract
-      callData: generateApproveCallData(
-        stakingContractAddress,
-        inputAmount
-      ),
-      // Native msg.value, can be 0 in the context of USDC
-      value: 0n,
-      // Update call data callback - we need to provide a callback function to
-      // re-generate calldata because it depends on the `outputAmount`, i.e.
-      // `inputAmount` - `relayer fee`. This is the amount the user has available after a
-      // relayer filled the deposit on the destination chain.
-      updateCallData: (outputAmount) => generateApproveCallData(
-        stakingContractAddress,
-        outputAmount
-      )
-    },
-    {
-      // Address of target contract on destination chain, i.e. staking contract
-      // on Optimism
-      target: stakingContractAddress,
-      // Encoded function data, i.e. calldata for staking USDC on behalf of user
-      callData: generateStakeCallData(
-        userAddress,
-        inputAmount
-      )
-      // Native msg.value, can be 0 in the context of USDC
-      value: 0n,
-      // Same reasoning as above in the approve step.
-      updateCallData: (outputAmount) => generateStakeCallData(
-        stakingContractAddress,
-        outputAmount
-      )
-    }
-  ]
-}
-
-function generateApproveCallData(spender: Address, amount: bigint) {
-  const approveCallData = encodeFunctionData({
-    abi: [parseAbiItem("function approve(address spender, uint256 value)")],
-    args: [spender, amount],
-  });
-
-  return approveCallData;
-}
-
-function generateStakeCallData(userAddress: Address, amount: bigint) {
-  return encodeFunctionData({
-    abi: [parseAbiItem("function stake(address stakerAddress, uint256 amount)")],
-    args: [userAddress, amount],
-  });
-}
-```
-
-### 2. Retrieve a quote
-
-After specifying a cross-chain message, you simply can fetch a quote the same way as a normal bridge
-
-```ts
-const route = {
-  originChainId: arbitrum.id,
-  destinationChainId: optimism.id,
-  inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-  outputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-};
-const quote = await client.getQuote({
-  route,
-  inputAmount,
-  crossChainMessage // created above
-});
-```
-
-### 3. Execute a quote
-
-If the quote is available, you can execute like so
-
-```ts
-import { useWalletClient } from "wagmi";
-
-const wallet = useWalletClient();
-
-await client.executeQuote({
-  walletClient: wallet,
-  deposit: quote.deposit, // returned by `getQuote`
-  onProgress: (progress) => {
-    // handle progress
-  },
-});
-```
-
-- ### **Example (B)** - _Stake Native ETH on destination chain_
-
-> This follows the logic in the example app.
-
-To implement this feature, we need to bridge either ETH or WETH from our origin chain to our destination chain. Across will always send WETH to the recipient on the destination chain, **unless the recipient is an EOA**. For our use-case, we want to stake native ETH, moreover we want to do this in one step. For this we recommend using Across's MulticallHandler contract (or deploying your own).
-
-So here's how we can stake ETH onto our staking contract:
-
-1. Bridge ETH => destination chain and send output tokens to MulticallHandler contract (this will be WETH since it's a contract).
-2. Unwrap WETH
-3. Stake ETH on the staking contract.
-
-The rest of the flow is exactly the same as the previous example.
-
-It is also worth noting that whenever our calldata is dependant on the output amount we **MUST** make use of the `update()` function.
-
-### 1. Craft a cross-chain message (B)
+### 1. Craft a cross-chain message
 
 ```ts
 import { type Amount } from "@across-protocol/app-sdk";
@@ -262,35 +136,24 @@ const multicallHandlerOptimism = "0x924a9f036260DdD5808007E1AA95f08eD08aA569";
 export const WETH_OPTIMISM = {
   chain: optimism,
   abi: WethAbi,
-  token: {
-    address: "0x4200000000000000000000000000000000000006",
-    decimals: 18,
-    logoUrl:
-      "https://raw.githubusercontent.com/across-protocol/frontend/master/src/assets/token-logos/weth.svg",
-    name: "Wrapped Ether",
-    symbol: "WETH",
-  },
   address: "0x4200000000000000000000000000000000000006",
+  decimals: 18,
+  logoUrl:
+    "https://raw.githubusercontent.com/across-protocol/frontend/master/src/assets/token-logos/weth.svg",
+  name: "Wrapped Ether",
+  symbol: "WETH",
 } as const;
 
 export const STAKE_CONTRACT = {
   address: "0x733Debf51574c70CfCdb7918F032E16F686bd9f8",
   chain: optimism,
-  token: {
-    address: "0x4200000000000000000000000000000000000006", // notice that ETH & WETH both have the same address
-    symbol: "ETH",
-    name: "Ether",
-    decimals: 18,
-    logoUrl:
-      "https://raw.githubusercontent.com/across-protocol/frontend/master/src/assets/token-logos/eth.svg",
-  },
   abi: StakerContractABI,
 } as const;
 
 // WETH unwrap action
 function generateUnwrapCallData(wethAmount: Amount) {
   return encodeFunctionData({
-    abi: WethAbi,
+    abi: WETH_OPTIMISM.abi,
     functionName: "withdraw",
     args: [BigInt(wethAmount)],
   });
@@ -333,14 +196,44 @@ const crossChainMessage = {
   ],
   fallbackRecipient: userAddress,
 };
+```
 
-// Then get a quote
+### 2. Retrieve a quote
+
+After specifying a cross-chain message, you simply can fetch a quote the same way as a normal bridge
+
+```ts
+const route = {
+  originChainId: arbitrum.id,
+  destinationChainId: optimism.id,
+  inputToken: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", // WETH arbitrum
+  outputToken: "0x4200000000000000000000000000000000000006", // WETH optimism
+};
+
 const quote = await client.getQuote({
   route,
   inputAmount: parseEther("1"),
-  // 🔔 Notice the recipient is not the staking contract itself or even the user, but is instead the contract that will execute our cross chain messages
+  // 🔔 Notice the recipient is not the staking contract itself or even the user, but the contract that will execute our cross chain messages
   recipient: multicallHandlerOptimism,
   crossChainMessage: buildCrossChainMessage(parseEther("1")),
+});
+```
+
+### 3. Execute a quote
+
+If the quote is available, you can execute like so
+
+```ts
+import { useWalletClient } from "wagmi";
+
+const wallet = useWalletClient();
+
+await client.executeQuote({
+  walletClient: wallet,
+  deposit: quote.deposit, // returned by `getQuote`
+  onProgress: (progress) => {
+    // handle progress
+  },
 });
 ```
 
