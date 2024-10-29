@@ -65,16 +65,18 @@ const client = createAcrossClient({
 Now, you can retrieve a quote for a given route.
 
 ```ts
-// USDC from Arbitrum -> Optimism
+import { parserEther } from "viem";
+
+// WETH from Arbitrum -> Optimism
 const route = {
   originChainId: arbitrum.id,
   destinationChainId: optimism.id,
-  inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-  outputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+  inputToken: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+  outputToken: "0x4200000000000000000000000000000000000006",
 };
 const quote = await client.getQuote({
   route,
-  inputAmount: parseUnits("1000", 6), // USDC decimals
+  inputAmount: parserEther("1"), // USDC decimals
 });
 ```
 
@@ -168,7 +170,7 @@ function generateStakeCallData(userAddress: Address) {
   });
 }
 
-const crossChainMessage = {
+const unwrapAndStakeMessage = {
   actions: [
     {
       target: WETH_OPTIMISM.address,
@@ -215,7 +217,7 @@ const quote = await client.getQuote({
   inputAmount: parseEther("1"),
   // 🔔 Notice the recipient is not the staking contract itself or even the user, but the contract that will execute our cross chain messages
   recipient: multicallHandlerOptimism,
-  crossChainMessage: buildCrossChainMessage(parseEther("1")),
+  crossChainMessage: unwrapAndStakeMessage,
 });
 ```
 
