@@ -36,6 +36,7 @@ jobs:
       - name: create test env file
         run: |
           echo VITE_ANVIL_ALCHEMY_KEY=${{ secrets.VITE_ANVIL_ALCHEMY_KEY }} >> packages/sdk/.env
+          echo VITE_MOCK_API=false >> packages/sdk/.env
 
       - name: Run CI
         run: pnpm run ci

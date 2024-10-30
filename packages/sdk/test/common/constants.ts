@@ -54,6 +54,4 @@ export const BLOCK_NUMBER_MAINNET = BigInt(21020558);
 export const BLOCK_NUMBER_ARBITRUM = BigInt(266447962);
 
 export const TENDERLY_KEY = getMaybeEnv("VITE_TENDERLY_KEY");
-export const MOCK_API = getMaybeEnv("VITE_MOCK_API")
-  ? Boolean(getMaybeEnv("VITE_MOCK_API"))
-  : true;
+export const MOCK_API = getMaybeEnv("VITE_MOCK_API") === "true";
