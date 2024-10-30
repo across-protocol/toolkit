@@ -156,8 +156,6 @@ describe("executeQuote", async () => {
                   chainClient: chainClientArbitrum,
                 });
 
-                console.log(_fillHash);
-
                 fillHash = _fillHash;
               }
             }
