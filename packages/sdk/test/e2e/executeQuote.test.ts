@@ -115,12 +115,10 @@ describe("executeQuote", async () => {
         blockTag: "latest",
       });
 
-      const depositTimestamp = latestBlock.timestamp - 20n;
-
       // override quote timestamp
       const deposit = {
         ...quote.deposit,
-        quoteTimestamp: Number(depositTimestamp),
+        quoteTimestamp: Number(latestBlock.timestamp),
       };
 
       await new Promise((res, rej) => {
