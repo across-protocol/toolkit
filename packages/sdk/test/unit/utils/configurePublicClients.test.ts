@@ -1,6 +1,6 @@
 import { arbitrum, mainnet, optimism, polygon } from "viem/chains";
 import { describe, expect, test } from "vitest";
-import { configurePublicClients } from "../../src";
+import { configurePublicClients } from "../../../src";
 
 const chains = [...[mainnet, optimism, polygon, arbitrum]];
 

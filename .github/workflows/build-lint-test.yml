@@ -24,11 +24,19 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: create test env file
+        run: |
+          echo VITE_ANVIL_ALCHEMY_KEY=${{ secrets.VITE_ANVIL_ALCHEMY_KEY }} >> packages/sdk/.env
+          echo VITE_MOCK_API=false >> packages/sdk/.env
 
       - name: Run CI
         run: pnpm run ci

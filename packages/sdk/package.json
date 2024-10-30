@@ -37,7 +37,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "type-check": "tsc",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
-    "test": "vitest run --reporter=verbose",
+    "test": "vitest run --config ./vitest.config.mts",
     "ci": "pnpm run build && pnpm run check-exports pnpm npm run lint && pnpm run test",
     "typedoc": "typedoc --out docs src/index.ts"
   },
@@ -48,7 +48,9 @@
     "@total-typescript/ts-reset": "^0.6.0",
     "@types/node": "^20",
     "eslint": "^8.57.0",
+    "msw": "^2.4.9",
     "prettier": "^3.2.5",
+    "prool": "^0.0.16",
     "tsup": "^8.0.2",
     "typedoc": "^0.26.7",
     "typedoc-plugin-markdown": "^4.2.8",
