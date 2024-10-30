@@ -26,7 +26,7 @@
     "@usedapp/core": "^1.2.16",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "ethers": "v5",
+    "ethers": "v6",
     "lucide-react": "^0.436.0",
     "next": "14.2.7",
     "next-themes": "^0.3.0",
