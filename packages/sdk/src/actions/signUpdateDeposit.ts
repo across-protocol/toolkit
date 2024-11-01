@@ -1,6 +1,6 @@
 import { Address, Hex, WalletClient } from "viem";
 import { getUpdateDepositTypedData } from "../utils";
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line
 import { simulateUpdateDepositTx } from "./simulateUpdateDepositTx";
 
 export type SignUpdateDepositTypedDataParams = {

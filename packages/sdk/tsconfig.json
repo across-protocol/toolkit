@@ -1,8 +1,17 @@
 {
   "extends": "@across-toolkit/typescript-config/base.json",
-  "include": [".", "test/mocks/data/available-routes/.ts"],
-  "exclude": ["dist", "build", "node_modules", "test"],
+  "include": ["src/index.ts"],
+  "exclude": ["dist"],
   "compilerOptions": {
-    "noEmit": true
+    "sourceMap": true,
+    "declarationMap": true,
+    "declaration": true,
+    "noEmit": true,
+    "moduleResolution": "Bundler",
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }
