@@ -1,11 +1,11 @@
-import type { Hash, TransactionReceipt } from "viem";
+import type { TransactionReceipt } from "viem";
 import {
   getDepositFromLogs,
   type AcrossClient,
   type ConfiguredPublicClient,
-} from "../../src";
-import type { ChainClient } from "./anvil";
-import { spokePoolAbi } from "../../src/abis/SpokePool";
+} from "../../src/index.js";
+import type { ChainClient } from "./anvil.js";
+import { spokePoolAbi } from "../../src/abis/SpokePool.js";
 
 type RelayerParams = {
   depositReceipt: TransactionReceipt;

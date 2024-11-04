@@ -1,12 +1,12 @@
 // src/mocks/handlers.js
 import { http, HttpResponse } from "msw";
-import { MAINNET_SUPPORTED_CHAINS, TEST_BASE_URL } from "../common/sdk";
+import { MAINNET_SUPPORTED_CHAINS, TEST_BASE_URL } from "../common/sdk.js";
 import {
   usdcMainnetArbitrum as route,
   mainnetChainInfo,
   usdcMainnetArbitrumFees as fees,
-} from "./data";
-import { getCurrentTimeSeconds } from "../../src";
+} from "./data/index.js";
+import { getCurrentTimeSeconds } from "../../src/index.js";
 
 export const handlers = [
   //  getAvailableRoutes

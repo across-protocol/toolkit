@@ -1,3 +1,3 @@
-export * from "./available-routes";
-export * from "./chains";
-export * from "./suggested-fees";
+export * from "./available-routes.js";
+export * from "./chains.js";
+export * from "./suggested-fees.js";

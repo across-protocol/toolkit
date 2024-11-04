@@ -31,10 +31,11 @@ export const USDC_WHALE = getAddress(
 );
 
 function getEnv(key: string): string {
-  if (!process.env[key]) {
+  const value = process.env[key];
+  if (!value) {
     throw new Error(`Missing environment variable "${key}"`);
   }
-  return process.env[key];
+  return value;
 }
 
 function getMaybeEnv(key: string): string | undefined {

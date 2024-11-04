@@ -6,7 +6,7 @@ import {
   FORK_URL_MAINNET,
   pool,
   PRIVATE_KEY,
-} from "./constants";
+} from "./constants.js";
 import {
   type Account,
   type Client,
@@ -23,7 +23,7 @@ import {
   walletActions,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { type Compute } from "./utils";
+import { type Compute } from "./utils.js";
 import { createServer } from "prool";
 import { anvil } from "prool/instances";
 
