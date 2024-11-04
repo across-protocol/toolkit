@@ -1,6 +1,7 @@
 {
   "extends": "@across-toolkit/typescript-config/base.json",
   "compilerOptions": {
+    "noUnusedLocals": true,
     "noEmit": true,
     "module": "NodeNext",
     "target": "es2022",

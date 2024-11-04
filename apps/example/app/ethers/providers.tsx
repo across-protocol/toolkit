@@ -1,12 +1,5 @@
 "use client";
-import {
-  useEthers,
-  useEtherBalance,
-  DAppProvider,
-  Arbitrum,
-  Config,
-  Mainnet,
-} from "@usedapp/core";
+import { DAppProvider, Arbitrum, Config, Mainnet } from "@usedapp/core";
 import * as React from "react";
 import { ThemeProvider } from "next-themes";
 
