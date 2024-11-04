@@ -25,7 +25,8 @@
       "persistent": true
     },
     "ci": {
-      "cache": true
+      "cache": true,
+      "dependsOn": ["^ci"]
     },
     "clean": {
       "cache": false

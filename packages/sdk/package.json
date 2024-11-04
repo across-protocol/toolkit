@@ -28,8 +28,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build:esm": "tsc --project tsconfig.build.json",
-    "build": "pnpm run build:esm",
+    "build": "tsc --project tsconfig.build.json",
     "dev": "tsc --watch --project tsconfig.build.json",
     "lint": "pnpm run type-check && eslint \"src/**/*.ts*\"",
     "type-check": "tsc --project tsconfig.json",
