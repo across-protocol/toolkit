@@ -1,4 +1,4 @@
-import type { Address, Chain, PublicClient, TestClient } from "viem";
+import type { Address, PublicClient } from "viem";
 import { USDC_MAINNET, USDC_WHALE } from "./constants.js";
 import type { ChainClient } from "./anvil.js";
 

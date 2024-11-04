@@ -2,8 +2,6 @@
   "name": "@across-protocol/app-sdk",
   "version": "0.0.3",
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "type": "module",
   "description": "The official SDK for integrating Across bridge into your dapp.",
   "keywords": [
@@ -24,7 +22,7 @@
   "sideEffects": false,
   "license": "MIT",
   "files": [
-    "dist/**"
+    "dist"
   ],
   "engines": {
     "node": ">=18.0.0"
