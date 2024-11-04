@@ -1,12 +1,10 @@
 {
   "extends": "@across-toolkit/typescript-config/base.json",
-  "include": ["src"],
+  "include": ["."],
   "exclude": ["dist"],
   "compilerOptions": {
-    "outDir": "dist",
-    "sourceMap": true,
-    "declarationMap": true,
-    "declaration": true,
+    "noEmit": true,
+    "module": "ESNext",
     "moduleResolution": "Bundler",
     "target": "es2022",
     "lib": ["es2022", "dom", "dom.iterable"],
