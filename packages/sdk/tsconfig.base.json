@@ -1,6 +1,7 @@
 {
   "extends": "@across-toolkit/typescript-config/base.json",
   "compilerOptions": {
+    "moduleDetection": "force",
     "noUnusedLocals": true,
     "noEmit": true,
     "module": "NodeNext",

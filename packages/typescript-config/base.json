@@ -6,7 +6,6 @@
     "skipLibCheck": true,
     "allowJs": true,
     "resolveJsonModule": true,
-    "moduleDetection": "force",
     "isolatedModules": true,
     "verbatimModuleSyntax": false,
     "strict": true,
