@@ -29,13 +29,17 @@ import {
   executeQuote,
   GetDepositParams,
   GetFillByDepositTxParams,
-} from "./actions";
+  simulateUpdateDepositTx,
+  SimulateUpdateDepositTxParams,
+  signUpdateDepositTypedData,
+  SignUpdateDepositTypedDataParams,
+} from "./actions/index.js";
 import {
   MAINNET_API_URL,
   MAINNET_INDEXER_API,
   TESTNET_API_URL,
   TESTNET_INDEXER_API,
-} from "./constants";
+} from "./constants/index.js";
 import {
   LogLevel,
   DefaultLogger,
@@ -47,27 +51,19 @@ import {
   TenderlySimulateTxParams,
   assertValidIntegratorId,
   AcrossChain,
-} from "./utils";
+} from "./utils/index.js";
 import {
   AcrossApiSimulationError,
   ConfigError,
   SimulationError,
-} from "./errors";
+} from "./errors/index.js";
 import {
   ChainInfoMap,
   ConfiguredPublicClient,
   ConfiguredPublicClientMap,
   ConfiguredWalletClient,
-} from "./types";
-import {
-  simulateUpdateDepositTx,
-  SimulateUpdateDepositTxParams,
-} from "./actions/simulateUpdateDepositTx";
-import {
-  signUpdateDepositTypedData,
-  SignUpdateDepositTypedDataParams,
-} from "./actions/signUpdateDeposit";
-import { MakeOptional } from "./utils/typeUtils";
+} from "./types/index.js";
+import { MakeOptional } from "./utils/index.js";
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,

@@ -1,8 +1,8 @@
 import { Address, Hash, Hex, parseEventLogs } from "viem";
-import { ConfiguredPublicClient } from "../types";
-import { spokePoolAbi } from "../abis/SpokePool";
-import { FillStatus, waitForFillByDepositTx } from "./getFillByDepositTx";
-import { LoggerT, MulticallHandlerAbi } from "../utils";
+import { ConfiguredPublicClient } from "../types/index.js";
+import { spokePoolAbi } from "../abis/SpokePool.js";
+import { FillStatus, waitForFillByDepositTx } from "./getFillByDepositTx.js";
+import { LoggerT, MulticallHandlerAbi } from "../utils/index.js";
 
 export type WaitForFillTxParams = {
   depositId: number;

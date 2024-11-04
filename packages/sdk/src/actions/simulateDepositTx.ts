@@ -5,9 +5,9 @@ import {
   WalletClient,
   zeroAddress,
 } from "viem";
-import { Quote } from "./getQuote";
-import { getIntegratorDataSuffix, LoggerT } from "../utils";
-import { spokePoolAbi } from "../abis/SpokePool";
+import { Quote } from "./getQuote.js";
+import { getIntegratorDataSuffix, LoggerT } from "../utils/index.js";
+import { spokePoolAbi } from "../abis/SpokePool.js";
 
 export type SimulateDepositTxParams = {
   walletClient: WalletClient;

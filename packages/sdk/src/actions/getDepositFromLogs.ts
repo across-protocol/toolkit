@@ -1,6 +1,6 @@
 import { Address, parseEventLogs, TransactionReceipt } from "viem";
-import { spokePoolAbi } from "../abis/SpokePool";
-import { Deposit } from "../types";
+import { spokePoolAbi } from "../abis/SpokePool.js";
+import { Deposit } from "../types/index.js";
 
 export type GetDepositLogsParams = {
   originChainId: number;

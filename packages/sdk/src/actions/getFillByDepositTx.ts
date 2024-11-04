@@ -1,4 +1,4 @@
-import { fetchIndexerApi, LoggerT } from "../utils";
+import { fetchIndexerApi, LoggerT } from "../utils/index.js";
 import {
   Address,
   Hash,
@@ -8,9 +8,9 @@ import {
   PublicClient,
   TransactionReceipt,
 } from "viem";
-import { MAINNET_INDEXER_API } from "../constants";
-import { NoFillLogError } from "../errors";
-import { IndexerStatusResponse } from "../types";
+import { MAINNET_INDEXER_API } from "../constants/index.js";
+import { NoFillLogError } from "../errors/index.js";
+import { IndexerStatusResponse } from "../types/index.js";
 
 export type GetFillByDepositTxParams = {
   deposit: {

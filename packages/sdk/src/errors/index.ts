@@ -1,5 +1,5 @@
 import { Address, Hash, Hex } from "viem";
-import { AcrossErrorCodeType } from "./acrossApi";
+import { AcrossErrorCodeType } from "./acrossApi.js";
 
 export type { AcrossErrorCodeType };
 

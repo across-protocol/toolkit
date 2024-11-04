@@ -5,8 +5,8 @@ import {
   AcrossErrorCodeType,
   AcrossApiSimulationError,
   IndexerError,
-} from "../errors";
-import { LoggerT } from "./logger";
+} from "../errors/index.js";
+import { LoggerT } from "./logger.js";
 
 type ParamBaseValue = number | bigint | string | boolean;
 

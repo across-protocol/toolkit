@@ -1,8 +1,8 @@
 import { Address, Hex, isHash } from "viem";
-import { getDepositFromLogs } from "./getDepositFromLogs";
-import { ConfiguredPublicClient, Deposit } from "../types";
-import { getFillByDepositTx } from "./getFillByDepositTx";
-import { NoFillLogError } from "../errors";
+import { getDepositFromLogs } from "./getDepositFromLogs.js";
+import { ConfiguredPublicClient, Deposit } from "../types/index.js";
+import { getFillByDepositTx } from "./getFillByDepositTx.js";
+import { NoFillLogError } from "../errors/index.js";
 
 export type GetDepositParams = {
   originChainClient: ConfiguredPublicClient;

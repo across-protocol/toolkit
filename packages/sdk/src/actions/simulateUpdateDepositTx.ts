@@ -1,10 +1,10 @@
 import { Address, Hex, SimulateContractReturnType, WalletClient } from "viem";
-import { getQuote } from "./getQuote";
-import { LoggerT } from "../utils";
-import { spokePoolAbi } from "../abis/SpokePool";
-import { ConfiguredPublicClient, CrossChainAction } from "../types";
-import { getDeposit } from "./getDeposit";
-import { signUpdateDepositTypedData } from "./signUpdateDeposit";
+import { getQuote } from "./getQuote.js";
+import { LoggerT } from "../utils/index.js";
+import { spokePoolAbi } from "../abis/SpokePool.js";
+import { ConfiguredPublicClient, CrossChainAction } from "../types/index.js";
+import { getDeposit } from "./getDeposit.js";
+import { signUpdateDepositTypedData } from "./signUpdateDeposit.js";
 
 export type SimulateUpdateDepositTxParams = {
   walletClient: WalletClient;
