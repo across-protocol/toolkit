@@ -30,7 +30,7 @@ export class DefaultLogger implements LoggerT {
   /**
    * Description - creates an indentation group for each call to `logger.[logLevel]()`
    */
-  log(logLevel: LogLevel, ...data: any[]) {
+  log(logLevel: LogLevel, ...data: unknown[]) {
     const { label, prefix } = this.createLogLevelLabel(logLevel);
     console.log(`${label}\n`);
 
@@ -39,26 +39,26 @@ export class DefaultLogger implements LoggerT {
     });
   }
 
-  debug(...data: any[]) {
+  debug(...data: unknown[]) {
     // TODO it might be useful to show the file/function logging this data
     if (LogLevels["DEBUG"] <= LogLevels[this.logLevel]) {
       this.log("DEBUG", ...data);
     }
   }
 
-  info(...data: any[]) {
+  info(...data: unknown[]) {
     if (LogLevels["INFO"] <= LogLevels[this.logLevel]) {
       this.log("INFO", ...data);
     }
   }
 
-  warn(...data: any[]) {
+  warn(...data: unknown[]) {
     if (LogLevels["WARN"] <= LogLevels[this.logLevel]) {
       this.log("WARN", ...data);
     }
   }
 
-  error(...data: any[]) {
+  error(...data: unknown[]) {
     if (LogLevels["ERROR"] <= LogLevels[this.logLevel]) {
       this.log("ERROR", ...data);
     }

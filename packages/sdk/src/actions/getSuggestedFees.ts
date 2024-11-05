@@ -1,7 +1,7 @@
 import { Address } from "viem";
-import { LoggerT, fetchAcrossApi } from "../utils";
-import { Amount } from "../types";
-import { MAINNET_API_URL } from "../constants";
+import { LoggerT, fetchAcrossApi } from "../utils/index.js";
+import { Amount } from "../types/index.js";
+import { MAINNET_API_URL } from "../constants/index.js";
 
 export type SuggestedFeesQueryParams = {
   originChainId: number;

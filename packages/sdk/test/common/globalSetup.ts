@@ -1,4 +1,4 @@
-import { chainClients } from "./anvil";
+import { chainClients } from "./anvil.js";
 
 export default async function () {
   const servers = await Promise.all(

@@ -1,7 +1,7 @@
 import { setupServer } from "msw/node";
-import { handlers } from "./handlers";
+import { handlers } from "./handlers.js";
 import { afterAll, afterEach, beforeAll } from "vitest";
-import { MOCK_API } from "../common/constants";
+import { MOCK_API } from "../common/constants.js";
 
 const server = setupServer(...handlers);
 

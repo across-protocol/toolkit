@@ -7,12 +7,12 @@ import {
   expect,
   test,
 } from "vitest";
-import { testClient } from "../common/sdk";
+import { testClient } from "../common/sdk.js";
 import {
   type FilledV3RelayEvent,
   type Quote,
   type Route,
-} from "../../src/index";
+} from "../../src/index.js";
 import { parseEther, parseEventLogs, parseUnits, type Hash } from "viem";
 import {
   chainClientArbitrum,
@@ -20,14 +20,14 @@ import {
   publicClientArbitrum,
   publicClientMainnet,
   testWalletMainnet,
-} from "../common/anvil";
+} from "../common/anvil.js";
 import {
   BLOCK_NUMBER_ARBITRUM,
   BLOCK_NUMBER_MAINNET,
-} from "../common/constants";
-import { fundUsdc } from "../common/utils";
-import { waitForDepositAndFill } from "../common/relayer";
-import { spokePoolAbi } from "../../src/abis/SpokePool";
+} from "../common/constants.js";
+import { fundUsdc } from "../common/utils.js";
+import { waitForDepositAndFill } from "../common/relayer.js";
+import { spokePoolAbi } from "../../src/abis/SpokePool.js";
 
 const inputToken = {
   address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",

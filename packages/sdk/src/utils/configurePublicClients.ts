@@ -1,5 +1,5 @@
 import { Chain, createPublicClient, http, Transport, webSocket } from "viem";
-import { ConfiguredPublicClientMap } from "../types";
+import { ConfiguredPublicClientMap } from "../types/index.js";
 
 // creates a mapping chainId => publicClient
 export function configurePublicClients(

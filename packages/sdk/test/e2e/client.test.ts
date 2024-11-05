@@ -1,12 +1,12 @@
 import { assertType, describe, expect, test } from "vitest";
-import { testClient } from "../common/sdk";
+import { testClient } from "../common/sdk.js";
 import {
   DefaultLogger,
   type AcrossChain,
   type ConfiguredPublicClient,
-} from "../../src";
+} from "../../src/index.js";
 import type { Address } from "viem";
-import { chains } from "../common/anvil";
+import { chains } from "../common/anvil.js";
 
 const chainIds = Object.values(chains).map((chain) => chain.id);
 

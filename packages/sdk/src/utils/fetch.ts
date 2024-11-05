@@ -5,8 +5,8 @@ import {
   AcrossErrorCodeType,
   AcrossApiSimulationError,
   IndexerError,
-} from "../errors";
-import { LoggerT } from "./logger";
+} from "../errors/index.js";
+import { LoggerT } from "./logger.js";
 
 type ParamBaseValue = number | bigint | string | boolean;
 
@@ -47,16 +47,19 @@ export function isOk(res: Response) {
 
 function makeFetcher(
   name: string,
-  apiErrorHandler?: (response: Response, data: any, url: string) => void,
+  apiErrorHandler?: (
+    response: Response,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any,
+    url: string,
+  ) => void,
 ) {
-  return async <ResBody, ReqParams = {}>(
+  return async <ResBody>(
     apiUrl: string,
-    params: ReqParams,
+    params: Record<string, ParamBaseValue | Array<ParamBaseValue>>,
     logger?: LoggerT,
   ): Promise<ResBody> => {
-    const searchParams = buildSearchParams(
-      params as Record<string, ParamBaseValue | Array<ParamBaseValue>>,
-    );
+    const searchParams = buildSearchParams(params);
     const url = `${apiUrl}?${searchParams}`;
 
     logger?.debug(`Fetching ${name}...`, url);

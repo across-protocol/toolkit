@@ -1,6 +1,6 @@
 import { Address, encodeAbiParameters, parseAbiParameters } from "viem";
 
-import { CrossChainAction } from "../types";
+import { CrossChainAction } from "../types/index.js";
 
 export type BuildMessageParams = {
   fallbackRecipient: Address;

@@ -1,4 +1,4 @@
-import { createAcrossClient } from "../../src/client";
+import { createAcrossClient } from "../../src/client.js";
 import {
   arbitrum,
   base,
@@ -11,8 +11,8 @@ import {
   redstone,
   zora,
 } from "viem/chains";
-import { TENDERLY_KEY } from "./constants";
-import { MAINNET_API_URL } from "../../src/constants";
+import { TENDERLY_KEY } from "./constants.js";
+import { MAINNET_API_URL } from "../../src/constants/index.js";
 
 export const MAINNET_SUPPORTED_CHAINS = [
   arbitrum,

@@ -1,7 +1,7 @@
 import { Address } from "viem";
-import { LoggerT, fetchAcrossApi } from "../utils";
-import { Route } from "../types";
-import { MAINNET_API_URL } from "../constants";
+import { LoggerT, fetchAcrossApi } from "../utils/index.js";
+import { Route } from "../types/index.js";
+import { MAINNET_API_URL } from "../constants/index.js";
 
 export type RoutesQueryParams = Partial<{
   /**

@@ -1,6 +1,6 @@
-import type { Address, Chain, PublicClient, TestClient } from "viem";
-import { USDC_MAINNET, USDC_WHALE } from "./constants";
-import type { ChainClient } from "./anvil";
+import type { Address, PublicClient } from "viem";
+import { USDC_MAINNET, USDC_WHALE } from "./constants.js";
+import type { ChainClient } from "./anvil.js";
 
 export function sleep(ms: number) {
   return new Promise((resolve) => {

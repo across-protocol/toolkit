@@ -1,6 +1,6 @@
-import { MAINNET_API_URL } from "../constants";
-import { TokenInfo } from "../types";
-import { LoggerT, fetchAcrossApi } from ".";
+import { MAINNET_API_URL } from "../constants/index.js";
+import { TokenInfo } from "../types/index.js";
+import { LoggerT, fetchAcrossApi } from "./index.js";
 import { Address } from "viem";
 
 export type ChainsQueryParams = Partial<{

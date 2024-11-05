@@ -1,7 +1,7 @@
 import { Hash, TransactionReceipt } from "viem";
-import { getDepositFromLogs } from "./getDepositFromLogs";
-import { NoDepositLogError } from "../errors";
-import { ConfiguredPublicClient } from "../types";
+import { getDepositFromLogs } from "./getDepositFromLogs.js";
+import { NoDepositLogError } from "../errors/index.js";
+import { ConfiguredPublicClient } from "../types/index.js";
 
 export type WaitForDepositTxParams = {
   transactionHash: Hash;

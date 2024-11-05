@@ -1,7 +1,7 @@
+// for local dev & linting. we can include test folder
 {
-  "extends": "@across-toolkit/typescript-config/base.json",
-  "include": [".", "test/mocks/data/available-routes/.ts"],
-  "exclude": ["dist", "build", "node_modules", "test"],
+  "extends": "./tsconfig.base.json",
+  "include": ["."],
   "compilerOptions": {
     "noEmit": true
   }

@@ -1,9 +1,8 @@
 {
   "name": "@across-protocol/app-sdk",
   "version": "0.0.3",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/index.js",
+  "type": "module",
   "description": "The official SDK for integrating Across bridge into your dapp.",
   "keywords": [
     "bridge",
@@ -23,22 +22,22 @@
   "sideEffects": false,
   "license": "MIT",
   "files": [
-    "dist/**"
+    "dist"
   ],
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
-    "dev": "tsup src/index.ts --format esm --watch --dts",
+    "build": "tsc --project tsconfig.build.json",
+    "dev": "tsc --watch --project tsconfig.build.json",
     "lint": "pnpm run type-check && eslint \"src/**/*.ts*\"",
+    "type-check": "tsc --project tsconfig.json",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "type-check": "tsc",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
-    "test": "vitest run --config ./vitest.config.mts",
-    "ci": "pnpm run build && pnpm run check-exports pnpm npm run lint && pnpm run test",
+    "test": "vitest run --config ./vitest.config.ts",
+    "ci": "pnpm run build && pnpm run check-exports && pnpm run lint && pnpm run test",
     "typedoc": "typedoc --out docs src/index.ts"
   },
   "devDependencies": {
@@ -51,7 +50,6 @@
     "msw": "^2.4.9",
     "prettier": "^3.2.5",
     "prool": "^0.0.16",
-    "tsup": "^8.0.2",
     "typedoc": "^0.26.7",
     "typedoc-plugin-markdown": "^4.2.8",
     "typescript": "^5.3.3",
@@ -63,8 +61,5 @@
   },
   "peerDependencies": {
     "viem": "^2.20.1"
-  },
-  "dependencies": {
-    "@across-protocol/constants": "^3.1.15"
   }
 }

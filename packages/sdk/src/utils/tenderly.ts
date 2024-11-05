@@ -1,5 +1,5 @@
-import { HttpError } from "../errors";
-import { isOk } from "./fetch";
+import { HttpError } from "../errors/index.js";
+import { isOk } from "./fetch.js";
 
 export type TenderlySimulateTxParams = {
   accountSlug: string;

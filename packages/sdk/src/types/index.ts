@@ -9,10 +9,10 @@ import {
   Transport,
   WalletClient,
 } from "viem";
-import { STATUS } from "../constants";
-import { AcrossChain } from "../utils/getSupportedChains";
-import { spokePoolAbi } from "../abis/SpokePool";
-import { NoNullValuesOfObject } from "../utils/typeUtils";
+import { STATUS } from "../constants/index.js";
+import { AcrossChain } from "../utils/getSupportedChains.js";
+import { spokePoolAbi } from "../abis/SpokePool.js";
+import { NoNullValuesOfObject } from "../utils/index.js";
 
 export type Status = keyof typeof STATUS;
 

@@ -1,7 +1,7 @@
 import { Address, Hex } from "viem";
-import { fetchAcrossApi, LoggerT } from "../utils";
-import { MAINNET_API_URL } from "../constants";
-import { Amount } from "../types";
+import { fetchAcrossApi, LoggerT } from "../utils/index.js";
+import { MAINNET_API_URL } from "../constants/index.js";
+import { Amount } from "../types/index.js";
 
 type LimitsQueryParams = {
   originChainId: number;
