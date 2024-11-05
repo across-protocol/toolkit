@@ -1,5 +1,15 @@
 # @across-protocol/app-sdk
 
+## 0.0.4
+
+### Patch Changes
+
+- 614d48c: add `updateDeposit` to allow updating message, recipient and output amount
+- 614d48c: add `simulateUpdateDeposit` for updating deposit
+- 94fc23d: Waiting for fill transaction reverts to using eth_getLogs if eth_newFilter or eth_getFilterChanges throws an error
+- 0f96e3f: Allow async message update callbacks for `getQuote`
+- f5633db: Simplify build using tsc for a more tree-shakable, unbundled output.
+
 ## 0.0.3
 
 ### Patch Changes
