@@ -45,7 +45,7 @@
     "@across-toolkit/typescript-config": "workspace:*",
     "@arethetypeswrong/cli": "^0.15.4",
     "@total-typescript/ts-reset": "^0.6.0",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "eslint": "^8.57.0",
     "msw": "^2.4.9",
     "prettier": "^3.2.5",
