@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.0.5
+
+### Patch Changes
+
+- bb73f49: add TSDoc comments to SpokePool ABI with scope reduction warning
+
 ## 0.0.4
 
 ### Patch Changes
