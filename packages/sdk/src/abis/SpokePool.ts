@@ -1,4 +1,8 @@
-// TODO: remove what we don't use
+/**
+ * @notice ABI definition for the Across Protocol SpokePool contract
+ * @dev WARNING: This ABI may be reduced in scope over time as unused functions are removed
+ * @see {@link https://github.com/across-protocol/contracts/blob/audit-latest/contracts/SpokePool.sol} for the most recent audited contract specification
+ */
 export const spokePoolAbi = [
   { inputs: [], name: "DepositsArePaused", type: "error" },
   { inputs: [], name: "DisabledRoute", type: "error" },
