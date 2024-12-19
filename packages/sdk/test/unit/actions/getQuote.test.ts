@@ -72,6 +72,12 @@ describe("getQuote with Raw Pre-Encoded Message", () => {
     assert(_quote, "No quote returned for the provided route and message");
     assertType<Quote>(_quote);
 
+    assert.equal(
+      _quote.deposit.message,
+      calldata,
+      "Message should be equal to pre-encoded calldata",
+    );
+
     // Optional: Additional assertions to verify quote details
     assert.equal(
       _quote.deposit.inputAmount.toString(),
