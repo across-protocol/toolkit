@@ -1,4 +1,4 @@
-import { Address, Hex } from "viem";
+import { Address, Hex, isHex } from "viem";
 import { Amount, CrossChainAction } from "../types/index.js";
 import {
   getMultiCallHandlerAddress,
@@ -128,6 +128,10 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
 
   let message: Hex = "0x";
   let recipient = _recipient;
+
+  if (isHex(crossChainMessage)) {
+    message = crossChainMessage;
+  }
 
   if (crossChainMessage && typeof crossChainMessage === "object") {
     if (crossChainMessage.actions.length === 0) {
