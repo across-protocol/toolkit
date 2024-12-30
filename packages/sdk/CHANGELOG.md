@@ -1,5 +1,12 @@
 # @across-protocol/app-sdk
 
+## 0.0.5
+
+### Patch Changes
+
+- bb73f49: add TSDoc comments to SpokePool ABI with scope reduction warning
+- 6c46231: Allow passing of pre encoded message field in getQuote
+
 ## 0.0.4
 
 ### Patch Changes
