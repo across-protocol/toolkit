@@ -1,4 +1,3 @@
-import { CrossChainAction } from "@across-protocol/app-sdk";
 import { Address, encodeFunctionData } from "viem";
 import { optimism } from "viem/chains";
 
