@@ -1,4 +1,4 @@
-import { concat, Hex, isHex } from "viem";
+import { Address, concat, Hex, isAddress, isHex, padHex } from "viem";
 
 export const DOMAIN_CALLDATA_DELIMITER = "0x1dc0de";
 
@@ -32,4 +32,31 @@ export function assertValidIntegratorId(
   }
 
   return true;
+}
+
+export function addressToBytes32(address: Address): Hex {
+  if (!isAddress(address)) {
+    throw new Error("Invalid Address, cannot convert to bytes32");
+  }
+
+  const padded = padHex(address, { dir: "left", size: 32 });
+  return padded;
+}
+
+export function bytes32ToAddress(hex: Hex): Address {
+  if (!isHex(hex)) {
+    throw new Error("Invalid hex input");
+  }
+
+  if (hex.length !== 66) {
+    throw new Error("Hex string must be 32 bytes");
+  }
+
+  const addressHex = `0x${hex.slice(-40)}`;
+
+  if (!isAddress(addressHex)) {
+    throw new Error("Invalid address extracted from bytes32");
+  }
+
+  return addressHex;
 }

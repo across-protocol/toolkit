@@ -5,7 +5,7 @@ import {
   type ConfiguredPublicClient,
 } from "../../src/index.js";
 import type { ChainClient } from "./anvil.js";
-import { spokePoolAbi } from "../../src/abis/SpokePool.js";
+import { spokePoolAbiV3 } from "../../src/abis/SpokePool/index.js";
 
 type RelayerParams = {
   depositReceipt: TransactionReceipt;
@@ -39,7 +39,7 @@ export async function waitForDepositAndFill({
 
   const { request } = await destinationPublicClient.simulateContract({
     address: destinationSpokepoolAddress,
-    abi: spokePoolAbi,
+    abi: spokePoolAbiV3,
     functionName: "fillV3Relay",
     args: [
       { ...deposit, originChainId: BigInt(originPublicClient.chain.id) },

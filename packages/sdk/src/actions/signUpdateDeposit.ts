@@ -5,7 +5,7 @@ import { simulateUpdateDepositTx } from "./simulateUpdateDepositTx.js";
 
 export type SignUpdateDepositTypedDataParams = {
   walletClient: WalletClient;
-  depositId: number;
+  depositId: bigint;
   originChainId: number;
   updatedMessage: Hex;
   updatedOutputAmount: bigint;

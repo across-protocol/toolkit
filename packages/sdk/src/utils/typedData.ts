@@ -10,7 +10,7 @@ export function getUpdateDepositTypedData({
 }: {
   signerAddress: Address;
   originChainId: number;
-  depositId: number;
+  depositId: bigint;
   updatedOutputAmount: bigint;
   updatedRecipient: Address;
   updatedMessage: Hex;
@@ -33,7 +33,7 @@ export function getUpdateDepositTypedData({
     },
     primaryType: "UpdateDepositDetails",
     message: {
-      depositId,
+      depositId: Number(depositId), // TODO: support new UpdateDepositDetails using bytes32 and uint256 for recipient & depositId, respectively
       originChainId: BigInt(originChainId),
       updatedOutputAmount,
       updatedRecipient,

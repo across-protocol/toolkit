@@ -1,11 +1,11 @@
 import { Address, Hash, Hex, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types/index.js";
-import { spokePoolAbi } from "../abis/SpokePool.js";
+import { spokePoolAbiV3 } from "../abis/SpokePool/index.js";
 import { FillStatus, waitForFillByDepositTx } from "./getFillByDepositTx.js";
 import { LoggerT, MulticallHandlerAbi } from "../utils/index.js";
 
 export type WaitForFillTxParams = {
-  depositId: number;
+  depositId: bigint;
   deposit: {
     originChainId: number;
     destinationChainId: number;
@@ -57,10 +57,10 @@ export async function waitForFillTxEvent(
   return new Promise<FillStatus>((resolve, reject) => {
     const unwatch = destinationChainClient.watchContractEvent({
       address: deposit.destinationSpokePoolAddress,
-      abi: spokePoolAbi,
+      abi: spokePoolAbiV3,
       eventName: "FilledV3Relay",
       args: {
-        depositId,
+        depositId: Number(depositId),
         originChainId: BigInt(deposit.originChainId),
       },
       fromBlock,

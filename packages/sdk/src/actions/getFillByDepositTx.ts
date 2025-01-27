@@ -14,7 +14,7 @@ import { IndexerStatusResponse } from "../types/index.js";
 
 export type GetFillByDepositTxParams = {
   deposit: {
-    depositId: number;
+    depositId: bigint;
     depositTxHash?: Hash;
     originChainId: number;
     destinationChainId: number;
@@ -201,7 +201,7 @@ export async function getFillByDepositTx(
       type: "event",
     },
     args: {
-      depositId: deposit.depositId,
+      depositId: Number(deposit.depositId),
       originChainId: BigInt(deposit.originChainId),
     },
     fromBlock: fromBlock ?? 0n,

@@ -27,7 +27,7 @@ import {
 } from "../common/constants.js";
 import { fundUsdc } from "../common/utils.js";
 import { waitForDepositAndFill } from "../common/relayer.js";
-import { spokePoolAbi } from "../../src/abis/SpokePool.js";
+import { spokePoolAbiV3 } from "../../src/abis/SpokePool/index.js";
 
 const inputToken = {
   address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -180,12 +180,14 @@ describe("executeQuote", async () => {
           })
         : undefined;
 
-      const _fillLog = parseEventLogs({
-        abi: spokePoolAbi,
-        eventName: "FilledV3Relay",
-        logs: fillReceipt?.logs!,
-      });
-      fillLog = _fillLog[0]?.args;
+      const _fillLog =
+        fillReceipt &&
+        parseEventLogs({
+          abi: spokePoolAbiV3,
+          eventName: "FilledV3Relay",
+          logs: fillReceipt?.logs,
+        });
+      fillLog = _fillLog?.[0]?.args;
     });
 
     test("Deposit approval simulation succeeds", async () => {
