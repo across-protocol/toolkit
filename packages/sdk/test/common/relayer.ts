@@ -42,7 +42,11 @@ export async function waitForDepositAndFill({
     abi: spokePoolAbiV3,
     functionName: "fillV3Relay",
     args: [
-      { ...deposit, originChainId: BigInt(originPublicClient.chain.id) },
+      {
+        ...deposit,
+        originChainId: BigInt(originPublicClient.chain.id),
+        depositId: Number(deposit.depositId),
+      },
       BigInt(destinationPublicClient.chain.id),
     ],
     account: chainClient.account.address,
