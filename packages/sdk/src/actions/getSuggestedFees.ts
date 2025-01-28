@@ -150,10 +150,7 @@ export async function getSuggestedFees({
 }: GetSuggestedFeesParams) {
   const data = await fetchAcrossApi<SuggestedFeesResponse>(
     `${apiUrl}/suggested-fees`,
-    {
-      depositMethod: "depositExclusive",
-      ...params,
-    },
+    params,
     logger,
   );
 

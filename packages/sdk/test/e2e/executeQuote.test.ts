@@ -123,7 +123,7 @@ describe("executeQuote", async () => {
 
       await new Promise((res, rej) => {
         testClient.executeQuote({
-          deposit: deposit,
+          deposit,
           walletClient: testWalletMainnet,
           // override publicClients because for some reason the configurePublicClients is not respecting the rpcUrls defined for each chain in anvil.ts
           originClient: publicClientMainnet,
@@ -144,6 +144,9 @@ describe("executeQuote", async () => {
             if (progress.step === "deposit") {
               if (progress.status === "simulationSuccess") {
                 depositSimulationSuccess = true;
+              }
+              if (progress.status === "simulationError") {
+                rej(false);
               }
               if (progress.status === "txSuccess") {
                 depositTxSuccess = true;
