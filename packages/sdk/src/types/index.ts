@@ -11,8 +11,9 @@ import {
 } from "viem";
 import { STATUS } from "../constants/index.js";
 import { AcrossChain } from "../utils/getSupportedChains.js";
-import { spokePoolAbiV3 } from "../abis/SpokePool/index.js";
+import { spokePoolAbiV3, spokePoolAbiV4 } from "../abis/SpokePool/index.js";
 import { NoNullValuesOfObject } from "../utils/index.js";
+import { parseFillLogs } from "@/actions/waitForFillTx.js";
 
 export type Status = keyof typeof STATUS;
 
@@ -83,11 +84,18 @@ export type Deposit = DepositLog & {
   actionSuccess?: boolean;
 };
 
+export type FillEventLog = ReturnType<typeof parseFillLogs>;
+
 export type ChainInfoMap = Map<number, AcrossChain>;
 
 type MaybeFilledV3RelayEvent = GetEventArgs<
   typeof spokePoolAbiV3,
   "FilledV3Relay",
+  { IndexedOnly: false }
+>;
+type MaybeFilledRelayEvent = GetEventArgs<
+  typeof spokePoolAbiV4,
+  "FilledRelay",
   { IndexedOnly: false }
 >;
 
@@ -96,5 +104,15 @@ type MaybeDepositV3Event = GetEventArgs<
   "V3FundsDeposited",
   { IndexedOnly: false }
 >;
+
+type MaybeDepositEvent = GetEventArgs<
+  typeof spokePoolAbiV4,
+  "FundsDeposited",
+  { IndexedOnly: false }
+>;
+
 export type FilledV3RelayEvent = NoNullValuesOfObject<MaybeFilledV3RelayEvent>;
 export type V3FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositV3Event>;
+
+export type V4FilledRelayEvent = NoNullValuesOfObject<MaybeFilledRelayEvent>;
+export type V4FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositEvent>;

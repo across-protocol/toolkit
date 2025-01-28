@@ -43,7 +43,10 @@ export function addressToBytes32(address: Address): Hex {
   return padded;
 }
 
-export function bytes32ToAddress(hex: Hex): Address {
+// if SVM 32bytes address, return full address.
+// If EVM address padded to 32 bytes, return truncated address (20 bytes)
+// This function does not encode SVM addresses back into base58
+export function bytes32ToAddress(hex: Hex): Address | Hex {
   if (!isHex(hex)) {
     throw new Error("Invalid hex input");
   }
@@ -52,11 +55,20 @@ export function bytes32ToAddress(hex: Hex): Address {
     throw new Error("Hex string must be 32 bytes");
   }
 
-  const addressHex = `0x${hex.slice(-40)}`;
+  // Check if the first 12 bytes (24 hex characters) are padding (zeros)
+  const padding = hex.slice(2, 26);
+  const isPadded = /^0{24}$/.test(padding);
 
-  if (!isAddress(addressHex)) {
-    throw new Error("Invalid address extracted from bytes32");
+  if (isPadded) {
+    const addressHex = `0x${hex.slice(-40)}`;
+
+    if (!isAddress(addressHex)) {
+      throw new Error("Invalid address extracted from bytes32");
+    }
+
+    return addressHex;
   }
 
-  return addressHex;
+  // Return the full bytes32 if not padded (SVM addresses)
+  return hex;
 }
