@@ -21,7 +21,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
-    "@rainbow-me/rainbowkit": "^2.1.5",
+    "@rainbow-me/rainbowkit": "^2.2.3",
     "@tanstack/react-query": "^5.52.2",
     "@usedapp/core": "^1.2.16",
     "class-variance-authority": "^0.7.0",
