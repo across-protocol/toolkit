@@ -150,7 +150,7 @@ async function getDepositLogs({
   originChainClient: ConfiguredPublicClient;
   originSpokePoolAddress: Address;
 }) {
-  const logs = await Promise.race([
+  const [v3Logs, v4Logs] = await Promise.all([
     originChainClient.getLogs({
       address: originSpokePoolAddress,
       event: {
@@ -337,5 +337,5 @@ async function getDepositLogs({
     }),
   ]);
 
-  return logs;
+  return v3Logs ?? v4Logs;
 }

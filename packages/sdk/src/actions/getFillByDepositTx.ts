@@ -165,7 +165,7 @@ export async function waitForFillByDepositTx(
 
 export async function getFillLogs(params: GetFillByDepositTxParams) {
   const { deposit, fromBlock, destinationChainClient } = params;
-  const logs = await Promise.race([
+  const [v3Logs, v4Logs] = await Promise.all([
     destinationChainClient.getLogs({
       address: deposit.destinationSpokePoolAddress,
 
@@ -422,5 +422,5 @@ export async function getFillLogs(params: GetFillByDepositTxParams) {
     }),
   ]);
 
-  return logs;
+  return v3Logs ?? v4Logs;
 }
