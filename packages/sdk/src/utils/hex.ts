@@ -35,6 +35,15 @@ export function assertValidIntegratorId(
 }
 
 export function addressToBytes32(address: Address): Hex {
+  if (!isHex(address)) {
+    throw new Error("Invalid hex input");
+  }
+
+  if (address.length === 66) {
+    // Address is already 32 bytes
+    return address as Hex;
+  }
+
   if (!isAddress(address)) {
     throw new Error("Invalid Address, cannot convert to bytes32");
   }
