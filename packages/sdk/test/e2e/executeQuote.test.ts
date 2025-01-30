@@ -7,7 +7,7 @@ import {
   expect,
   test,
 } from "vitest";
-import { testClient } from "../common/sdk.js";
+import { mainnetTestClient as testClient } from "../common/sdk.js";
 import {
   type FilledV3RelayEvent,
   type Quote,
@@ -26,7 +26,7 @@ import {
   BLOCK_NUMBER_MAINNET,
 } from "../common/constants.js";
 import { fundUsdc } from "../common/utils.js";
-import { waitForDepositAndFill } from "../common/relayer.js";
+import { waitForDepositAndFillV3 } from "../common/relayer.js";
 import { spokePoolAbiV3 } from "../../src/abis/SpokePool/index.js";
 
 const inputToken = {
@@ -85,6 +85,7 @@ describe("executeQuote", async () => {
         chainClientMainnet.resetFork(),
       ]);
     });
+
     beforeAll(async () => {
       // sanity check that we have fresh anvil instances running in this case
       const blockNumberArbitrum = await chainClientArbitrum.getBlockNumber();
@@ -151,7 +152,7 @@ describe("executeQuote", async () => {
               if (progress.status === "txSuccess") {
                 depositTxSuccess = true;
                 const { txReceipt } = progress;
-                const _fillHash = await waitForDepositAndFill({
+                const _fillHash = await waitForDepositAndFillV3({
                   depositReceipt: txReceipt,
                   acrossClient: testClient,
                   originPublicClient: publicClientMainnet,

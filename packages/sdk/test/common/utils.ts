@@ -1,6 +1,12 @@
-import type { Address, PublicClient } from "viem";
+import {
+  parseEther,
+  WalletClient,
+  type Address,
+  type PublicClient,
+} from "viem";
 import { USDC_MAINNET, USDC_WHALE } from "./constants.js";
-import type { ChainClient } from "./anvil.js";
+import { type ChainClient } from "./anvil.js";
+import { UpgradeTestEnvironment } from "./upgrade.2025.js";
 
 export function sleep(ms: number) {
   return new Promise((resolve) => {
@@ -10,7 +16,8 @@ export function sleep(ms: number) {
 
 export type Compute<type> = { [key in keyof type]: type[key] } & unknown;
 
-const transferAbi = [
+// ERC20 transfer
+export const transferAbi = [
   {
     name: "transfer",
     type: "function",
@@ -23,6 +30,7 @@ const transferAbi = [
   },
 ] as const;
 
+// ERC20 balanceOf
 const balanceOfAbi = [
   {
     inputs: [{ internalType: "address", name: "account", type: "address" }],
@@ -33,7 +41,20 @@ const balanceOfAbi = [
   },
 ] as const;
 
-const transferAmount = 1_000_000_000n;
+// WETH deposit
+const depositAbi = [
+  {
+    constant: false,
+    inputs: [],
+    name: "deposit",
+    outputs: [],
+    payable: true,
+    stateMutability: "payable",
+    type: "function",
+  },
+] as const;
+
+export const transferAmount = 1_000_000_000n;
 
 export async function getUsdcBalance(
   walletAddress: Address,
@@ -72,4 +93,72 @@ export async function fundUsdc(
   console.log("USDC funded!", receipt);
 
   return receipt;
+}
+
+export function fundWeth1(
+  params: Omit<Parameters<typeof fundWeth>[0], "wethAddress">,
+) {
+  return fundWeth({
+    ...params,
+    wethAddress: UpgradeTestEnvironment.spokePool1.WETH.address,
+  });
+}
+
+export function fundWeth2(
+  params: Omit<Parameters<typeof fundWeth>[0], "wethAddress">,
+) {
+  return fundWeth({
+    ...params,
+    wethAddress: UpgradeTestEnvironment.spokePool2.WETH.address,
+  });
+}
+
+export async function fundWeth({
+  chainClient,
+  walletClient,
+  amount = parseEther("1"),
+  wethAddress,
+}: {
+  chainClient: ChainClient;
+  walletClient: ChainClient | WalletClient;
+  amount?: bigint;
+  wethAddress: Address;
+}) {
+  try {
+    if (!walletClient.account?.address) {
+      throw new Error(
+        `No ACCOUNT attached to the walletClient for chain ${walletClient.chain?.id}`,
+      );
+    }
+    // fund ETH
+    await chainClient.setBalance({
+      address: walletClient.account.address,
+      value: amount * 2n,
+    });
+
+    console.log("ETH funded!");
+
+    // wrap
+    const { request } = await chainClient.simulateContract({
+      address: wethAddress,
+      abi: depositAbi,
+      functionName: "deposit",
+      account: walletClient.account.address,
+      value: amount,
+    });
+
+    console.log("simulating WETH deposit...");
+
+    const hash = await walletClient.writeContract(request);
+    const receipt = await chainClient.waitForTransactionReceipt({ hash });
+
+    console.log("WETH funded!", receipt);
+
+    return receipt;
+  } catch (e) {
+    console.log(
+      `Unable to fund WETH for client with account ${walletClient.account?.address}`,
+    );
+    console.log(e);
+  }
 }

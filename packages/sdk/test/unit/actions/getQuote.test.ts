@@ -1,5 +1,5 @@
 import { assert, assertType, describe, test } from "vitest";
-import { testClient } from "../../common/sdk.js";
+import { mainnetTestClient as testClient } from "../../common/sdk.js";
 import {
   buildMulticallHandlerMessage,
   getMultiCallHandlerAddress,

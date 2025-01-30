@@ -1,14 +1,16 @@
 import { assertType, describe, expect, test } from "vitest";
-import { testClient } from "../common/sdk.js";
+import {
+  MAINNET_SUPPORTED_CHAINS,
+  mainnetTestClient as testClient,
+} from "../common/sdk.js";
 import {
   DefaultLogger,
   type AcrossChain,
   type ConfiguredPublicClient,
 } from "../../src/index.js";
 import type { Address } from "viem";
-import { chains } from "../common/anvil.js";
 
-const chainIds = Object.values(chains).map((chain) => chain.id);
+const chainIds = MAINNET_SUPPORTED_CHAINS.map((chain) => chain.id);
 
 describe("Initialize client", () => {
   test("Client properties set correctly", async () => {
