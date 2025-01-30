@@ -15,7 +15,7 @@ import { parseFillLogs } from "./waitForFillTx.js";
 
 export type GetFillByDepositTxParams = {
   deposit: {
-    depositId: bigint;
+    depositId: bigint | number;
     depositTxHash?: Hash;
     originChainId: number;
     destinationChainId: number;
@@ -37,7 +37,7 @@ export async function getFillByDepositTx(
     const data = await fetchIndexerApi<IndexerStatusResponse>(
       `${indexerUrl}/deposit/status`,
       {
-        depositId: params.deposit.depositId,
+        depositId: BigInt(params.deposit.depositId),
         originChainId: params.deposit.originChainId,
       },
     );
@@ -87,7 +87,7 @@ export async function getFillByDepositTx(
 
   if (!fillEvent) {
     throw new NoFillLogError(
-      params.deposit.depositId,
+      BigInt(params.deposit.depositId),
       params.deposit.destinationChainId,
       params.deposit.depositTxHash,
     );
@@ -165,7 +165,7 @@ export async function waitForFillByDepositTx(
 
 export async function getFillLogs(params: GetFillByDepositTxParams) {
   const { deposit, fromBlock, destinationChainClient } = params;
-  const [v3Logs, v4Logs] = await Promise.all([
+  const [v3Logs, v3_5Logs] = await Promise.all([
     destinationChainClient.getLogs({
       address: deposit.destinationSpokePoolAddress,
 
@@ -415,12 +415,12 @@ export async function getFillLogs(params: GetFillByDepositTxParams) {
         type: "event",
       },
       args: {
-        depositId: deposit.depositId,
+        depositId: BigInt(deposit.depositId),
         originChainId: BigInt(deposit.originChainId),
       },
       fromBlock: fromBlock ?? 0n,
     }),
   ]);
 
-  return v3Logs ?? v4Logs;
+  return v3Logs ?? v3_5Logs;
 }

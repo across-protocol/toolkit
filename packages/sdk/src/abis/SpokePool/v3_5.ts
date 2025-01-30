@@ -3,7 +3,7 @@
  * @dev WARNING: This ABI may be reduced in scope over time as unused functions are removed
  * @see {@link https://github.com/across-protocol/contracts/blob/audit-latest/contracts/SpokePool.sol} for the most recent audited contract specification
  */
-export const spokePoolAbiV4 = [
+export const spokePoolAbiV3_5 = [
   {
     inputs: [],
     name: "ClaimedMerkleLeaf",

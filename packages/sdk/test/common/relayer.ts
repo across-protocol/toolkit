@@ -6,7 +6,7 @@ import {
 } from "../../src/index.js";
 import type { ChainClient } from "./anvil.js";
 import { spokePoolAbiV3 } from "../../src/abis/SpokePool/index.js";
-import { spokePoolAbiV4 } from "../../dist/abis/SpokePool/v4.js";
+import { spokePoolAbiV3_5 } from "../../dist/abis/SpokePool/v3_5.js";
 
 type RelayerParams = {
   depositReceipt: TransactionReceipt;
@@ -19,7 +19,7 @@ type RelayerParams = {
 
 // ACROSS RELAYER MOCK
 // waits for deposit TX to succeed, then performs the fill on the destination chain.
-export async function waitForDepositAndFillV4({
+export async function waitForDepositAndFillV3_5({
   depositReceipt,
   acrossClient,
   originPublicClient,
@@ -42,7 +42,7 @@ export async function waitForDepositAndFillV4({
 
   const { request } = await destinationPublicClient.simulateContract({
     address: destinationSpokepoolAddress,
-    abi: spokePoolAbiV4,
+    abi: spokePoolAbiV3_5,
     functionName: "fillV3Relay",
     args: [
       {

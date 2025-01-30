@@ -1,5 +1,5 @@
 import { Address, Log, parseEventLogs, TransactionReceipt } from "viem";
-import { spokePoolAbiV4 } from "../abis/SpokePool/index.js";
+import { spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 import { Deposit, DepositLog } from "../types/index.js";
 import { bytes32ToAddress } from "../utils/hex.js";
 
@@ -31,38 +31,38 @@ export function parseDepositLogs(
     depositTxHash: logs[0]!.blockHash!,
     depositTxBlock: logs[0]!.blockNumber!,
   };
-  // Parse V4 Logs
-  const parsedV4Logs = parseEventLogs({
-    abi: spokePoolAbiV4,
+  // Parse V3_5 Logs
+  const parsedV3_5Logs = parseEventLogs({
+    abi: spokePoolAbiV3_5,
     eventName: "FundsDeposited",
     logs,
     args: filter,
   });
 
-  const v4Log = parsedV4Logs?.[0];
-  if (v4Log) {
+  const v3_5Log = parsedV3_5Logs?.[0];
+  if (v3_5Log) {
     return {
       ...blockData,
-      depositId: v4Log.args.depositId,
-      inputToken: bytes32ToAddress(v4Log.args.inputToken),
-      outputToken: bytes32ToAddress(v4Log.args.outputToken),
-      inputAmount: v4Log.args.inputAmount,
-      outputAmount: v4Log.args.outputAmount,
-      destinationChainId: Number(v4Log.args.destinationChainId),
-      message: v4Log.args.message,
-      depositor: bytes32ToAddress(v4Log.args.depositor),
-      recipient: bytes32ToAddress(v4Log.args.recipient),
-      exclusiveRelayer: bytes32ToAddress(v4Log.args.exclusiveRelayer),
-      quoteTimestamp: v4Log.args.quoteTimestamp,
-      fillDeadline: v4Log.args.fillDeadline,
-      exclusivityDeadline: v4Log.args.exclusivityDeadline,
+      depositId: v3_5Log.args.depositId,
+      inputToken: bytes32ToAddress(v3_5Log.args.inputToken),
+      outputToken: bytes32ToAddress(v3_5Log.args.outputToken),
+      inputAmount: v3_5Log.args.inputAmount,
+      outputAmount: v3_5Log.args.outputAmount,
+      destinationChainId: Number(v3_5Log.args.destinationChainId),
+      message: v3_5Log.args.message,
+      depositor: bytes32ToAddress(v3_5Log.args.depositor),
+      recipient: bytes32ToAddress(v3_5Log.args.recipient),
+      exclusiveRelayer: bytes32ToAddress(v3_5Log.args.exclusiveRelayer),
+      quoteTimestamp: v3_5Log.args.quoteTimestamp,
+      fillDeadline: v3_5Log.args.fillDeadline,
+      exclusivityDeadline: v3_5Log.args.exclusivityDeadline,
       status: "pending",
     };
   }
 
   // Parse V3 Logs
   const parsedV3Logs = parseEventLogs({
-    abi: spokePoolAbiV4,
+    abi: spokePoolAbiV3_5,
     eventName: "V3FundsDeposited",
     logs,
     args: filter,

@@ -10,7 +10,7 @@ export function getUpdateDepositTypedData({
 }: {
   signerAddress: Address;
   originChainId: number;
-  depositId: bigint;
+  depositId: bigint | number;
   updatedOutputAmount: bigint;
   updatedRecipient: Address;
   updatedMessage: Hex;

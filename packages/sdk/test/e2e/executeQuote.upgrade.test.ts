@@ -17,7 +17,7 @@ import {
 
 import { BLOCK_NUMBER_SEPOLIA } from "../common/constants.js";
 
-import { waitForDepositAndFillV4 } from "../common/relayer.js";
+import { waitForDepositAndFillV3_5 } from "../common/relayer.js";
 import {
   testWalletSepolia,
   chainClientSepolia,
@@ -142,7 +142,7 @@ describe("executeQuote", async () => {
               if (progress.status === "txSuccess") {
                 depositTxSuccess = true;
                 const { txReceipt } = progress;
-                const _fillHash = await waitForDepositAndFillV4({
+                const _fillHash = await waitForDepositAndFillV3_5({
                   depositReceipt: txReceipt,
                   acrossClient: testnetTestClient,
                   originPublicClient: publicClientSepolia,

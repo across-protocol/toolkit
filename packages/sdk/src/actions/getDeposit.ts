@@ -13,7 +13,7 @@ export type GetDepositParams = {
     destinationSpokePoolAddress: Address;
   } & Partial<{
     originSpokePoolAddress: Address;
-    depositId: bigint;
+    depositId: bigint | number;
     depositTxHash: Hex;
   }>;
   depositLogFromBlock?: bigint;
@@ -77,6 +77,7 @@ export async function getDeposit(
   // Try to get deposit from logs by deposit id and spoke pool address on origin chain
   else if (findBy.depositId && findBy.originSpokePoolAddress) {
     const { depositId, originSpokePoolAddress } = findBy;
+    const _depositId = BigInt(findBy.depositId);
 
     const depositLogs = await getDepositLogs({
       depositId,
@@ -99,7 +100,7 @@ export async function getDeposit(
 
     rawDeposit = {
       ...parsedDepositLog,
-      depositId,
+      depositId: _depositId,
       originChainId,
     };
   }
@@ -138,19 +139,19 @@ export async function getDeposit(
   return rawDeposit;
 }
 
-// Look for v3 & v4 deposit logs
+// Look for v3 & v3_5 deposit logs
 async function getDepositLogs({
   depositId,
   depositLogFromBlock,
   originChainClient,
   originSpokePoolAddress,
 }: {
-  depositId: bigint;
+  depositId: bigint | number;
   depositLogFromBlock: bigint | undefined;
   originChainClient: ConfiguredPublicClient;
   originSpokePoolAddress: Address;
 }) {
-  const [v3Logs, v4Logs] = await Promise.all([
+  const [v3Logs, v3_5Logs] = await Promise.all([
     originChainClient.getLogs({
       address: originSpokePoolAddress,
       event: {
@@ -331,11 +332,11 @@ async function getDepositLogs({
         type: "event",
       },
       args: {
-        depositId,
+        depositId: BigInt(depositId),
       },
       fromBlock: depositLogFromBlock ?? 0n,
     }),
   ]);
 
-  return v3Logs ?? v4Logs;
+  return v3Logs ?? v3_5Logs;
 }

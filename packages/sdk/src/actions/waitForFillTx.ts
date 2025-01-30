@@ -1,6 +1,6 @@
 import { Address, Hash, Hex, Log, parseEventLogs } from "viem";
 import { ConfiguredPublicClient } from "../types/index.js";
-import { spokePoolAbiV3, spokePoolAbiV4 } from "../abis/SpokePool/index.js";
+import { spokePoolAbiV3, spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 import { FillStatus, waitForFillByDepositTx } from "./getFillByDepositTx.js";
 import {
   bytes32ToAddress,
@@ -9,7 +9,7 @@ import {
 } from "../utils/index.js";
 
 export type WaitForFillTxParams = {
-  depositId: bigint;
+  depositId: bigint | number;
   deposit: {
     originChainId: number;
     destinationChainId: number;
@@ -60,7 +60,7 @@ export async function waitForFillTxEvent(
   try {
     const status = await Promise.race([
       waitForV3FillEvent(params),
-      waitForV4FillEvent(params),
+      waitForV3_5FillEvent(params),
     ]);
     return status;
   } catch (error) {
@@ -150,7 +150,7 @@ export async function waitForV3FillEvent(
   });
 }
 
-export async function waitForV4FillEvent(
+export async function waitForV3_5FillEvent(
   params: WaitForFillTxParams,
 ): Promise<FillStatus> {
   const { depositId, destinationChainClient, deposit, fromBlock, logger } =
@@ -159,10 +159,10 @@ export async function waitForV4FillEvent(
   return new Promise<FillStatus>((resolve, reject) => {
     const unwatch = destinationChainClient.watchContractEvent({
       address: deposit.destinationSpokePoolAddress,
-      abi: spokePoolAbiV4,
+      abi: spokePoolAbiV3_5,
       eventName: "FilledRelay",
       args: {
-        depositId: depositId,
+        depositId: BigInt(depositId),
         originChainId: BigInt(deposit.originChainId),
       },
       fromBlock,
@@ -177,8 +177,8 @@ export async function waitForV4FillEvent(
       onLogs: async (fillLogs) => {
         if (fillLogs.length) {
           logger
-            ? logger.debug("V4 Fill events found in block", fillLogs)
-            : console.log("V4 Fill events found in block", fillLogs);
+            ? logger.debug("V3_5 Fill events found in block", fillLogs)
+            : console.log("V3_5 Fill events found in block", fillLogs);
         }
         const [fillLog] = fillLogs;
         if (fillLog) {
@@ -238,7 +238,7 @@ export function parseFillLogs(
     inputAmount: bigint;
     outputAmount: bigint;
     depositor: Address;
-    depositId: bigint;
+    depositId: bigint | number;
   }>,
 ) {
   const blockData = {
@@ -246,38 +246,41 @@ export function parseFillLogs(
     depositTxBlock: logs[0]!.blockNumber!,
   };
 
-  // Parse V4 Logs
-  const parsedV4Logs = parseEventLogs({
-    abi: spokePoolAbiV4,
+  // Parse V3_5 Logs
+  const parsedV3_5Logs = parseEventLogs({
+    abi: spokePoolAbiV3_5,
     eventName: "FilledRelay",
     logs,
-    args: filter,
+    args: {
+      ...filter,
+      depositId: filter?.depositId ? BigInt(filter?.depositId) : undefined,
+    },
   });
-  const v4Log = parsedV4Logs?.[0];
+  const v3_5Log = parsedV3_5Logs?.[0];
 
-  if (v4Log) {
+  if (v3_5Log) {
     return {
       ...blockData,
-      inputToken: bytes32ToAddress(v4Log.args.inputToken),
-      outputToken: bytes32ToAddress(v4Log.args.outputToken),
-      inputAmount: v4Log.args.inputAmount,
-      outputAmount: v4Log.args.outputAmount,
-      repaymentChainId: v4Log.args.repaymentChainId,
-      originChainId: v4Log.args.originChainId,
-      depositId: v4Log.args.depositId,
-      fillDeadline: v4Log.args.fillDeadline,
-      exclusivityDeadline: v4Log.args.exclusivityDeadline,
-      exclusiveRelayer: bytes32ToAddress(v4Log.args.exclusiveRelayer),
-      relayer: bytes32ToAddress(v4Log.args.relayer),
-      depositor: bytes32ToAddress(v4Log.args.depositor),
-      recipient: bytes32ToAddress(v4Log.args.recipient),
-      messageHash: v4Log.args.messageHash,
+      inputToken: bytes32ToAddress(v3_5Log.args.inputToken),
+      outputToken: bytes32ToAddress(v3_5Log.args.outputToken),
+      inputAmount: v3_5Log.args.inputAmount,
+      outputAmount: v3_5Log.args.outputAmount,
+      repaymentChainId: v3_5Log.args.repaymentChainId,
+      originChainId: v3_5Log.args.originChainId,
+      depositId: v3_5Log.args.depositId,
+      fillDeadline: v3_5Log.args.fillDeadline,
+      exclusivityDeadline: v3_5Log.args.exclusivityDeadline,
+      exclusiveRelayer: bytes32ToAddress(v3_5Log.args.exclusiveRelayer),
+      relayer: bytes32ToAddress(v3_5Log.args.relayer),
+      depositor: bytes32ToAddress(v3_5Log.args.depositor),
+      recipient: bytes32ToAddress(v3_5Log.args.recipient),
+      messageHash: v3_5Log.args.messageHash,
       relayExecutionInfo: {
-        ...v4Log.args.relayExecutionInfo,
+        ...v3_5Log.args.relayExecutionInfo,
         updatedRecipient: bytes32ToAddress(
-          v4Log.args.relayExecutionInfo.updatedRecipient,
+          v3_5Log.args.relayExecutionInfo.updatedRecipient,
         ),
-        fillType: FillType?.[v4Log.args.relayExecutionInfo.fillType],
+        fillType: FillType?.[v3_5Log.args.relayExecutionInfo.fillType],
       },
     };
   }

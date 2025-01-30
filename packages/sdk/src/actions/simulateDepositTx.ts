@@ -7,7 +7,7 @@ import {
 } from "viem";
 import { Quote } from "./getQuote.js";
 import { getIntegratorDataSuffix, LoggerT } from "../utils/index.js";
-import { spokePoolAbiV4 } from "../abis/SpokePool/index.js";
+import { spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 
 export type SimulateDepositTxParams = {
   walletClient: WalletClient;
@@ -63,12 +63,12 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
         contracts: [
           {
             address: spokePoolAddress,
-            abi: spokePoolAbiV4,
+            abi: spokePoolAbiV3_5,
             functionName: "fillDeadlineBuffer",
           },
           {
             address: spokePoolAddress,
-            abi: spokePoolAbiV4,
+            abi: spokePoolAbiV3_5,
             functionName: "getCurrentTime",
           },
         ],
@@ -91,7 +91,7 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
 
   const result = await publicClient.simulateContract({
     account: walletClient.account,
-    abi: spokePoolAbiV4,
+    abi: spokePoolAbiV3_5,
     address: spokePoolAddress,
     functionName: "depositV3",
     args: [
