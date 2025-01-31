@@ -10,6 +10,7 @@ import {
   scroll,
   redstone,
   zora,
+  sepolia,
 } from "viem/chains";
 import { TENDERLY_KEY } from "./constants.js";
 import { MAINNET_API_URL } from "../../src/constants/index.js";
@@ -38,10 +39,18 @@ const tenderly = TENDERLY_KEY
 
 export const TEST_BASE_URL = MAINNET_API_URL;
 
-export const testClient = createAcrossClient({
+export const mainnetTestClient = createAcrossClient({
   useTestnet: false,
   logLevel: "WARN",
   chains: [...MAINNET_SUPPORTED_CHAINS],
+  pollingInterval: 1_000,
+  tenderly,
+});
+
+export const testnetTestClient = createAcrossClient({
+  useTestnet: true,
+  logLevel: "WARN",
+  chains: [sepolia],
   pollingInterval: 1_000,
   tenderly,
 });

@@ -1,5 +1,5 @@
 import { Address, Hex, isHash } from "viem";
-import { getDepositFromLogs } from "./getDepositFromLogs.js";
+import { getDepositFromLogs, parseDepositLogs } from "./getDepositFromLogs.js";
 import { ConfiguredPublicClient, Deposit } from "../types/index.js";
 import { getFillByDepositTx } from "./getFillByDepositTx.js";
 import { NoFillLogError } from "../errors/index.js";
@@ -13,7 +13,7 @@ export type GetDepositParams = {
     destinationSpokePoolAddress: Address;
   } & Partial<{
     originSpokePoolAddress: Address;
-    depositId: number;
+    depositId: bigint | number;
     depositTxHash: Hex;
   }>;
   depositLogFromBlock?: bigint;
@@ -73,11 +73,86 @@ export async function getDeposit(
 
     rawDeposit = getDepositFromLogs({ originChainId, receipt });
   }
+
   // Try to get deposit from logs by deposit id and spoke pool address on origin chain
   else if (findBy.depositId && findBy.originSpokePoolAddress) {
-    const { originSpokePoolAddress, depositId } = findBy;
+    const { depositId, originSpokePoolAddress } = findBy;
+    const _depositId = BigInt(findBy.depositId);
 
-    const [depositEvent] = await originChainClient.getLogs({
+    const depositLogs = await getDepositLogs({
+      depositId,
+      depositLogFromBlock,
+      originChainClient: params.originChainClient,
+      originSpokePoolAddress,
+    });
+
+    if (!depositLogs?.length) {
+      throw new Error(`No deposit logs found for deposit id: ${depositId}`);
+    }
+
+    const parsedDepositLog = parseDepositLogs(depositLogs);
+
+    if (!parsedDepositLog) {
+      throw new Error(
+        `Unable to parse Deposit logs for deposit id: ${depositId}`,
+      );
+    }
+
+    rawDeposit = {
+      ...parsedDepositLog,
+      depositId: _depositId,
+      originChainId,
+    };
+  }
+
+  if (!rawDeposit) {
+    throw new Error(`No deposit found for ${JSON.stringify(findBy)}`);
+  }
+
+  try {
+    const fill = await getFillByDepositTx({
+      deposit: {
+        depositId: rawDeposit.depositId,
+        originChainId: rawDeposit.originChainId,
+        destinationSpokePoolAddress,
+        message: rawDeposit.message,
+        depositTxHash: rawDeposit.depositTxHash,
+        destinationChainId: rawDeposit.destinationChainId,
+      },
+      fromBlock: fillLogFromBlock,
+      destinationChainClient,
+      indexerUrl,
+    });
+    rawDeposit.fillTxHash = fill.fillTxReceipt.transactionHash;
+    rawDeposit.fillTxBlock = fill.fillTxReceipt.blockNumber;
+    rawDeposit.status = "filled";
+    rawDeposit.actionSuccess = fill.actionSuccess;
+  } catch (e) {
+    if (e instanceof NoFillLogError) {
+      // if no fill log, deposit is pending
+    } else {
+      throw e;
+    }
+  }
+
+  // TODO: enrich with token details, format amounts, etc.
+  return rawDeposit;
+}
+
+// Look for v3 & v3_5 deposit logs
+async function getDepositLogs({
+  depositId,
+  depositLogFromBlock,
+  originChainClient,
+  originSpokePoolAddress,
+}: {
+  depositId: bigint | number;
+  depositLogFromBlock: bigint | undefined;
+  originChainClient: ConfiguredPublicClient;
+  originSpokePoolAddress: Address;
+}) {
+  const [v3Logs, v3_5Logs] = await Promise.all([
+    originChainClient.getLogs({
       address: originSpokePoolAddress,
       event: {
         anonymous: false,
@@ -165,66 +240,103 @@ export async function getDeposit(
         type: "event",
       },
       args: {
-        depositId,
+        depositId: Number(depositId),
       },
       fromBlock: depositLogFromBlock ?? 0n,
-    });
-
-    if (!depositEvent) {
-      throw new Error(`No deposit found for deposit id: ${depositId}`);
-    }
-
-    rawDeposit = {
-      depositId,
-      originChainId,
-      inputToken: depositEvent.args.inputToken!,
-      outputToken: depositEvent.args.outputToken!,
-      inputAmount: depositEvent.args.inputAmount!,
-      outputAmount: depositEvent.args.outputAmount!,
-      destinationChainId: Number(depositEvent.args.destinationChainId!),
-      quoteTimestamp: depositEvent.args.quoteTimestamp!,
-      fillDeadline: depositEvent.args.fillDeadline!,
-      exclusivityDeadline: depositEvent.args.exclusivityDeadline!,
-      depositor: depositEvent.args.depositor!,
-      recipient: depositEvent.args.recipient!,
-      exclusiveRelayer: depositEvent.args.exclusiveRelayer!,
-      message: depositEvent.args.message!,
-      status: "pending",
-      depositTxHash: depositEvent.transactionHash,
-      depositTxBlock: depositEvent.blockNumber,
-    };
-  }
-
-  if (!rawDeposit) {
-    throw new Error(`No deposit found for ${JSON.stringify(findBy)}`);
-  }
-
-  try {
-    const fill = await getFillByDepositTx({
-      deposit: {
-        depositId: rawDeposit.depositId,
-        originChainId: rawDeposit.originChainId,
-        destinationSpokePoolAddress,
-        message: rawDeposit.message,
-        depositTxHash: rawDeposit.depositTxHash,
-        destinationChainId: rawDeposit.destinationChainId,
+    }),
+    originChainClient.getLogs({
+      address: originSpokePoolAddress,
+      event: {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "bytes32",
+            name: "inputToken",
+            type: "bytes32",
+          },
+          {
+            indexed: false,
+            internalType: "bytes32",
+            name: "outputToken",
+            type: "bytes32",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "inputAmount",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "outputAmount",
+            type: "uint256",
+          },
+          {
+            indexed: true,
+            internalType: "uint256",
+            name: "destinationChainId",
+            type: "uint256",
+          },
+          {
+            indexed: true,
+            internalType: "uint256",
+            name: "depositId",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint32",
+            name: "quoteTimestamp",
+            type: "uint32",
+          },
+          {
+            indexed: false,
+            internalType: "uint32",
+            name: "fillDeadline",
+            type: "uint32",
+          },
+          {
+            indexed: false,
+            internalType: "uint32",
+            name: "exclusivityDeadline",
+            type: "uint32",
+          },
+          {
+            indexed: true,
+            internalType: "bytes32",
+            name: "depositor",
+            type: "bytes32",
+          },
+          {
+            indexed: false,
+            internalType: "bytes32",
+            name: "recipient",
+            type: "bytes32",
+          },
+          {
+            indexed: false,
+            internalType: "bytes32",
+            name: "exclusiveRelayer",
+            type: "bytes32",
+          },
+          {
+            indexed: false,
+            internalType: "bytes",
+            name: "message",
+            type: "bytes",
+          },
+        ],
+        name: "FundsDeposited",
+        type: "event",
       },
-      fromBlock: fillLogFromBlock,
-      destinationChainClient,
-      indexerUrl,
-    });
-    rawDeposit.fillTxHash = fill.fillTxReceipt.transactionHash;
-    rawDeposit.fillTxBlock = fill.fillTxReceipt.blockNumber;
-    rawDeposit.status = "filled";
-    rawDeposit.actionSuccess = fill.actionSuccess;
-  } catch (e) {
-    if (e instanceof NoFillLogError) {
-      // if no fill log, deposit is pending
-    } else {
-      throw e;
-    }
-  }
+      args: {
+        depositId: BigInt(depositId),
+      },
+      fromBlock: depositLogFromBlock ?? 0n,
+    }),
+  ]);
 
-  // TODO: enrich with token details, format amounts, etc.
-  return rawDeposit;
+  return v3Logs ?? v3_5Logs;
 }

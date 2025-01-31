@@ -2,6 +2,7 @@ import {
   Address,
   Hash,
   Hex,
+  maxUint256,
   parseAbi,
   SimulateContractReturnType,
   TransactionReceipt,
@@ -239,7 +240,7 @@ export async function executeQuote(params: ExecuteQuoteParams) {
 
       if (BigInt(inputAmount) > allowance) {
         const approvalAmount = infiniteApproval
-          ? BigInt(0xffffffff) // max uint256
+          ? maxUint256
           : BigInt(inputAmount);
 
         currentProgressMeta = {

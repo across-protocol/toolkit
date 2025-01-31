@@ -1,7 +1,7 @@
 import { Address, Hex, SimulateContractReturnType, WalletClient } from "viem";
 import { getQuote } from "./getQuote.js";
 import { LoggerT } from "../utils/index.js";
-import { spokePoolAbi } from "../abis/SpokePool.js";
+import { spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 import { ConfiguredPublicClient, CrossChainAction } from "../types/index.js";
 import { getDeposit } from "./getDeposit.js";
 import { signUpdateDepositTypedData } from "./signUpdateDeposit.js";
@@ -11,7 +11,7 @@ export type SimulateUpdateDepositTxParams = {
   originChainClient: ConfiguredPublicClient;
   destinationChainClient: ConfiguredPublicClient;
   deposit: {
-    depositId: number;
+    depositId: bigint | number;
     originChainId: number;
     destinationChainId: number;
     originSpokePoolAddress: Address;
@@ -150,7 +150,7 @@ export async function simulateUpdateDepositTx(
 
   const result = await originChainClient.simulateContract({
     account,
-    abi: spokePoolAbi,
+    abi: spokePoolAbiV3_5,
     address: originSpokePoolAddress,
     functionName: "speedUpV3Deposit",
     args: [

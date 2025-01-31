@@ -34,5 +34,5 @@ export async function waitForDepositTx(
 
 export type DepositStatus = {
   depositTxReceipt: TransactionReceipt;
-  depositId: number;
+  depositId: bigint;
 };

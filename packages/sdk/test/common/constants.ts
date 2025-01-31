@@ -47,12 +47,14 @@ export const FORK_URL_OPTIMISM = `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY
 export const FORK_URL_BASE = `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
 export const FORK_URL_MAINNET = `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
 export const FORK_URL_ARBITRUM = `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
+export const FORK_URL_SEPOLIA = `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`;
 
 // FORK BLOCK NUMBERS
 export const BLOCK_NUMBER_OPTIMISM = BigInt(126951625);
 export const BLOCK_NUMBER_BASE = BigInt(21363706);
-export const BLOCK_NUMBER_MAINNET = BigInt(21020558);
-export const BLOCK_NUMBER_ARBITRUM = BigInt(266447962);
+export const BLOCK_NUMBER_MAINNET = BigInt(21722489);
+export const BLOCK_NUMBER_ARBITRUM = BigInt(300129506);
+export const BLOCK_NUMBER_SEPOLIA = BigInt(7596767);
 
 export const TENDERLY_KEY = getMaybeEnv("VITE_TENDERLY_KEY");
 export const MOCK_API = getMaybeEnv("VITE_MOCK_API") === "true";

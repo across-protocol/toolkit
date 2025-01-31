@@ -680,7 +680,7 @@ export class AcrossClient {
         destinationSpokePoolAddress?: Address;
         originChainId: number;
         destinationChainId: number;
-        depositId?: number;
+        depositId?: bigint;
         depositTxHash?: Hex;
       };
     },

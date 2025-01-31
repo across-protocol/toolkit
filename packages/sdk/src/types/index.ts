@@ -11,8 +11,9 @@ import {
 } from "viem";
 import { STATUS } from "../constants/index.js";
 import { AcrossChain } from "../utils/getSupportedChains.js";
-import { spokePoolAbi } from "../abis/SpokePool.js";
+import { spokePoolAbiV3, spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 import { NoNullValuesOfObject } from "../utils/index.js";
+import { parseFillLogs } from "@/actions/waitForFillTx.js";
 
 export type Status = keyof typeof STATUS;
 
@@ -57,14 +58,13 @@ export type TokenInfo = {
   logoUrl: string;
 };
 
-export type Deposit = {
+export type DepositLog = {
   inputToken: Address;
   outputToken: Address;
   inputAmount: bigint;
   outputAmount: bigint;
-  originChainId: number;
   destinationChainId: number;
-  depositId: number;
+  depositId: bigint;
   quoteTimestamp: number;
   fillDeadline: number;
   exclusivityDeadline: number;
@@ -75,23 +75,44 @@ export type Deposit = {
   status: "pending" | "filled";
   depositTxHash: Hash;
   depositTxBlock: bigint;
+};
+
+export type Deposit = DepositLog & {
+  originChainId: number;
   fillTxHash?: Hash;
   fillTxBlock?: bigint;
   actionSuccess?: boolean;
 };
 
+export type FillEventLog = ReturnType<typeof parseFillLogs>;
+
 export type ChainInfoMap = Map<number, AcrossChain>;
 
 type MaybeFilledV3RelayEvent = GetEventArgs<
-  typeof spokePoolAbi,
+  typeof spokePoolAbiV3,
   "FilledV3Relay",
+  { IndexedOnly: false }
+>;
+type MaybeFilledRelayEvent = GetEventArgs<
+  typeof spokePoolAbiV3_5,
+  "FilledRelay",
   { IndexedOnly: false }
 >;
 
 type MaybeDepositV3Event = GetEventArgs<
-  typeof spokePoolAbi,
+  typeof spokePoolAbiV3,
   "V3FundsDeposited",
   { IndexedOnly: false }
 >;
+
+type MaybeDepositEvent = GetEventArgs<
+  typeof spokePoolAbiV3_5,
+  "FundsDeposited",
+  { IndexedOnly: false }
+>;
+
 export type FilledV3RelayEvent = NoNullValuesOfObject<MaybeFilledV3RelayEvent>;
 export type V3FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositV3Event>;
+
+export type V3_5FilledRelayEvent = NoNullValuesOfObject<MaybeFilledRelayEvent>;
+export type V3_5FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositEvent>;

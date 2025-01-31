@@ -7,7 +7,7 @@ import {
   expect,
   test,
 } from "vitest";
-import { testClient } from "../common/sdk.js";
+import { mainnetTestClient as testClient } from "../common/sdk.js";
 import {
   type FilledV3RelayEvent,
   type Quote,
@@ -26,8 +26,8 @@ import {
   BLOCK_NUMBER_MAINNET,
 } from "../common/constants.js";
 import { fundUsdc } from "../common/utils.js";
-import { waitForDepositAndFill } from "../common/relayer.js";
-import { spokePoolAbi } from "../../src/abis/SpokePool.js";
+import { waitForDepositAndFillV3 } from "../common/relayer.js";
+import { spokePoolAbiV3 } from "../../src/abis/SpokePool/index.js";
 
 const inputToken = {
   address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -85,6 +85,7 @@ describe("executeQuote", async () => {
         chainClientMainnet.resetFork(),
       ]);
     });
+
     beforeAll(async () => {
       // sanity check that we have fresh anvil instances running in this case
       const blockNumberArbitrum = await chainClientArbitrum.getBlockNumber();
@@ -123,7 +124,7 @@ describe("executeQuote", async () => {
 
       await new Promise((res, rej) => {
         testClient.executeQuote({
-          deposit: deposit,
+          deposit,
           walletClient: testWalletMainnet,
           // override publicClients because for some reason the configurePublicClients is not respecting the rpcUrls defined for each chain in anvil.ts
           originClient: publicClientMainnet,
@@ -145,10 +146,13 @@ describe("executeQuote", async () => {
               if (progress.status === "simulationSuccess") {
                 depositSimulationSuccess = true;
               }
+              if (progress.status === "simulationError") {
+                rej(false);
+              }
               if (progress.status === "txSuccess") {
                 depositTxSuccess = true;
                 const { txReceipt } = progress;
-                const _fillHash = await waitForDepositAndFill({
+                const _fillHash = await waitForDepositAndFillV3({
                   depositReceipt: txReceipt,
                   acrossClient: testClient,
                   originPublicClient: publicClientMainnet,
@@ -180,12 +184,14 @@ describe("executeQuote", async () => {
           })
         : undefined;
 
-      const _fillLog = parseEventLogs({
-        abi: spokePoolAbi,
-        eventName: "FilledV3Relay",
-        logs: fillReceipt?.logs!,
-      });
-      fillLog = _fillLog[0]?.args;
+      const _fillLog =
+        fillReceipt &&
+        parseEventLogs({
+          abi: spokePoolAbiV3,
+          eventName: "FilledV3Relay",
+          logs: fillReceipt?.logs,
+        });
+      fillLog = _fillLog?.[0]?.args;
     });
 
     test("Deposit approval simulation succeeds", async () => {

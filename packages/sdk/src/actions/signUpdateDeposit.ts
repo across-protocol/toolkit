@@ -1,12 +1,10 @@
 import { Address, Hex, WalletClient } from "viem";
-import { getUpdateDepositTypedData } from "../utils/index.js";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { simulateUpdateDepositTx } from "./simulateUpdateDepositTx.js";
+import { getUpdateDepositTypedDataV3_5 } from "../utils/index.js";
 
 export type SignUpdateDepositTypedDataParams = {
   walletClient: WalletClient;
-  depositId: number;
-  originChainId: number;
+  depositId: bigint | number;
+  originChainId: bigint | number;
   updatedMessage: Hex;
   updatedOutputAmount: bigint;
   updatedRecipient: Address;
@@ -38,7 +36,7 @@ export async function signUpdateDepositTypedData(
   }
 
   const signature = await walletClient.signTypedData(
-    getUpdateDepositTypedData({
+    getUpdateDepositTypedDataV3_5({
       signerAddress: account.address,
       originChainId,
       depositId,

@@ -206,7 +206,7 @@ async function main() {
   const depositById = await client.getDeposit({
     findBy: {
       ...depositFilter,
-      depositId: 2525494,
+      depositId: 2525494n,
     },
   });
   console.log("Deposit by id", depositById);
