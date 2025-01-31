@@ -12,11 +12,11 @@
 
 ### deposit.depositId
 
-> **depositId**: `number`
+> **depositId**: `bigint` \| `number`
 
-### deposit.depositTxHash
+### deposit.depositTxHash?
 
-> **depositTxHash**: `Hash`
+> `optional` **depositTxHash**: `Hash`
 
 ### deposit.destinationChainId
 
@@ -52,4 +52,4 @@
 
 ## Defined in
 
-[packages/sdk/src/actions/getFillByDepositTx.ts:15](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/getFillByDepositTx.ts#L15)
+[packages/sdk/src/actions/getFillByDepositTx.ts:16](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getFillByDepositTx.ts#L16)

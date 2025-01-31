@@ -34,7 +34,7 @@ Whether to use an infinite approval for the SpokePool contract.
 
 ### integratorId
 
-> **integratorId**: `string`
+> **integratorId**: `Hex`
 
 An identifier for the integrator.
 
@@ -84,4 +84,4 @@ The wallet client to use for the deposit.
 
 ## Defined in
 
-[packages/sdk/src/actions/executeQuote.ts:111](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/executeQuote.ts#L111)
+[packages/sdk/src/actions/executeQuote.ts:116](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/executeQuote.ts#L116)

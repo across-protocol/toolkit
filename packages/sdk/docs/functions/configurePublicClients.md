@@ -2,15 +2,17 @@
 
 # Function: configurePublicClients()
 
-> **configurePublicClients**(`chains`, `pollingInterval`, `rpcUrls`?): [`ConfiguredPublicClientMap`](../type-aliases/ConfiguredPublicClientMap.md)
+> **configurePublicClients**(`chains`, `pollingInterval`?, `rpcUrls`?, `transports`?): [`ConfiguredPublicClientMap`](../type-aliases/ConfiguredPublicClientMap.md)
 
 ## Parameters
 
 • **chains**: `Chain`[]
 
-• **pollingInterval**: `number`
+• **pollingInterval?**: `number`
 
 • **rpcUrls?**
+
+• **transports?**
 
 ## Returns
 
@@ -18,4 +20,4 @@
 
 ## Defined in
 
-[packages/sdk/src/utils/configurePublicClients.ts:5](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/configurePublicClients.ts#L5)
+[packages/sdk/src/utils/configurePublicClients.ts:5](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/configurePublicClients.ts#L5)

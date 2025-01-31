@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:91](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/errors/index.ts#L91)
+[packages/sdk/src/errors/index.ts:91](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L91)
 
 ## Properties
 
@@ -48,9 +48,9 @@
 
 #### Defined in
 
-node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2022.error.d.ts:24
+node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.error.d.ts:24
 
----
+***
 
 ### message
 
@@ -62,9 +62,9 @@ node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2022.error
 
 #### Defined in
 
-node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:1076
+node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1076
 
----
+***
 
 ### name
 
@@ -76,9 +76,9 @@ node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:107
 
 #### Defined in
 
-node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:1075
+node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1075
 
----
+***
 
 ### simulationId
 
@@ -86,9 +86,9 @@ node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:107
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:88](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/errors/index.ts#L88)
+[packages/sdk/src/errors/index.ts:88](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L88)
 
----
+***
 
 ### simulationUrl
 
@@ -96,9 +96,9 @@ node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:107
 
 #### Defined in
 
-[packages/sdk/src/errors/index.ts:89](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/errors/index.ts#L89)
+[packages/sdk/src/errors/index.ts:89](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L89)
 
----
+***
 
 ### stack?
 
@@ -110,9 +110,9 @@ node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:107
 
 #### Defined in
 
-node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es5.d.ts:1077
+node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1077
 
----
+***
 
 ### prepareStackTrace()?
 
@@ -140,9 +140,9 @@ https://v8.dev/docs/stack-trace-api#customizing-stack-traces
 
 #### Defined in
 
-node_modules/.pnpm/@types+node@20.16.2/node_modules/@types/node/globals.d.ts:28
+node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:28
 
----
+***
 
 ### stackTraceLimit
 
@@ -154,7 +154,7 @@ node_modules/.pnpm/@types+node@20.16.2/node_modules/@types/node/globals.d.ts:28
 
 #### Defined in
 
-node_modules/.pnpm/@types+node@20.16.2/node_modules/@types/node/globals.d.ts:30
+node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:30
 
 ## Methods
 
@@ -180,4 +180,4 @@ Create .stack property on a target object
 
 #### Defined in
 
-node_modules/.pnpm/@types+node@20.16.2/node_modules/@types/node/globals.d.ts:21
+node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:21

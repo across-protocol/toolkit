@@ -5,7 +5,6 @@
 > **executeQuote**(`params`): `Promise`\<`object` \| `object`\>
 
 Executes a quote by:
-
 1. Approving the SpokePool contract if necessary
 2. Depositing the input token on the origin chain
 3. Waiting for the deposit to be filled on the destination chain
@@ -24,4 +23,4 @@ The deposit ID and receipts for the deposit and fill transactions.
 
 ## Defined in
 
-[packages/sdk/src/actions/executeQuote.ts:167](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/actions/executeQuote.ts#L167)
+[packages/sdk/src/actions/executeQuote.ts:172](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/executeQuote.ts#L172)

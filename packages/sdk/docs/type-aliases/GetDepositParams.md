@@ -12,7 +12,7 @@
 
 ### destinationChainClient
 
-> **destinationChainClient**: `PublicClient`
+> **destinationChainClient**: [`ConfiguredPublicClient`](ConfiguredPublicClient.md)
 
 ### fillLogFromBlock?
 
@@ -42,8 +42,8 @@
 
 ### originChainClient
 
-> **originChainClient**: `PublicClient`
+> **originChainClient**: [`ConfiguredPublicClient`](ConfiguredPublicClient.md)
 
 ## Defined in
 
-packages/sdk/src/actions/getDeposit.ts:7
+[packages/sdk/src/actions/getDeposit.ts:7](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getDeposit.ts#L7)
