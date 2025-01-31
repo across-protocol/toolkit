@@ -2,41 +2,13 @@
 
 # Type Alias: Deposit
 
-> **Deposit**: `object`
+> **Deposit**: [`DepositLog`](DepositLog.md) & `object`
 
 ## Type declaration
 
-### depositId
+### actionSuccess?
 
-> **depositId**: `number`
-
-### depositor
-
-> **depositor**: `Address`
-
-### depositTxBlock
-
-> **depositTxBlock**: `bigint`
-
-### depositTxHash
-
-> **depositTxHash**: `Hash`
-
-### destinationChainId
-
-> **destinationChainId**: `number`
-
-### exclusiveRelayer
-
-> **exclusiveRelayer**: `Address`
-
-### exclusivityDeadline
-
-> **exclusivityDeadline**: `number`
-
-### fillDeadline
-
-> **fillDeadline**: `number`
+> `optional` **actionSuccess**: `boolean`
 
 ### fillTxBlock?
 
@@ -46,42 +18,10 @@
 
 > `optional` **fillTxHash**: `Hash`
 
-### inputAmount
-
-> **inputAmount**: `bigint`
-
-### inputToken
-
-> **inputToken**: `Address`
-
-### message
-
-> **message**: `Hex`
-
 ### originChainId
 
 > **originChainId**: `number`
 
-### outputAmount
-
-> **outputAmount**: `bigint`
-
-### outputToken
-
-> **outputToken**: `Address`
-
-### quoteTimestamp
-
-> **quoteTimestamp**: `number`
-
-### recipient
-
-> **recipient**: `Address`
-
-### status
-
-> **status**: `"pending"` \| `"filled"`
-
 ## Defined in
 
-[packages/sdk/src/types/index.ts:54](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/types/index.ts#L54)
+[packages/sdk/src/types/index.ts:80](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/types/index.ts#L80)

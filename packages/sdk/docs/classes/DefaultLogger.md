@@ -14,7 +14,7 @@
 
 #### Parameters
 
-• **logLevel**: `"DEBUG"` \| `"INFO"` \| `"WARN"` \| `"ERROR"`
+• **logLevel**: `"ERROR"` \| `"DEBUG"` \| `"INFO"` \| `"WARN"`
 
 #### Returns
 
@@ -22,19 +22,19 @@
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:16](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L16)
+[packages/sdk/src/utils/logger.ts:16](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L16)
 
 ## Properties
 
 ### logLevel
 
-> **logLevel**: `"DEBUG"` \| `"INFO"` \| `"WARN"` \| `"ERROR"`
+> **logLevel**: `"ERROR"` \| `"DEBUG"` \| `"INFO"` \| `"WARN"`
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:12](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L12)
+[packages/sdk/src/utils/logger.ts:12](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L12)
 
----
+***
 
 ### logPrefix
 
@@ -42,9 +42,9 @@
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:14](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L14)
+[packages/sdk/src/utils/logger.ts:14](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L14)
 
----
+***
 
 ### secondaryLabel
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:13](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L13)
+[packages/sdk/src/utils/logger.ts:13](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L13)
 
 ## Methods
 
@@ -62,7 +62,7 @@
 
 #### Parameters
 
-• **logLevel**: `"DEBUG"` \| `"INFO"` \| `"WARN"` \| `"ERROR"`
+• **logLevel**: `"ERROR"` \| `"DEBUG"` \| `"INFO"` \| `"WARN"`
 
 #### Returns
 
@@ -78,9 +78,9 @@
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:20](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L20)
+[packages/sdk/src/utils/logger.ts:20](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L20)
 
----
+***
 
 ### debug()
 
@@ -88,7 +88,7 @@
 
 #### Parameters
 
-• ...**data**: `any`[]
+• ...**data**: `unknown`[]
 
 #### Returns
 
@@ -100,9 +100,9 @@
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:42](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L42)
+[packages/sdk/src/utils/logger.ts:42](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L42)
 
----
+***
 
 ### error()
 
@@ -110,7 +110,7 @@
 
 #### Parameters
 
-• ...**data**: `any`[]
+• ...**data**: `unknown`[]
 
 #### Returns
 
@@ -122,9 +122,9 @@
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:61](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L61)
+[packages/sdk/src/utils/logger.ts:61](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L61)
 
----
+***
 
 ### info()
 
@@ -132,7 +132,7 @@
 
 #### Parameters
 
-• ...**data**: `any`[]
+• ...**data**: `unknown`[]
 
 #### Returns
 
@@ -144,9 +144,9 @@
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:49](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L49)
+[packages/sdk/src/utils/logger.ts:49](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L49)
 
----
+***
 
 ### log()
 
@@ -156,9 +156,9 @@ Description - creates an indentation group for each call to `logger.[logLevel]()
 
 #### Parameters
 
-• **logLevel**: `"DEBUG"` \| `"INFO"` \| `"WARN"` \| `"ERROR"`
+• **logLevel**: `"ERROR"` \| `"DEBUG"` \| `"INFO"` \| `"WARN"`
 
-• ...**data**: `any`[]
+• ...**data**: `unknown`[]
 
 #### Returns
 
@@ -166,9 +166,9 @@ Description - creates an indentation group for each call to `logger.[logLevel]()
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:33](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L33)
+[packages/sdk/src/utils/logger.ts:33](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L33)
 
----
+***
 
 ### warn()
 
@@ -176,7 +176,7 @@ Description - creates an indentation group for each call to `logger.[logLevel]()
 
 #### Parameters
 
-• ...**data**: `any`[]
+• ...**data**: `unknown`[]
 
 #### Returns
 
@@ -188,4 +188,4 @@ Description - creates an indentation group for each call to `logger.[logLevel]()
 
 #### Defined in
 
-[packages/sdk/src/utils/logger.ts:55](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/logger.ts#L55)
+[packages/sdk/src/utils/logger.ts:55](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L55)

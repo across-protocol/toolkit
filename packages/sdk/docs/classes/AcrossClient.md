@@ -12,7 +12,7 @@ Entrypoint for the Across Integrator SDK
 
 #### Defined in
 
-[packages/sdk/src/client.ts:143](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L143)
+[packages/sdk/src/client.ts:154](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L154)
 
 ## Accessors
 
@@ -26,7 +26,7 @@ Entrypoint for the Across Integrator SDK
 
 #### Defined in
 
-[packages/sdk/src/client.ts:153](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L153)
+[packages/sdk/src/client.ts:164](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L164)
 
 ## Methods
 
@@ -35,7 +35,6 @@ Entrypoint for the Across Integrator SDK
 > **executeQuote**(`params`): `Promise`\<`void`\>
 
 Execute a quote by:
-
 1. Approving the SpokePool contract if necessary
 2. Depositing the input token on the origin chain
 3. Waiting for the deposit to be filled on the destination chain
@@ -44,7 +43,7 @@ See [executeQuote](../functions/executeQuote.md) for more details.
 
 #### Parameters
 
-• **params**: `Omit`\<[`ExecuteQuoteParams`](../type-aliases/ExecuteQuoteParams.md), `"logger"` \| `"integratorId"` \| `"originClient"` \| `"destinationClient"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`ExecuteQuoteParams`](../type-aliases/ExecuteQuoteParams.md), `"logger"` \| `"integratorId"` \| `"originClient"` \| `"destinationClient"`\>
 
 See [ExecuteQuoteParams](../type-aliases/ExecuteQuoteParams.md).
 
@@ -63,9 +62,9 @@ const { depositId } = await client.executeQuote({ deposit: quote.deposit });
 
 #### Defined in
 
-[packages/sdk/src/client.ts:244](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L244)
+[packages/sdk/src/client.ts:284](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L284)
 
----
+***
 
 ### getAvailableRoutes()
 
@@ -75,7 +74,7 @@ Get the available routes for a given set of parameters. See [getAvailableRoutes]
 
 #### Parameters
 
-• **params**: `Omit`\<[`GetAvailableRoutesParams`](../type-aliases/GetAvailableRoutesParams.md), `"logger"` \| `"apiUrl"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`GetAvailableRoutesParams`](../type-aliases/GetAvailableRoutesParams.md), `"logger"` \| `"apiUrl"`\>
 
 See [GetAvailableRoutesParams](../type-aliases/GetAvailableRoutesParams.md).
 
@@ -87,9 +86,31 @@ See [GetAvailableRoutesReturnType](../type-aliases/GetAvailableRoutesReturnType.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:320](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L320)
+[packages/sdk/src/client.ts:367](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L367)
 
----
+***
+
+### getChainInfo()
+
+> **getChainInfo**(`chainId`): `Promise`\<[`AcrossChain`](../type-aliases/AcrossChain.md)\>
+
+#### Parameters
+
+• **chainId**: `number`
+
+number
+
+#### Returns
+
+`Promise`\<[`AcrossChain`](../type-aliases/AcrossChain.md)\>
+
+See [AcrossChain](../type-aliases/AcrossChain.md).
+
+#### Defined in
+
+[packages/sdk/src/client.ts:250](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L250)
+
+***
 
 ### getDeposit()
 
@@ -99,7 +120,7 @@ Get a deposit by its deposit tx hash or deposit id + spoke pool address. See [ge
 
 #### Parameters
 
-• **params**: `Omit`\<[`GetDepositParams`](../type-aliases/GetDepositParams.md), `"destinationChainClient"` \| `"indexerUrl"` \| `"originChainClient"`\>
+• **params**: `Omit`\<`Omit`\<[`GetDepositParams`](../type-aliases/GetDepositParams.md), `"findBy"`\>, `"indexerUrl"` \| `"destinationChainClient"` \| `"originChainClient"`\> & `Partial`\<`Pick`\<`Omit`\<[`GetDepositParams`](../type-aliases/GetDepositParams.md), `"findBy"`\>, `"indexerUrl"` \| `"destinationChainClient"` \| `"originChainClient"`\>\> & `object`
 
 See [GetDepositParams](../type-aliases/GetDepositParams.md).
 
@@ -111,9 +132,9 @@ See [Deposit](../type-aliases/Deposit.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:531](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L531)
+[packages/sdk/src/client.ts:673](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L673)
 
----
+***
 
 ### getFillByDepositTx()
 
@@ -123,7 +144,7 @@ Get a fill after a deposit has been made. See [getFillByDepositTx](../functions/
 
 #### Parameters
 
-• **params**: `Omit`\<[`GetFillByDepositTxParams`](../type-aliases/GetFillByDepositTxParams.md), `"logger"` \| `"destinationChainClient"` \| `"indexerUrl"` \| `"originChainClient"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`GetFillByDepositTxParams`](../type-aliases/GetFillByDepositTxParams.md), `"logger"` \| `"indexerUrl"` \| `"destinationChainClient"`\>
 
 See [GetFillByDepositTxParams](../type-aliases/GetFillByDepositTxParams.md).
 
@@ -135,9 +156,9 @@ See [FillStatus](../type-aliases/FillStatus.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:499](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L499)
+[packages/sdk/src/client.ts:640](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L640)
 
----
+***
 
 ### getLimits()
 
@@ -147,7 +168,7 @@ Get the deposit limits for a given route. See [getLimits](../functions/getLimits
 
 #### Parameters
 
-• **params**: `Omit`\<[`GetLimitsParams`](../type-aliases/GetLimitsParams.md), `"logger"` \| `"apiUrl"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`GetLimitsParams`](../type-aliases/GetLimitsParams.md), `"logger"` \| `"apiUrl"`\>
 
 See [GetLimitsParams](../type-aliases/GetLimitsParams.md).
 
@@ -159,9 +180,9 @@ See [GetLimitsReturnType](../type-aliases/GetLimitsReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:374](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L374)
+[packages/sdk/src/client.ts:421](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L421)
 
----
+***
 
 ### getPublicClient()
 
@@ -223,18 +244,18 @@ The call data. CallReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const data = await client.call({
-  account: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
-  data: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-  to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
-});
+  account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  data: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+  to: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
+})
 ```
 
 ##### ccipRead?
@@ -279,14 +300,14 @@ Filter. CreateBlockFilterReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, createBlockFilter, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, createBlockFilter, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const filter = await createBlockFilter(client);
+})
+const filter = await createBlockFilter(client)
 // { id: "0x345a6572337856574a76364e457a4366", type: 'block' }
 ```
 
@@ -300,17 +321,17 @@ Creates a Filter to retrieve event logs that can be used with [`getFilterChanges
 
 ###### Type Parameters
 
-• **abi** _extends_ `Abi` \| readonly `unknown`[]
+• **abi** *extends* readonly `unknown`[] \| `Abi`
 
-• **eventName** _extends_ `undefined` \| `string`
+• **eventName** *extends* `undefined` \| `string`
 
-• **args** _extends_ `undefined` \| `Record`\<`string`, `unknown`\> \| readonly `unknown`[]
+• **args** *extends* `undefined` \| readonly `unknown`[] \| `Record`\<`string`, `unknown`\>
 
-• **strict** _extends_ `undefined` \| `boolean` = `undefined`
+• **strict** *extends* `undefined` \| `boolean` = `undefined`
 
-• **fromBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **fromBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
-• **toBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **toBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
 ###### Parameters
 
@@ -327,16 +348,16 @@ CreateContractEventFilterParameters
 ###### Example
 
 ```ts
-import { createPublicClient, http, parseAbi } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseAbi } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const filter = await client.createContractEventFilter({
-  abi: parseAbi(["event Transfer(address indexed, address indexed, uint256)"]),
-});
+  abi: parseAbi(['event Transfer(address indexed, address indexed, uint256)']),
+})
 ```
 
 ##### createEventFilter()
@@ -350,19 +371,19 @@ Creates a [`Filter`](https://viem.sh/docs/glossary/types#filter) to listen for n
 
 ###### Type Parameters
 
-• **abiEvent** _extends_ `undefined` \| `AbiEvent` = `undefined`
+• **abiEvent** *extends* `undefined` \| `AbiEvent` = `undefined`
 
-• **abiEvents** _extends_ `undefined` \| readonly `unknown`[] \| readonly `AbiEvent`[] = `abiEvent` _extends_ `AbiEvent` ? [`abiEvent`\<`abiEvent`\>] : `undefined`
+• **abiEvents** *extends* `undefined` \| readonly `unknown`[] \| readonly `AbiEvent`[] = `abiEvent` *extends* `AbiEvent` ? [`abiEvent`\<`abiEvent`\>] : `undefined`
 
-• **strict** _extends_ `undefined` \| `boolean` = `undefined`
+• **strict** *extends* `undefined` \| `boolean` = `undefined`
 
-• **fromBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **fromBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
-• **toBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **toBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
-• **\_EventName** _extends_ `undefined` \| `string` = `MaybeAbiEventName`\<`abiEvent`\>
+• **_EventName** *extends* `undefined` \| `string` = `MaybeAbiEventName`\<`abiEvent`\>
 
-• **\_Args** _extends_ `undefined` \| `Record`\<`string`, `unknown`\> \| readonly `unknown`[] = `undefined`
+• **_Args** *extends* `undefined` \| readonly `unknown`[] \| `Record`\<`string`, `unknown`\> = `undefined`
 
 ###### Parameters
 
@@ -379,16 +400,16 @@ CreateEventFilterParameters
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const filter = await client.createEventFilter({
-  address: "0xfba3912ca04dd458c843e2ee08967fc04f3579c2",
-});
+  address: '0xfba3912ca04dd458c843e2ee08967fc04f3579c2',
+})
 ```
 
 ##### createPendingTransactionFilter()
@@ -421,14 +442,14 @@ Creates a Filter to listen for new pending transaction hashes that can be used w
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const filter = await client.createPendingTransactionFilter();
+})
+const filter = await client.createPendingTransactionFilter()
 // { id: "0x345a6572337856574a76364e457a4366", type: 'transaction' }
 ```
 
@@ -442,13 +463,13 @@ Estimates the gas required to successfully execute a contract write function cal
 
 ###### Type Parameters
 
-• **chain** _extends_ `undefined` \| `Chain`
+• **chain** *extends* `undefined` \| `Chain`
 
-• **abi** _extends_ `Abi` \| readonly `unknown`[]
+• **abi** *extends* readonly `unknown`[] \| `Abi`
 
-• **functionName** _extends_ `string`
+• **functionName** *extends* `string`
 
-• **args** _extends_ `unknown`
+• **args** *extends* `unknown`
 
 ###### Parameters
 
@@ -469,19 +490,19 @@ Internally, uses a [Public Client](https://viem.sh/docs/clients/public) to call 
 ###### Example
 
 ```ts
-import { createPublicClient, http, parseAbi } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseAbi } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const gas = await client.estimateContractGas({
-  address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
-  abi: parseAbi(["function mint() public"]),
-  functionName: "mint",
-  account: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
-});
+  address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+  abi: parseAbi(['function mint() public']),
+  functionName: 'mint',
+  account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+})
 ```
 
 ##### estimateFeesPerGas()
@@ -495,9 +516,9 @@ in the next block.
 
 ###### Type Parameters
 
-• **chainOverride** _extends_ `undefined` \| `Chain` = `undefined`
+• **chainOverride** *extends* `undefined` \| `Chain` = `undefined`
 
-• **type** _extends_ `FeeValuesType` = `"eip1559"`
+• **type** *extends* `FeeValuesType` = `"eip1559"`
 
 ###### Parameters
 
@@ -512,14 +533,14 @@ An estimate (in wei) for the fees per gas. EstimateFeesPerGasReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const maxPriorityFeePerGas = await client.estimateFeesPerGas();
+})
+const maxPriorityFeePerGas = await client.estimateFeesPerGas()
 // { maxFeePerGas: ..., maxPriorityFeePerGas: ... }
 ```
 
@@ -547,18 +568,18 @@ The gas estimate (in wei). EstimateGasReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http, parseEther } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseEther } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const gasEstimate = await client.estimateGas({
-  account: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
-  to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
-  value: parseEther("1"),
-});
+  account: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+  to: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
+  value: parseEther('1'),
+})
 ```
 
 ##### estimateMaxPriorityFeePerGas()
@@ -572,7 +593,7 @@ to be included in the next block.
 
 ###### Type Parameters
 
-• **chainOverride** _extends_ `undefined` \| `Chain` = `undefined`
+• **chainOverride** *extends* `undefined` \| `Chain` = `undefined`
 
 ###### Parameters
 
@@ -589,14 +610,14 @@ An estimate (in wei) for the max priority fee per gas. EstimateMaxPriorityFeePer
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const maxPriorityFeePerGas = await client.estimateMaxPriorityFeePerGas();
+})
+const maxPriorityFeePerGas = await client.estimateMaxPriorityFeePerGas()
 // 10000000n
 ```
 
@@ -606,7 +627,7 @@ const maxPriorityFeePerGas = await client.estimateMaxPriorityFeePerGas();
 
 ###### Type Parameters
 
-• **client** _extends_ `object` & `ExactPartial`\<`ExtendableProtectedActions`\<`Transport`, `Chain`, `undefined`\>\>
+• **client** *extends* `object` & `ExactPartial`\<`ExtendableProtectedActions`\<`Transport`, `Chain`, `undefined`\>\>
 
 ###### Parameters
 
@@ -643,26 +664,26 @@ You can convert the balance to ether units with [`formatEther`](https://viem.sh/
 
 ```ts
 const balance = await getBalance(client, {
-  address: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
-  blockTag: "safe",
-});
-const balanceAsEther = formatEther(balance);
+  address: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+  blockTag: 'safe'
+})
+const balanceAsEther = formatEther(balance)
 // "6.942"
 ```
 
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const balance = await client.getBalance({
-  address: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
-});
+  address: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+})
 // 10000000000000000000000n (wei)
 ```
 
@@ -684,15 +705,15 @@ The blob base fee (in wei). GetBlobBaseFeeReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import { getBlobBaseFee } from "viem/public";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { getBlobBaseFee } from 'viem/public'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const blobBaseFee = await client.getBlobBaseFee();
+})
+const blobBaseFee = await client.getBlobBaseFee()
 ```
 
 ##### getBlock()
@@ -709,9 +730,9 @@ Returns information about a block at a block number, hash, or tag.
 
 ###### Type Parameters
 
-• **includeTransactions** _extends_ `boolean` = `false`
+• **includeTransactions** *extends* `boolean` = `false`
 
-• **blockTag** _extends_ `BlockTag` = `"latest"`
+• **blockTag** *extends* `BlockTag` = `"latest"`
 
 ###### Parameters
 
@@ -769,13 +790,13 @@ Total used gas by all transactions in this block
 
 ###### hash
 
-> **hash**: `blockTag` _extends_ `"pending"` ? `null` : \`0x$\{string\}\`
+> **hash**: `blockTag` *extends* `"pending"` ? `null` : \`0x$\{string\}\`
 
 Block hash or `null` if pending
 
 ###### logsBloom
 
-> **logsBloom**: `blockTag` _extends_ `"pending"` ? `null` : \`0x$\{string\}\`
+> **logsBloom**: `blockTag` *extends* `"pending"` ? `null` : \`0x$\{string\}\`
 
 Logs bloom filter or `null` if pending
 
@@ -793,13 +814,13 @@ Unique identifier for the block.
 
 ###### nonce
 
-> **nonce**: `blockTag` _extends_ `"pending"` ? `null` : \`0x$\{string\}\`
+> **nonce**: `blockTag` *extends* `"pending"` ? `null` : \`0x$\{string\}\`
 
 Proof-of-work hash or `null` if pending
 
 ###### number
 
-> **number**: `blockTag` _extends_ `"pending"` ? `null` : `bigint`
+> **number**: `blockTag` *extends* `"pending"` ? `null` : `bigint`
 
 Block number or `null` if pending
 
@@ -851,7 +872,7 @@ Total difficulty of the chain until this block
 
 ###### transactions
 
-> **transactions**: `includeTransactions` _extends_ `true` ? (`object` \| `object` \| `object` \| `object` \| `object`)[] : \`0x$\{string\}\`[]
+> **transactions**: `includeTransactions` *extends* `true` ? (`object` \| `object` \| `object` \| `object` \| `object`)[] : \`0x$\{string\}\`[]
 
 ###### transactionsRoot
 
@@ -880,14 +901,14 @@ Root of the this block’s withdrawals trie
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const block = await client.getBlock();
+})
+const block = await client.getBlock()
 ```
 
 ##### getBlockNumber()
@@ -915,14 +936,14 @@ The number of the block. GetBlockNumberReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const blockNumber = await client.getBlockNumber();
+})
+const blockNumber = await client.getBlockNumber()
 // 69420n
 ```
 
@@ -952,14 +973,14 @@ The block transaction count. GetBlockTransactionCountReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const count = await client.getBlockTransactionCount();
+})
+const count = await client.getBlockTransactionCount()
 ```
 
 ##### ~~getBytecode()~~
@@ -996,14 +1017,14 @@ The current chain ID. GetChainIdReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const chainId = await client.getChainId();
+})
+const chainId = await client.getChainId()
 // 1
 ```
 
@@ -1031,16 +1052,16 @@ The contract's bytecode. GetBytecodeReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const code = await client.getCode({
-  address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
-});
+  address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+})
 ```
 
 ##### getContractEvents()
@@ -1054,15 +1075,15 @@ Returns a list of event logs emitted by a contract.
 
 ###### Type Parameters
 
-• **abi** _extends_ `Abi` \| readonly `unknown`[]
+• **abi** *extends* readonly `unknown`[] \| `Abi`
 
-• **eventName** _extends_ `undefined` \| `string` = `undefined`
+• **eventName** *extends* `undefined` \| `string` = `undefined`
 
-• **strict** _extends_ `undefined` \| `boolean` = `undefined`
+• **strict** *extends* `undefined` \| `boolean` = `undefined`
 
-• **fromBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **fromBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
-• **toBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **toBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
 ###### Parameters
 
@@ -1077,19 +1098,19 @@ A list of event logs. GetContractEventsReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import { wagmiAbi } from "./abi";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { wagmiAbi } from './abi'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const logs = await client.getContractEvents(client, {
-  address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
-  abi: wagmiAbi,
-  eventName: "Transfer",
-});
+ address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+ abi: wagmiAbi,
+ eventName: 'Transfer'
+})
 ```
 
 ##### getEip712Domain()
@@ -1111,17 +1132,17 @@ The EIP-712 domain, fields, and extensions. GetEip712DomainReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 
 const domain = await client.getEip712Domain({
-  address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-});
+  address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+})
 // {
 //   domain: {
 //     name: 'ExampleContract',
@@ -1160,7 +1181,7 @@ The balance of the account at a block tag.
 **Default**
 
 ```ts
-"latest";
+'latest'
 ```
 
 • **args.coinType?**: `number`
@@ -1198,17 +1219,17 @@ Since ENS names prohibit certain forbidden characters (e.g. underscore) and have
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import { normalize } from "viem/ens";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { normalize } from 'viem/ens'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const ensAddress = await client.getEnsAddress({
-  name: normalize("wevm.eth"),
-});
+  name: normalize('wevm.eth'),
+})
 // '0xd2135CfB216b74109775236E36d4b433F1DF507B'
 ```
 
@@ -1242,7 +1263,7 @@ The balance of the account at a block tag.
 **Default**
 
 ```ts
-"latest";
+'latest'
 ```
 
 • **args.gatewayUrls?**: `string`[]
@@ -1276,17 +1297,17 @@ Since ENS names prohibit certain forbidden characters (e.g. underscore) and have
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import { normalize } from "viem/ens";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { normalize } from 'viem/ens'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const ensAvatar = await client.getEnsAvatar({
-  name: normalize("wevm.eth"),
-});
+  name: normalize('wevm.eth'),
+})
 // 'https://ipfs.io/ipfs/Qma8mnp6xV3J2cRNf3mTth5C8nV11CAnceVinc3y8jSbio'
 ```
 
@@ -1320,7 +1341,7 @@ The balance of the account at a block tag.
 **Default**
 
 ```ts
-"latest";
+'latest'
 ```
 
 • **args.gatewayUrls?**: `string`[]
@@ -1348,16 +1369,16 @@ Calls `reverse(bytes)` on ENS Universal Resolver Contract to "reverse resolve" t
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const ensName = await client.getEnsName({
-  address: "0xd2135CfB216b74109775236E36d4b433F1DF507B",
-});
+  address: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
+})
 // 'wevm.eth'
 ```
 
@@ -1387,7 +1408,7 @@ The balance of the account at a block tag.
 **Default**
 
 ```ts
-"latest";
+'latest'
 ```
 
 • **args.name**: `string`
@@ -1413,17 +1434,17 @@ Since ENS names prohibit certain forbidden characters (e.g. underscore) and have
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import { normalize } from "viem/ens";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { normalize } from 'viem/ens'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const resolverAddress = await client.getEnsResolver({
-  name: normalize("wevm.eth"),
-});
+  name: normalize('wevm.eth'),
+})
 // '0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41'
 ```
 
@@ -1453,7 +1474,7 @@ The balance of the account at a block tag.
 **Default**
 
 ```ts
-"latest";
+'latest'
 ```
 
 • **args.gatewayUrls?**: `string`[]
@@ -1491,18 +1512,18 @@ Since ENS names prohibit certain forbidden characters (e.g. underscore) and have
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import { normalize } from "viem/ens";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { normalize } from 'viem/ens'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const twitterRecord = await client.getEnsText({
-  name: normalize("wevm.eth"),
-  key: "com.twitter",
-});
+  name: normalize('wevm.eth'),
+  key: 'com.twitter',
+})
 // 'wevm_dev'
 ```
 
@@ -1530,17 +1551,17 @@ The gas estimate (in wei). GetFeeHistoryReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const feeHistory = await client.getFeeHistory({
   blockCount: 4,
   rewardPercentiles: [25, 75],
-});
+})
 ```
 
 ##### getFilterChanges()
@@ -1554,17 +1575,17 @@ Returns a list of logs or hashes based on a [Filter](/docs/glossary/terms#filter
 
 ###### Type Parameters
 
-• **filterType** _extends_ `FilterType`
+• **filterType** *extends* `FilterType`
 
-• **abi** _extends_ `undefined` \| `Abi` \| readonly `unknown`[]
+• **abi** *extends* `undefined` \| readonly `unknown`[] \| `Abi`
 
-• **eventName** _extends_ `undefined` \| `string`
+• **eventName** *extends* `undefined` \| `string`
 
-• **strict** _extends_ `undefined` \| `boolean` = `undefined`
+• **strict** *extends* `undefined` \| `boolean` = `undefined`
 
-• **fromBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **fromBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
-• **toBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **toBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
 ###### Parameters
 
@@ -1597,63 +1618,61 @@ Depending on the type of filter, the return value will be different:
 
 ```ts
 // Blocks
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const filter = await client.createBlockFilter();
-const hashes = await client.getFilterChanges({ filter });
+})
+const filter = await client.createBlockFilter()
+const hashes = await client.getFilterChanges({ filter })
 ```
 
 ```ts
 // Contract Events
-import { createPublicClient, http, parseAbi } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseAbi } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const filter = await client.createContractEventFilter({
-  address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  abi: parseAbi(["event Transfer(address indexed, address indexed, uint256)"]),
-  eventName: "Transfer",
-});
-const logs = await client.getFilterChanges({ filter });
+  address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  abi: parseAbi(['event Transfer(address indexed, address indexed, uint256)']),
+  eventName: 'Transfer',
+})
+const logs = await client.getFilterChanges({ filter })
 ```
 
 ```ts
 // Raw Events
-import { createPublicClient, http, parseAbiItem } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseAbiItem } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const filter = await client.createEventFilter({
-  address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  event: parseAbiItem(
-    "event Transfer(address indexed, address indexed, uint256)",
-  ),
-});
-const logs = await client.getFilterChanges({ filter });
+  address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  event: parseAbiItem('event Transfer(address indexed, address indexed, uint256)'),
+})
+const logs = await client.getFilterChanges({ filter })
 ```
 
 ```ts
 // Transactions
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const filter = await client.createPendingTransactionFilter();
-const hashes = await client.getFilterChanges({ filter });
+})
+const filter = await client.createPendingTransactionFilter()
+const hashes = await client.getFilterChanges({ filter })
 ```
 
 ##### getFilterLogs()
@@ -1667,15 +1686,15 @@ Returns a list of event logs since the filter was created.
 
 ###### Type Parameters
 
-• **abi** _extends_ `undefined` \| `Abi` \| readonly `unknown`[]
+• **abi** *extends* `undefined` \| readonly `unknown`[] \| `Abi`
 
-• **eventName** _extends_ `undefined` \| `string`
+• **eventName** *extends* `undefined` \| `string`
 
-• **strict** _extends_ `undefined` \| `boolean` = `undefined`
+• **strict** *extends* `undefined` \| `boolean` = `undefined`
 
-• **fromBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **fromBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
-• **toBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **toBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
 ###### Parameters
 
@@ -1696,20 +1715,18 @@ A list of event logs. GetFilterLogsReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http, parseAbiItem } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseAbiItem } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const filter = await client.createEventFilter({
-  address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  event: parseAbiItem(
-    "event Transfer(address indexed, address indexed, uint256)",
-  ),
-});
-const logs = await client.getFilterLogs({ filter });
+  address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  event: parseAbiItem('event Transfer(address indexed, address indexed, uint256)'),
+})
+const logs = await client.getFilterLogs({ filter })
 ```
 
 ##### getGasPrice()
@@ -1730,14 +1747,14 @@ The gas price (in wei). GetGasPriceReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const gasPrice = await client.getGasPrice();
+})
+const gasPrice = await client.getGasPrice()
 ```
 
 ##### getLogs()
@@ -1752,15 +1769,15 @@ Returns a list of event logs matching the provided parameters.
 
 ###### Type Parameters
 
-• **abiEvent** _extends_ `undefined` \| `AbiEvent` = `undefined`
+• **abiEvent** *extends* `undefined` \| `AbiEvent` = `undefined`
 
-• **abiEvents** _extends_ `undefined` \| readonly `unknown`[] \| readonly `AbiEvent`[] = `abiEvent` _extends_ `AbiEvent` ? [`abiEvent`\<`abiEvent`\>] : `undefined`
+• **abiEvents** *extends* `undefined` \| readonly `unknown`[] \| readonly `AbiEvent`[] = `abiEvent` *extends* `AbiEvent` ? [`abiEvent`\<`abiEvent`\>] : `undefined`
 
-• **strict** _extends_ `undefined` \| `boolean` = `undefined`
+• **strict** *extends* `undefined` \| `boolean` = `undefined`
 
-• **fromBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **fromBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
-• **toBlock** _extends_ `undefined` \| `bigint` \| `BlockTag` = `undefined`
+• **toBlock** *extends* `undefined` \| `bigint` \| `BlockTag` = `undefined`
 
 ###### Parameters
 
@@ -1777,14 +1794,14 @@ A list of event logs. GetLogsReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http, parseAbiItem } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseAbiItem } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
-const logs = await client.getLogs();
+})
+const logs = await client.getLogs()
 ```
 
 ##### getProof()
@@ -1810,17 +1827,17 @@ Proof data. GetProofReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const block = await client.getProof({
-  address: "0x...",
-  storageKeys: ["0x..."],
-});
+ address: '0x...',
+ storageKeys: ['0x...'],
+})
 ```
 
 ##### getStorageAt()
@@ -1847,18 +1864,18 @@ The value of the storage slot. GetStorageAtReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import { getStorageAt } from "viem/contract";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { getStorageAt } from 'viem/contract'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const code = await client.getStorageAt({
-  address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+  address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
   slot: toHex(0),
-});
+})
 ```
 
 ##### getTransaction()
@@ -1873,7 +1890,7 @@ Returns information about a [Transaction](https://viem.sh/docs/glossary/terms#tr
 
 ###### Type Parameters
 
-• **blockTag** _extends_ `BlockTag` = `"latest"`
+• **blockTag** *extends* `BlockTag` = `"latest"`
 
 ###### Parameters
 
@@ -1890,16 +1907,16 @@ The transaction information. GetTransactionReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const transaction = await client.getTransaction({
-  hash: "0x4ca7ee652d57678f26e887c149ab0735f41de37bcad58c9f6d3ed5824f15b74d",
-});
+  hash: '0x4ca7ee652d57678f26e887c149ab0735f41de37bcad58c9f6d3ed5824f15b74d',
+})
 ```
 
 ##### getTransactionConfirmations()
@@ -1927,16 +1944,16 @@ The number of blocks passed since the transaction was processed. If confirmation
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const confirmations = await client.getTransactionConfirmations({
-  hash: "0x4ca7ee652d57678f26e887c149ab0735f41de37bcad58c9f6d3ed5824f15b74d",
-});
+  hash: '0x4ca7ee652d57678f26e887c149ab0735f41de37bcad58c9f6d3ed5824f15b74d',
+})
 ```
 
 ##### getTransactionCount()
@@ -1963,16 +1980,16 @@ The number of transactions an account has sent. GetTransactionCountReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const transactionCount = await client.getTransactionCount({
-  address: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
-});
+  address: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+})
 ```
 
 ##### getTransactionReceipt()
@@ -2000,16 +2017,16 @@ The transaction receipt. GetTransactionReceiptReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const transactionReceipt = await client.getTransactionReceipt({
-  hash: "0x4ca7ee652d57678f26e887c149ab0735f41de37bcad58c9f6d3ed5824f15b74d",
-});
+  hash: '0x4ca7ee652d57678f26e887c149ab0735f41de37bcad58c9f6d3ed5824f15b74d',
+})
 ```
 
 ##### key
@@ -2028,9 +2045,9 @@ Similar to [`readContract`](https://viem.sh/docs/contract/readContract), but bat
 
 ###### Type Parameters
 
-• **contracts** _extends_ readonly `unknown`[]
+• **contracts** *extends* readonly `unknown`[]
 
-• **allowFailure** _extends_ `boolean` = `true`
+• **allowFailure** *extends* `boolean` = `true`
 
 ###### Parameters
 
@@ -2047,32 +2064,32 @@ An array of results with accompanying status. MulticallReturnType
 ###### Example
 
 ```ts
-import { createPublicClient, http, parseAbi } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseAbi } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const abi = parseAbi([
-  "function balanceOf(address) view returns (uint256)",
-  "function totalSupply() view returns (uint256)",
-]);
+  'function balanceOf(address) view returns (uint256)',
+  'function totalSupply() view returns (uint256)',
+])
 const result = await client.multicall({
   contracts: [
     {
-      address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+      address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
       abi,
-      functionName: "balanceOf",
-      args: ["0xA0Cf798816D4b9b9866b5330EEa46a18382f251e"],
+      functionName: 'balanceOf',
+      args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
     },
     {
-      address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+      address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
       abi,
-      functionName: "totalSupply",
+      functionName: 'totalSupply',
     },
   ],
-});
+})
 // [{ result: 424122n, status: 'success' }, { result: 1000000n, status: 'success' }]
 ```
 
@@ -2098,11 +2115,11 @@ Prepares a transaction request for signing.
 
 ###### Type Parameters
 
-• **request** _extends_ `Omit`\<`object`, `"from"`\> \| `Omit`\<`object`, `"from"`\> \| `Omit`\<`object`, `"from"`\> \| `Omit`\<`object`, `"from"`\> \| `Omit`\<`object`, `"from"`\> & `object` & `object`
+• **request** *extends* `Omit`\<`object`, `"from"`\> \| `Omit`\<`object`, `"from"`\> \| `Omit`\<`object`, `"from"`\> \| `Omit`\<`object`, `"from"`\> \| `Omit`\<`object`, `"from"`\> & `object` & `object`
 
-• **chainOverride** _extends_ `undefined` \| `Chain` = `undefined`
+• **chainOverride** *extends* `undefined` \| `Chain` = `undefined`
 
-• **accountOverride** _extends_ `undefined` \| \`0x$\{string\}\` \| `Account` = `undefined`
+• **accountOverride** *extends* `undefined` \| \`0x$\{string\}\` \| `Account` = `undefined`
 
 ###### Parameters
 
@@ -2119,35 +2136,35 @@ The transaction request. PrepareTransactionRequestReturnType
 ###### Examples
 
 ```ts
-import { createWalletClient, custom } from "viem";
-import { mainnet } from "viem/chains";
+import { createWalletClient, custom } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createWalletClient({
   chain: mainnet,
   transport: custom(window.ethereum),
-});
+})
 const request = await client.prepareTransactionRequest({
-  account: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
-  to: "0x0000000000000000000000000000000000000000",
+  account: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+  to: '0x0000000000000000000000000000000000000000',
   value: 1n,
-});
+})
 ```
 
 ```ts
 // Account Hoisting
-import { createWalletClient, http } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { mainnet } from "viem/chains";
+import { createWalletClient, http } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { mainnet } from 'viem/chains'
 
 const client = createWalletClient({
-  account: privateKeyToAccount("0x…"),
+  account: privateKeyToAccount('0x…'),
   chain: mainnet,
   transport: custom(window.ethereum),
-});
+})
 const request = await client.prepareTransactionRequest({
-  to: "0x0000000000000000000000000000000000000000",
+  to: '0x0000000000000000000000000000000000000000',
   value: 1n,
-});
+})
 ```
 
 ##### readContract()
@@ -2161,11 +2178,11 @@ Calls a read-only function on a contract, and returns the response.
 
 ###### Type Parameters
 
-• **abi** _extends_ `Abi` \| readonly `unknown`[]
+• **abi** *extends* readonly `unknown`[] \| `Abi`
 
-• **functionName** _extends_ `string`
+• **functionName** *extends* `string`
 
-• **args** _extends_ `unknown`
+• **args** *extends* `unknown`
 
 ###### Parameters
 
@@ -2188,20 +2205,20 @@ Internally, uses a [Public Client](https://viem.sh/docs/clients/public) to call 
 ###### Example
 
 ```ts
-import { createPublicClient, http, parseAbi } from "viem";
-import { mainnet } from "viem/chains";
-import { readContract } from "viem/contract";
+import { createPublicClient, http, parseAbi } from 'viem'
+import { mainnet } from 'viem/chains'
+import { readContract } from 'viem/contract'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const result = await client.readContract({
-  address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
-  abi: parseAbi(["function balanceOf(address) view returns (uint256)"]),
-  functionName: "balanceOf",
-  args: ["0xA0Cf798816D4b9b9866b5330EEa46a18382f251e"],
-});
+  address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+  abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
+  functionName: 'balanceOf',
+  args: ['0xA0Cf798816D4b9b9866b5330EEa46a18382f251e'],
+})
 // 424122n
 ```
 
@@ -2233,19 +2250,18 @@ The transaction hash. SendRawTransactionReturnType
 ###### Example
 
 ```ts
-import { createWalletClient, custom } from "viem";
-import { mainnet } from "viem/chains";
-import { sendRawTransaction } from "viem/wallet";
+import { createWalletClient, custom } from 'viem'
+import { mainnet } from 'viem/chains'
+import { sendRawTransaction } from 'viem/wallet'
 
 const client = createWalletClient({
   chain: mainnet,
   transport: custom(window.ethereum),
-});
+})
 
 const hash = await client.sendRawTransaction({
-  serializedTransaction:
-    "0x02f850018203118080825208808080c080a04012522854168b27e5dc3d5839bab5e6b39e1a0ffd343901ce1622e3d64b48f1a04e00902ae0502c4728cbf12156290df99c3ed7de85b1dbfe20b5c36931733a33",
-});
+  serializedTransaction: '0x02f850018203118080825208808080c080a04012522854168b27e5dc3d5839bab5e6b39e1a0ffd343901ce1622e3d64b48f1a04e00902ae0502c4728cbf12156290df99c3ed7de85b1dbfe20b5c36931733a33'
+})
 ```
 
 ##### simulateContract()
@@ -2259,15 +2275,15 @@ Simulates/validates a contract interaction. This is useful for retrieving **retu
 
 ###### Type Parameters
 
-• **abi** _extends_ `Abi` \| readonly `unknown`[]
+• **abi** *extends* readonly `unknown`[] \| `Abi`
 
-• **functionName** _extends_ `string`
+• **functionName** *extends* `string`
 
-• **args** _extends_ `unknown`
+• **args** *extends* `unknown`
 
-• **chainOverride** _extends_ `undefined` \| `Chain`
+• **chainOverride** *extends* `undefined` \| `Chain`
 
-• **accountOverride** _extends_ `undefined` \| \`0x$\{string\}\` \| `Account` = `undefined`
+• **accountOverride** *extends* `undefined` \| \`0x$\{string\}\` \| `Account` = `undefined`
 
 ###### Parameters
 
@@ -2290,20 +2306,20 @@ Internally, uses a [Public Client](https://viem.sh/docs/clients/public) to call 
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const result = await client.simulateContract({
-  address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
-  abi: parseAbi(["function mint(uint32) view returns (uint32)"]),
-  functionName: "mint",
-  args: ["69420"],
-  account: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
-});
+  address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+  abi: parseAbi(['function mint(uint32) view returns (uint32)']),
+  functionName: 'mint',
+  args: ['69420'],
+  account: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+})
 ```
 
 ##### transport
@@ -2352,12 +2368,12 @@ A boolean indicating if the Filter was successfully uninstalled. UninstallFilter
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-import { createPendingTransactionFilter, uninstallFilter } from "viem/public";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { createPendingTransactionFilter, uninstallFilter } from 'viem/public'
 
-const filter = await client.createPendingTransactionFilter();
-const uninstalled = await client.uninstallFilter({ filter });
+const filter = await client.createPendingTransactionFilter()
+const uninstalled = await client.uninstallFilter({ filter })
 // true
 ```
 
@@ -2390,7 +2406,7 @@ The balance of the account at a block tag.
 **Default**
 
 ```ts
-"latest";
+'latest'
 ```
 
 • **args.factory?**: \`0x$\{string\}\`
@@ -2440,7 +2456,7 @@ The balance of the account at a block tag.
 **Default**
 
 ```ts
-"latest";
+'latest'
 ```
 
 • **args.domain?**: `string`
@@ -2470,7 +2486,7 @@ Current time to check optional `expirationTime` and `notBefore` fields.
 **Default**
 
 ```ts
-new Date();
+new Date()
 ```
 
 ###### Returns
@@ -2539,16 +2555,16 @@ There are 3 types of Transaction Replacement reasons:
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const transactionReceipt = await client.waitForTransactionReceipt({
-  hash: "0x4ca7ee652d57678f26e887c149ab0735f41de37bcad58c9f6d3ed5824f15b74d",
-});
+  hash: '0x4ca7ee652d57678f26e887c149ab0735f41de37bcad58c9f6d3ed5824f15b74d',
+})
 ```
 
 ##### watchBlockNumber()
@@ -2578,16 +2594,16 @@ A function that can be invoked to stop watching for new block numbers. WatchBloc
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const unwatch = await client.watchBlockNumber({
   onBlockNumber: (blockNumber) => console.log(blockNumber),
-});
+})
 ```
 
 ##### watchBlocks()
@@ -2604,9 +2620,9 @@ Watches and returns information for incoming blocks.
 
 ###### Type Parameters
 
-• **includeTransactions** _extends_ `boolean` = `false`
+• **includeTransactions** *extends* `boolean` = `false`
 
-• **blockTag** _extends_ `BlockTag` = `"latest"`
+• **blockTag** *extends* `BlockTag` = `"latest"`
 
 ###### Parameters
 
@@ -2623,16 +2639,16 @@ A function that can be invoked to stop watching for new block numbers. WatchBloc
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const unwatch = await client.watchBlocks({
   onBlock: (block) => console.log(block),
-});
+})
 ```
 
 ##### watchContractEvent()
@@ -2645,11 +2661,11 @@ Watches and returns emitted contract event logs.
 
 ###### Type Parameters
 
-• **abi** _extends_ `Abi` \| readonly `unknown`[]
+• **abi** *extends* readonly `unknown`[] \| `Abi`
 
-• **eventName** _extends_ `string`
+• **eventName** *extends* `string`
 
-• **strict** _extends_ `undefined` \| `boolean` = `undefined`
+• **strict** *extends* `undefined` \| `boolean` = `undefined`
 
 ###### Parameters
 
@@ -2672,22 +2688,20 @@ This Action will batch up all the event logs found within the [`pollingInterval`
 ###### Example
 
 ```ts
-import { createPublicClient, http, parseAbi } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http, parseAbi } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const unwatch = client.watchContractEvent({
-  address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
-  abi: parseAbi([
-    "event Transfer(address indexed from, address indexed to, uint256 value)",
-  ]),
-  eventName: "Transfer",
-  args: { from: "0xc961145a54C96E3aE9bAA048c4F4D6b04C13916b" },
+  address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+  abi: parseAbi(['event Transfer(address indexed from, address indexed to, uint256 value)']),
+  eventName: 'Transfer',
+  args: { from: '0xc961145a54C96E3aE9bAA048c4F4D6b04C13916b' },
   onLogs: (logs) => console.log(logs),
-});
+})
 ```
 
 ##### watchEvent()
@@ -2706,11 +2720,11 @@ Watches and returns emitted [Event Logs](https://viem.sh/docs/glossary/terms#eve
 
 ###### Type Parameters
 
-• **abiEvent** _extends_ `undefined` \| `AbiEvent` = `undefined`
+• **abiEvent** *extends* `undefined` \| `AbiEvent` = `undefined`
 
-• **abiEvents** _extends_ `undefined` \| readonly `unknown`[] \| readonly `AbiEvent`[] = `abiEvent` _extends_ `AbiEvent` ? [`abiEvent`\<`abiEvent`\>] : `undefined`
+• **abiEvents** *extends* `undefined` \| readonly `unknown`[] \| readonly `AbiEvent`[] = `abiEvent` *extends* `AbiEvent` ? [`abiEvent`\<`abiEvent`\>] : `undefined`
 
-• **strict** _extends_ `undefined` \| `boolean` = `undefined`
+• **strict** *extends* `undefined` \| `boolean` = `undefined`
 
 ###### Parameters
 
@@ -2733,16 +2747,16 @@ This Action will batch up all the Event Logs found within the [`pollingInterval`
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const unwatch = client.watchEvent({
   onLogs: (logs) => console.log(logs),
-});
+})
 ```
 
 ##### watchPendingTransactions()
@@ -2777,23 +2791,23 @@ This Action will batch up all the pending transactions found within the [`pollin
 ###### Example
 
 ```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
-});
+})
 const unwatch = await client.watchPendingTransactions({
   onTransactions: (hashes) => console.log(hashes),
-});
+})
 ```
 
 #### Defined in
 
-[packages/sdk/src/client.ts:218](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L218)
+[packages/sdk/src/client.ts:232](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L232)
 
----
+***
 
 ### getQuote()
 
@@ -2803,7 +2817,7 @@ Get a quote for a given set of parameters. See [getQuote](../functions/getQuote.
 
 #### Parameters
 
-• **params**: `Omit`\<[`GetQuoteParams`](../type-aliases/GetQuoteParams.md), `"logger"` \| `"apiUrl"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`GetQuoteParams`](../type-aliases/GetQuoteParams.md), `"logger"` \| `"apiUrl"`\>
 
 See [GetQuoteParams](../type-aliases/GetQuoteParams.md).
 
@@ -2815,9 +2829,27 @@ See [Quote](../type-aliases/Quote.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:412](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L412)
+[packages/sdk/src/client.ts:459](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L459)
 
----
+***
+
+### getSpokePoolAddress()
+
+> **getSpokePoolAddress**(`chainId`): `Promise`\<\`0x$\{string\}\`\>
+
+#### Parameters
+
+• **chainId**: `number`
+
+#### Returns
+
+`Promise`\<\`0x$\{string\}\`\>
+
+#### Defined in
+
+[packages/sdk/src/client.ts:241](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L241)
+
+***
 
 ### getSuggestedFees()
 
@@ -2827,7 +2859,7 @@ Get the suggested fees for a given route. See [getSuggestedFees](../functions/ge
 
 #### Parameters
 
-• **params**: `Omit`\<[`GetSuggestedFeesParams`](../type-aliases/GetSuggestedFeesParams.md), `"logger"` \| `"apiUrl"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`GetSuggestedFeesParams`](../type-aliases/GetSuggestedFeesParams.md), `"logger"` \| `"apiUrl"`\>
 
 See [GetSuggestedFeesParams](../type-aliases/GetSuggestedFeesParams.md).
 
@@ -2839,9 +2871,9 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:335](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L335)
+[packages/sdk/src/client.ts:382](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L382)
 
----
+***
 
 ### getSupportedChains()
 
@@ -2849,7 +2881,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Parameters
 
-• **params**: `Omit`\<[`GetSupportedChainsParams`](../type-aliases/GetSupportedChainsParams.md), `"logger"` \| `"apiUrl"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`GetSupportedChainsParams`](../type-aliases/GetSupportedChainsParams.md), `"logger"` \| `"apiUrl"`\>
 
 #### Returns
 
@@ -2857,9 +2889,27 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:549](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L549)
+[packages/sdk/src/client.ts:714](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L714)
 
----
+***
+
+### signUpdateDepositTypedData()
+
+> **signUpdateDepositTypedData**(`params`): `Promise`\<\`0x$\{string\}\`\>
+
+#### Parameters
+
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`SignUpdateDepositTypedDataParams`](../type-aliases/SignUpdateDepositTypedDataParams.md), `"walletClient"`\>
+
+#### Returns
+
+`Promise`\<\`0x$\{string\}\`\>
+
+#### Defined in
+
+[packages/sdk/src/client.ts:612](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L612)
+
+***
 
 ### simulateDepositTx()
 
@@ -2867,7 +2917,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Parameters
 
-• **params**: `Omit`\<[`SimulateDepositTxParams`](../type-aliases/SimulateDepositTxParams.md), `"logger"` \| `"publicClient"` \| `"integratorId"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`SimulateDepositTxParams`](../type-aliases/SimulateDepositTxParams.md), `"logger"` \| `"integratorId"` \| `"publicClient"`\>
 
 #### Returns
 
@@ -2875,9 +2925,9 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:443](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L443)
+[packages/sdk/src/client.ts:490](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L490)
 
----
+***
 
 ### simulateTxOnTenderly()
 
@@ -2885,7 +2935,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Parameters
 
-• **params**: `Omit`\<[`TenderlySimulateTxParams`](../type-aliases/TenderlySimulateTxParams.md), `"accessKey"` \| `"accountSlug"` \| `"enableShare"` \| `"projectSlug"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`TenderlySimulateTxParams`](../type-aliases/TenderlySimulateTxParams.md), `"accessKey"` \| `"accountSlug"` \| `"enableShare"` \| `"projectSlug"`\>
 
 #### Returns
 
@@ -2901,9 +2951,58 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:559](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L559)
+[packages/sdk/src/client.ts:724](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L724)
 
----
+***
+
+### simulateUpdateDepositTx()
+
+> **simulateUpdateDepositTx**(`params`): `Promise`\<`SimulateContractReturnType`\>
+
+This function simulates the update of a deposit on the origin chain. Can be used to
+update:
+- the recipient address
+- the output amount, i.e. the fees
+- the cross-chain message
+
+Note that this requires a signature from the depositor.
+
+See [simulateUpdateDepositTx](../functions/simulateUpdateDepositTx.md).
+
+#### Parameters
+
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`SimulateUpdateDepositTxParams`](../type-aliases/SimulateUpdateDepositTxParams.md), `"logger"` \| `"apiUrl"` \| `"destinationChainClient"` \| `"originChainClient"`\>
+
+See [SimulateUpdateDepositTxParams](../type-aliases/SimulateUpdateDepositTxParams.md).
+
+#### Returns
+
+`Promise`\<`SimulateContractReturnType`\>
+
+The result of the simulation.
+
+#### Example
+
+```ts
+const result = await client.simulateUpdateDepositTx({
+  deposit: {
+    // deposit details
+  },
+  update: {
+    recipient: "0xNEW_RECIPIENT_ADDRESS",
+  },
+ });
+const txHash = await walletClient.writeContract({
+  account,
+  ...txRequest,
+});
+```
+
+#### Defined in
+
+[packages/sdk/src/client.ts:565](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L565)
+
+***
 
 ### update()
 
@@ -2919,9 +3018,9 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:211](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L211)
+[packages/sdk/src/client.ts:225](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L225)
 
----
+***
 
 ### waitForDepositTx()
 
@@ -2929,7 +3028,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Parameters
 
-• **params**: `Omit`\<[`WaitForDepositTxParams`](../type-aliases/WaitForDepositTxParams.md), `"publicClient"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`WaitForDepositTxParams`](../type-aliases/WaitForDepositTxParams.md), `"publicClient"`\>
 
 #### Returns
 
@@ -2937,9 +3036,9 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:487](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L487)
+[packages/sdk/src/client.ts:625](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L625)
 
----
+***
 
 ### waitForFillTx()
 
@@ -2947,7 +3046,7 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Parameters
 
-• **params**: `Omit`\<[`WaitForFillTxParams`](../type-aliases/WaitForFillTxParams.md), `"destinationChainClient"`\>
+• **params**: [`MakeOptional`](../type-aliases/MakeOptional.md)\<[`WaitForFillTxParams`](../type-aliases/WaitForFillTxParams.md), `"destinationChainClient"`\>
 
 #### Returns
 
@@ -2955,9 +3054,9 @@ See [GetSuggestedFeesReturnType](../type-aliases/GetSuggestedFeesReturnType.md).
 
 #### Defined in
 
-[packages/sdk/src/client.ts:515](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L515)
+[packages/sdk/src/client.ts:656](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L656)
 
----
+***
 
 ### create()
 
@@ -2980,9 +3079,9 @@ instance.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:190](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L190)
+[packages/sdk/src/client.ts:204](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L204)
 
----
+***
 
 ### getInstance()
 
@@ -3002,4 +3101,4 @@ If the instance is not initialized.
 
 #### Defined in
 
-[packages/sdk/src/client.ts:202](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L202)
+[packages/sdk/src/client.ts:216](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L216)

@@ -28,4 +28,4 @@ A URL to the simulation result.
 
 ## Defined in
 
-[packages/sdk/src/utils/tenderly.ts:34](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/utils/tenderly.ts#L34)
+[packages/sdk/src/utils/tenderly.ts:34](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/tenderly.ts#L34)

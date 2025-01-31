@@ -16,7 +16,7 @@ The chains to use for the Across API. Should be imported from `viem/chains`.
 
 ### integratorId?
 
-> `optional` **integratorId**: `string`
+> `optional` **integratorId**: `Hex`
 
 An identifier representing the integrator.
 
@@ -48,7 +48,7 @@ for the chain if not specified.
 
 #### Index Signature
 
-\[`chainId`: `number`\]: `string`
+ \[`chainId`: `number`\]: `string`
 
 ### tenderly?
 
@@ -112,4 +112,4 @@ A wallet client to use for the Across API.
 
 ## Defined in
 
-[packages/sdk/src/client.ts:66](https://github.com/across-protocol/toolkit/blob/fa61c35c7597804e093096de254dbc326f096003/packages/sdk/src/client.ts#L66)
+[packages/sdk/src/client.ts:75](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/client.ts#L75)
