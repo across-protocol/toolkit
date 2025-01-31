@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.1.0
+
+### Minor Changes
+
+- d027d7c: Adds support for minor upgrade in SpokePools.
+
 ## 0.0.5
 
 ### Patch Changes
