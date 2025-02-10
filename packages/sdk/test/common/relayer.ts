@@ -1,4 +1,4 @@
-import { zeroAddress, type Address, type TransactionReceipt } from "viem";
+import { type Address, type TransactionReceipt } from "viem";
 import {
   getDepositFromLogs,
   type AcrossClient,
@@ -7,6 +7,7 @@ import {
 import type { ChainClient } from "./anvil.js";
 import { spokePoolAbiV3 } from "../../src/abis/SpokePool/index.js";
 import { spokePoolAbiV3_5 } from "../../dist/abis/SpokePool/v3_5.js";
+import { isAddressDefined } from "./utils.js";
 
 type RelayerParams = {
   depositReceipt: TransactionReceipt;
@@ -33,7 +34,7 @@ export async function waitForDepositAndFillV3_5({
     spokePoolAddress ??
     (await acrossClient.getSpokePoolAddress(destinationPublicClient.chain.id));
 
-  if (exclusiveRelayer && exclusiveRelayer !== zeroAddress) {
+  if (isAddressDefined(exclusiveRelayer)) {
     await chainClient.impersonateAccount({
       address: exclusiveRelayer,
     });
@@ -60,7 +61,9 @@ export async function waitForDepositAndFillV3_5({
       },
       BigInt(destinationPublicClient.chain.id),
     ],
-    account: exclusiveRelayer || chainClient.account.address,
+    account: isAddressDefined(exclusiveRelayer)
+      ? exclusiveRelayer
+      : chainClient.account.address,
   });
 
   return await chainClient.writeContract(request);
