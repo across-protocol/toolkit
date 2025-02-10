@@ -1,12 +1,17 @@
 import {
   parseEther,
   WalletClient,
+  zeroAddress,
   type Address,
   type PublicClient,
 } from "viem";
 import { USDC_MAINNET, USDC_WHALE } from "./constants.js";
 import { type ChainClient } from "./anvil.js";
 import { UpgradeTestEnvironment } from "./upgrade.2025.js";
+
+export function isAddressDefined(address?: Address): address is Address {
+  return address && address !== "0x" && address !== zeroAddress ? true : false;
+}
 
 export function sleep(ms: number) {
   return new Promise((resolve) => {

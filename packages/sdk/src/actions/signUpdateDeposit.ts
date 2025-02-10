@@ -1,5 +1,8 @@
 import { Address, Hex, WalletClient } from "viem";
-import { getUpdateDepositTypedDataV3_5 } from "../utils/index.js";
+import {
+  getUpdateDepositTypedData,
+  getUpdateDepositTypedDataV3_5,
+} from "../utils/index.js";
 
 export type SignUpdateDepositTypedDataParams = {
   walletClient: WalletClient;
@@ -18,6 +21,45 @@ export type SignUpdateDepositTypedDataParams = {
  * @returns Hex-encoded signature
  */
 export async function signUpdateDepositTypedData(
+  params: SignUpdateDepositTypedDataParams,
+) {
+  const {
+    walletClient,
+    depositId,
+    originChainId,
+    updatedMessage,
+    updatedOutputAmount,
+    updatedRecipient,
+  } = params;
+
+  const account = walletClient.account;
+
+  if (!account) {
+    throw new Error("Wallet account has to be set");
+  }
+
+  const signature = await walletClient.signTypedData(
+    getUpdateDepositTypedData({
+      signerAddress: account.address,
+      originChainId,
+      depositId,
+      updatedMessage,
+      updatedOutputAmount,
+      updatedRecipient,
+    }),
+  );
+
+  return signature;
+}
+
+/**
+ * Creates a signature that allows signer to update a deposit. Can be used with
+ * `SpokePool` contract's `speedUpDeposit` method. Is used internally by
+ * {@link simulateUpdateDepositTx}
+ * @param params See {@link SignUpdateDepositTypedDataParams}
+ * @returns Hex-encoded signature
+ */
+export async function signUpdateDepositTypedDataV3_5(
   params: SignUpdateDepositTypedDataParams,
 ) {
   const {

@@ -1,9 +1,6 @@
 import { Address, Hex } from "viem";
 import { addressToBytes32 } from "./hex.js";
 
-/**
- * @deprecated Use `getUpdateDepositTypedDataV3_5` instead.
- */
 export function getUpdateDepositTypedData({
   signerAddress,
   originChainId,
@@ -13,7 +10,7 @@ export function getUpdateDepositTypedData({
   updatedRecipient,
 }: {
   signerAddress: Address;
-  originChainId: number;
+  originChainId: bigint | number;
   depositId: bigint | number;
   updatedOutputAmount: bigint;
   updatedRecipient: Address;
@@ -24,11 +21,11 @@ export function getUpdateDepositTypedData({
     domain: {
       name: "ACROSS-V2",
       version: "1.0.0",
-      chainId: originChainId,
+      chainId: Number(originChainId),
     },
     types: {
       UpdateDepositDetails: [
-        { name: "depositId", type: "uint32" },
+        { name: "depositId", type: "uint256" },
         { name: "originChainId", type: "uint256" },
         { name: "updatedOutputAmount", type: "uint256" },
         { name: "updatedRecipient", type: "address" },
@@ -37,7 +34,7 @@ export function getUpdateDepositTypedData({
     },
     primaryType: "UpdateDepositDetails",
     message: {
-      depositId: Number(depositId),
+      depositId: BigInt(depositId),
       originChainId: BigInt(originChainId),
       updatedOutputAmount,
       updatedRecipient,
