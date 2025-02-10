@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.1.1
+
+### Patch Changes
+
+- b764aec: Fix for speed up typed data
+
 ## 0.1.0
 
 ### Minor Changes
