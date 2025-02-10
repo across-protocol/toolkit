@@ -26,7 +26,7 @@ import {
   BLOCK_NUMBER_MAINNET,
 } from "../common/constants.js";
 import { fundUsdc } from "../common/utils.js";
-import { waitForDepositAndFillV3 } from "../common/relayer.js";
+import { waitForDepositAndFillV3_5 } from "../common/relayer.js";
 import { spokePoolAbiV3 } from "../../src/abis/SpokePool/index.js";
 
 const inputToken = {
@@ -64,6 +64,7 @@ describe("executeQuote", async () => {
     const [_route] = await testClient.getAvailableRoutes(testRoute);
     assert(_route !== undefined, "route is not defined");
     assertType<Route>(_route);
+    console.log(_route);
     route = _route;
   });
 
@@ -75,6 +76,7 @@ describe("executeQuote", async () => {
 
     assert(_quote, "No quote for route");
     assertType<Quote>(_quote);
+    console.log(_quote);
     quote = _quote;
   });
 
@@ -108,7 +110,6 @@ describe("executeQuote", async () => {
           value: parseEther("1"),
         }),
       ]);
-
       // fund test wallet clients with 1000 USDC
       await fundUsdc(chainClientMainnet, testWalletMainnet.account.address);
 
@@ -152,12 +153,13 @@ describe("executeQuote", async () => {
               if (progress.status === "txSuccess") {
                 depositTxSuccess = true;
                 const { txReceipt } = progress;
-                const _fillHash = await waitForDepositAndFillV3({
+                const _fillHash = await waitForDepositAndFillV3_5({
                   depositReceipt: txReceipt,
                   acrossClient: testClient,
                   originPublicClient: publicClientMainnet,
                   destinationPublicClient: publicClientArbitrum,
                   chainClient: chainClientArbitrum,
+                  exclusiveRelayer: deposit.exclusiveRelayer,
                 });
 
                 fillHash = _fillHash;

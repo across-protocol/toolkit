@@ -1,4 +1,4 @@
-import type { Address, TransactionReceipt } from "viem";
+import { zeroAddress, type Address, type TransactionReceipt } from "viem";
 import {
   getDepositFromLogs,
   type AcrossClient,
@@ -15,6 +15,7 @@ type RelayerParams = {
   destinationPublicClient: ConfiguredPublicClient;
   chainClient: ChainClient;
   spokePoolAddress?: Address;
+  exclusiveRelayer?: Address;
 };
 
 // ACROSS RELAYER MOCK
@@ -26,10 +27,17 @@ export async function waitForDepositAndFillV3_5({
   destinationPublicClient,
   chainClient,
   spokePoolAddress,
+  exclusiveRelayer,
 }: RelayerParams) {
   const destinationSpokepoolAddress =
     spokePoolAddress ??
     (await acrossClient.getSpokePoolAddress(destinationPublicClient.chain.id));
+
+  if (exclusiveRelayer && exclusiveRelayer !== zeroAddress) {
+    await chainClient.impersonateAccount({
+      address: exclusiveRelayer,
+    });
+  }
 
   const deposit = getDepositFromLogs({
     originChainId: originPublicClient.chain.id,
@@ -52,7 +60,7 @@ export async function waitForDepositAndFillV3_5({
       },
       BigInt(destinationPublicClient.chain.id),
     ],
-    account: chainClient.account.address,
+    account: exclusiveRelayer || chainClient.account.address,
   });
 
   return await chainClient.writeContract(request);
