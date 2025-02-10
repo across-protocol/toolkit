@@ -54,7 +54,7 @@ export async function signUpdateDepositTypedData(
 
 /**
  * Creates a signature that allows signer to update a deposit. Can be used with
- * `SpokePool` contract's `speedUpV3Deposit` method. Is used internally by
+ * `SpokePool` contract's `speedUpDeposit` method. Is used internally by
  * {@link simulateUpdateDepositTx}
  * @param params See {@link SignUpdateDepositTypedDataParams}
  * @returns Hex-encoded signature
