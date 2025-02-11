@@ -1,13 +1,7 @@
-import {
-  parseEther,
-  WalletClient,
-  zeroAddress,
-  type Address,
-  type PublicClient,
-} from "viem";
+import { Hex, zeroAddress, type Address, type PublicClient } from "viem";
 import { USDC_MAINNET, USDC_WHALE } from "./constants.js";
 import { type ChainClient } from "./anvil.js";
-import { UpgradeTestEnvironment } from "./upgrade.2025.js";
+import { addressToBytes32, type Deposit } from "../../src/index.js";
 
 export function isAddressDefined(address?: Address): address is Address {
   return address && address !== "0x" && address !== zeroAddress ? true : false;
@@ -42,19 +36,6 @@ const balanceOfAbi = [
     name: "balanceOf",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
-    type: "function",
-  },
-] as const;
-
-// WETH deposit
-const depositAbi = [
-  {
-    constant: false,
-    inputs: [],
-    name: "deposit",
-    outputs: [],
-    payable: true,
-    stateMutability: "payable",
     type: "function",
   },
 ] as const;
@@ -100,70 +81,34 @@ export async function fundUsdc(
   return receipt;
 }
 
-export function fundWeth1(
-  params: Omit<Parameters<typeof fundWeth>[0], "wethAddress">,
-) {
-  return fundWeth({
-    ...params,
-    wethAddress: UpgradeTestEnvironment.spokePool1.WETH.address,
-  });
-}
+type V3RelayData = {
+  depositor: Hex;
+  recipient: Hex;
+  exclusiveRelayer: Hex;
+  inputToken: Hex;
+  outputToken: Hex;
+  inputAmount: bigint;
+  outputAmount: bigint;
+  originChainId: bigint;
+  depositId: bigint;
+  fillDeadline: number;
+  exclusivityDeadline: number;
+  message: Hex;
+};
 
-export function fundWeth2(
-  params: Omit<Parameters<typeof fundWeth>[0], "wethAddress">,
-) {
-  return fundWeth({
-    ...params,
-    wethAddress: UpgradeTestEnvironment.spokePool2.WETH.address,
-  });
-}
-
-export async function fundWeth({
-  chainClient,
-  walletClient,
-  amount = parseEther("1"),
-  wethAddress,
-}: {
-  chainClient: ChainClient;
-  walletClient: ChainClient | WalletClient;
-  amount?: bigint;
-  wethAddress: Address;
-}) {
-  try {
-    if (!walletClient.account?.address) {
-      throw new Error(
-        `No ACCOUNT attached to the walletClient for chain ${walletClient.chain?.id}`,
-      );
-    }
-    // fund ETH
-    await chainClient.setBalance({
-      address: walletClient.account.address,
-      value: amount * 2n,
-    });
-
-    console.log("ETH funded!");
-
-    // wrap
-    const { request } = await chainClient.simulateContract({
-      address: wethAddress,
-      abi: depositAbi,
-      functionName: "deposit",
-      account: walletClient.account.address,
-      value: amount,
-    });
-
-    console.log("simulating WETH deposit...");
-
-    const hash = await walletClient.writeContract(request);
-    const receipt = await chainClient.waitForTransactionReceipt({ hash });
-
-    console.log("WETH funded!", receipt);
-
-    return receipt;
-  } catch (e) {
-    console.log(
-      `Unable to fund WETH for client with account ${walletClient.account?.address}`,
-    );
-    console.log(e);
-  }
+export function toV3RelayData(v3LegacyData: Deposit): V3RelayData {
+  return {
+    message: v3LegacyData.message,
+    exclusivityDeadline: v3LegacyData.exclusivityDeadline,
+    fillDeadline: v3LegacyData.fillDeadline,
+    originChainId: BigInt(v3LegacyData.originChainId),
+    depositor: addressToBytes32(v3LegacyData.depositor),
+    recipient: addressToBytes32(v3LegacyData.recipient),
+    exclusiveRelayer: addressToBytes32(v3LegacyData.exclusiveRelayer),
+    inputToken: addressToBytes32(v3LegacyData.inputToken),
+    outputToken: addressToBytes32(v3LegacyData.outputToken),
+    depositId: BigInt(v3LegacyData.depositId),
+    inputAmount: v3LegacyData.inputAmount,
+    outputAmount: v3LegacyData.outputAmount,
+  };
 }
