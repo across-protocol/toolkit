@@ -81,3 +81,11 @@ export function bytes32ToAddress(hex: Hex): Address | Hex {
   // Return the full bytes32 if not padded (SVM addresses)
   return hex;
 }
+
+export const ZERO_BYTES_32 =
+  "0x0000000000000000000000000000000000000000000000000000000000000000" as Hex;
+
+// check either the message itself or the messageHash
+export function hasMessage(message: string): boolean {
+  return message !== "" && message !== "0x" && message !== ZERO_BYTES_32;
+}

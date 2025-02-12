@@ -16,7 +16,8 @@ import {
   ConfiguredPublicClient,
   ConfiguredWalletClient,
 } from "../types/index.js";
-import { waitForFillTx } from "./waitForFillTx.js";
+import { parseFillLogs, waitForFillTx } from "./waitForFillTx.js";
+import { parseDepositLogs } from "./getDepositFromLogs.js";
 
 export type ExecutionProgress = TransactionProgress;
 
@@ -87,6 +88,7 @@ export type TransactionProgress =
       txReceipt: TransactionReceipt;
       depositId: DepositStatus["depositId"];
       meta: DepositMeta;
+      depositLog: ReturnType<typeof parseDepositLogs>;
     }
   | {
       step: "fill";
@@ -100,6 +102,7 @@ export type TransactionProgress =
       fillTxTimestamp: bigint;
       actionSuccess: boolean | undefined;
       meta: FillMeta;
+      fillLog: ReturnType<typeof parseFillLogs>;
     }
   | {
       step: "approve" | "deposit" | "fill";
@@ -346,12 +349,14 @@ export async function executeQuote(params: ExecuteQuoteParams) {
       transactionHash: depositTxHash,
       publicClient: originClient,
     });
+    const depositLog = parseDepositLogs(depositTxReceipt.logs);
 
     currentTransactionProgress = {
       ...currentTransactionProgress,
       status: "txSuccess",
       txReceipt: depositTxReceipt,
       depositId,
+      depositLog,
     };
     onProgressHandler(currentTransactionProgress);
 
@@ -376,12 +381,15 @@ export async function executeQuote(params: ExecuteQuoteParams) {
         fromBlock: destinationBlock - 100n, // TODO: use dynamic block buffer based chain
       });
 
+    const fillLog = parseFillLogs(fillTxReceipt.logs);
+
     currentTransactionProgress = {
       ...currentTransactionProgress,
       status: "txSuccess",
       txReceipt: fillTxReceipt,
       fillTxTimestamp,
       actionSuccess,
+      fillLog,
     };
     onProgressHandler(currentTransactionProgress);
     return { depositId, depositTxReceipt, fillTxReceipt };

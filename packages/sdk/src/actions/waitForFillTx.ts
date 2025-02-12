@@ -4,6 +4,7 @@ import { spokePoolAbiV3, spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 import { FillStatus, waitForFillByDepositTx } from "./getFillByDepositTx.js";
 import {
   bytes32ToAddress,
+  hasMessage,
   LoggerT,
   MulticallHandlerAbi,
 } from "../utils/index.js";
@@ -58,10 +59,7 @@ export async function waitForFillTxEvent(
   const { logger } = params;
 
   try {
-    const status = await Promise.race([
-      waitForV3FillEvent(params),
-      waitForV3_5FillEvent(params),
-    ]);
+    const status = await waitForFillEvent(params);
     return status;
   } catch (error) {
     logger
@@ -71,86 +69,7 @@ export async function waitForFillTxEvent(
   }
 }
 
-export async function waitForV3FillEvent(
-  params: WaitForFillTxParams,
-): Promise<FillStatus> {
-  const { depositId, destinationChainClient, deposit, fromBlock, logger } =
-    params;
-
-  return new Promise<FillStatus>((resolve, reject) => {
-    const unwatch = destinationChainClient.watchContractEvent({
-      address: deposit.destinationSpokePoolAddress,
-      abi: spokePoolAbiV3,
-      eventName: "FilledV3Relay",
-      args: {
-        depositId: Number(depositId),
-        originChainId: BigInt(deposit.originChainId),
-      },
-      fromBlock,
-      onError: async (error) => {
-        logger
-          ? logger.error("Watch FilledV3Relay event error", error)
-          : console.error("Watch FilledV3Relay event error", error);
-
-        unwatch();
-        reject(error);
-      },
-      onLogs: async (fillLogs) => {
-        if (fillLogs.length) {
-          logger
-            ? logger.debug("V3 Fill events found in block", fillLogs)
-            : console.log("V3 Fill events found in block", fillLogs);
-        }
-        const [fillLog] = fillLogs;
-        if (fillLog) {
-          try {
-            const [fillTxReceipt, fillBlock] = await Promise.all([
-              destinationChainClient.getTransactionReceipt({
-                hash: fillLog.transactionHash,
-              }),
-              destinationChainClient.getBlock({
-                blockNumber: fillLog.blockNumber,
-              }),
-            ]);
-
-            const parsedFillEvent = parseFillLogs([fillLog]);
-            unwatch();
-
-            if (deposit.message !== "0x") {
-              const logs = parseEventLogs({
-                abi: MulticallHandlerAbi,
-                logs: fillTxReceipt.logs,
-              });
-
-              logger?.debug("Fill Logs", logs);
-
-              const actionSuccess = !logs.some(
-                (log) => log.eventName === "CallsFailed",
-              );
-              resolve({
-                actionSuccess,
-                fillTxReceipt: fillTxReceipt,
-                fillTxTimestamp: fillBlock.timestamp,
-                parsedFillEvent,
-              });
-            }
-
-            resolve({
-              fillTxReceipt,
-              fillTxTimestamp: fillBlock.timestamp,
-              parsedFillEvent,
-            });
-          } catch (error) {
-            unwatch();
-            reject(error);
-          }
-        }
-      },
-    });
-  });
-}
-
-export async function waitForV3_5FillEvent(
+export async function waitForFillEvent(
   params: WaitForFillTxParams,
 ): Promise<FillStatus> {
   const { depositId, destinationChainClient, deposit, fromBlock, logger } =
@@ -191,11 +110,12 @@ export async function waitForV3_5FillEvent(
                 blockNumber: fillLog.blockNumber,
               }),
             ]);
+
             const parsedFillEvent = parseFillLogs([fillLog]);
 
             unwatch();
 
-            if (deposit.message !== "0x") {
+            if (hasMessage(deposit.message)) {
               const logs = parseEventLogs({
                 abi: MulticallHandlerAbi,
                 logs: fillTxReceipt.logs,
