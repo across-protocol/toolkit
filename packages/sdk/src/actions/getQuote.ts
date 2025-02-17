@@ -73,6 +73,7 @@ export type Quote = {
     recipient: Address;
     message: Hex;
     quoteTimestamp: number;
+    fillDeadline: number;
     exclusiveRelayer: Address;
     exclusivityDeadline: number;
     spokePoolAddress: Address;
@@ -207,6 +208,7 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
   const {
     // partial deposit args
     timestamp,
+    fillDeadline,
     exclusiveRelayer,
     exclusivityDeadline,
     spokePoolAddress,
@@ -230,6 +232,7 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
       recipient: recipient as Address,
       message,
       quoteTimestamp: Number(timestamp),
+      fillDeadline,
       exclusiveRelayer: exclusiveRelayer as Address,
       exclusivityDeadline,
       spokePoolAddress: spokePoolAddress as Address,

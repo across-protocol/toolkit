@@ -70,6 +70,10 @@ export type GetSuggestedFeesReturnType = {
    */
   timestamp: number;
   /**
+   * The timestamp of deadline to fill the quote.
+   */
+  fillDeadline: number;
+  /**
    * Whether the deposit amount is too low.
    */
   isAmountTooLow: boolean;
@@ -158,6 +162,7 @@ export async function getSuggestedFees({
     estimatedFillTimeSec: data.estimatedFillTimeSec,
     outputAmount: BigInt(params.amount) - BigInt(data.totalRelayFee.total),
     timestamp: Number(data.timestamp),
+    fillDeadline: Number(data.fillDeadline),
     isAmountTooLow: data.isAmountTooLow,
     quoteBlock: Number(data.quoteBlock),
     exclusiveRelayer: data.exclusiveRelayer as Address,
@@ -190,6 +195,7 @@ export async function getSuggestedFees({
 
 export type SuggestedFeesResponse = {
   estimatedFillTimeSec: number;
+  fillDeadline: string;
   capitalFeePct: string;
   capitalFeeTotal: string;
   relayGasFeePct: string;

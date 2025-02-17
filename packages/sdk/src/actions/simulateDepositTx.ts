@@ -12,9 +12,7 @@ import { spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 export type SimulateDepositTxParams = {
   walletClient: WalletClient;
   publicClient: PublicClient;
-  deposit: Quote["deposit"] & {
-    fillDeadline?: number;
-  };
+  deposit: Quote["deposit"];
   integratorId: Hex;
   logger?: LoggerT;
 };
