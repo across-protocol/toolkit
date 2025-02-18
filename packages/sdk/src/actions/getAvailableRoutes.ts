@@ -2,6 +2,7 @@ import { Address } from "viem";
 import { LoggerT, fetchAcrossApi } from "../utils/index.js";
 import { Route } from "../types/index.js";
 import { MAINNET_API_URL } from "../constants/index.js";
+import { AvailableRoutesApiResponse } from "../api/available-routes.js";
 
 export type RoutesQueryParams = Partial<{
   /**
@@ -66,13 +67,3 @@ export async function getAvailableRoutes({
     outputTokenSymbol: route.destinationTokenSymbol,
   }));
 }
-
-type AvailableRoutesApiResponse = {
-  originChainId: number;
-  originToken: string;
-  destinationChainId: number;
-  destinationToken: string;
-  originTokenSymbol: string;
-  destinationTokenSymbol: string;
-  isNative: boolean;
-}[];

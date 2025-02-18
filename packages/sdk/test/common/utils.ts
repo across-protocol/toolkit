@@ -168,14 +168,37 @@ export async function fundWeth({
   }
 }
 
-/**
- * Recursively checks if all fields in the `raw` object are present in the `parsed` object.
- *
- * @param raw - The original object containing the fields to check.
- * @param parsed - The object to validate against, ensuring it contains all fields from `raw`.
- * @returns `true` if all fields in `raw` are present in `parsed`, otherwise `false`.
- */
-export function checkFields(raw: unknown, parsed: unknown): boolean {
+type FieldMapping = {
+  [key: string]: string | FieldMapping;
+};
+
+function remapValues(raw: unknown, mapping: FieldMapping): unknown {
+  if (typeof raw !== "object" || raw === null) return raw;
+
+  const remapped: Record<string, unknown> = {};
+
+  Object.entries(mapping).forEach(([oldKey, mapValue]) => {
+    const rawValue = (raw as Record<string, unknown>)[oldKey];
+
+    if (typeof mapValue === "string") {
+      // Rename the key using the provided string.
+      remapped[mapValue] = rawValue;
+    } else if (typeof mapValue === "object") {
+      // For a nested mapping, recursively remap the value.
+      remapped[oldKey] = remapValues(rawValue, mapValue as FieldMapping);
+    }
+  });
+
+  return remapped;
+}
+
+export function checkFields(
+  _raw: unknown,
+  parsed: unknown,
+  fieldMapping?: FieldMapping,
+): boolean {
+  const raw = fieldMapping ? remapValues(_raw, fieldMapping) : _raw;
+
   // If raw is not an object, there's nothing to check
   if (typeof raw !== "object" || raw === null) {
     return true;
