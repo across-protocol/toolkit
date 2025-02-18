@@ -2,6 +2,7 @@ import { Address } from "viem";
 import { LoggerT, fetchAcrossApi } from "../utils/index.js";
 import { Amount } from "../types/index.js";
 import { MAINNET_API_URL } from "../constants/index.js";
+import { SuggestedFeesApiResponse } from "../api/suggested-fees.js";
 
 export type SuggestedFeesQueryParams = {
   originChainId: number;
@@ -61,6 +62,14 @@ export type GetSuggestedFeesParams = SuggestedFeesQueryParams & {
 };
 
 export type GetSuggestedFeesReturnType = {
+  capitalFeePct: number;
+  capitalFeeTotal: bigint;
+  relayGasFeePct: number;
+  relayGasFeeTotal: bigint;
+  relayFeePct: number;
+  relayFeeTotal: bigint;
+  lpFeePct?: string;
+  fillDeadline: number;
   /**
    * The estimated fill time in seconds.
    */
@@ -134,6 +143,8 @@ export type GetSuggestedFeesReturnType = {
     minDeposit: bigint;
     maxDeposit: bigint;
     maxDepositInstant: bigint;
+    maxDepositShortDelay: bigint;
+    recommendedDepositInstant: bigint;
   };
 };
 
@@ -148,83 +159,63 @@ export async function getSuggestedFees({
   logger,
   ...params
 }: GetSuggestedFeesParams) {
-  const data = await fetchAcrossApi<SuggestedFeesResponse>(
+  const data = await fetchAcrossApi<SuggestedFeesApiResponse>(
     `${apiUrl}/suggested-fees`,
     params,
     logger,
   );
 
+  const parsed = parseSuggestedFees(data);
   return {
-    estimatedFillTimeSec: data.estimatedFillTimeSec,
+    ...parsed,
     outputAmount: BigInt(params.amount) - BigInt(data.totalRelayFee.total),
-    timestamp: Number(data.timestamp),
-    isAmountTooLow: data.isAmountTooLow,
-    quoteBlock: Number(data.quoteBlock),
-    exclusiveRelayer: data.exclusiveRelayer as Address,
-    exclusivityDeadline: data.exclusivityDeadline,
-    spokePoolAddress: data.spokePoolAddress as Address,
-    destinationSpokePoolAddress: data.destinationSpokePoolAddress as Address,
-    totalRelayFee: {
-      pct: BigInt(data.totalRelayFee.pct),
-      total: BigInt(data.totalRelayFee.total),
-    },
-    relayerCapitalFee: {
-      pct: BigInt(data.relayerCapitalFee.pct),
-      total: BigInt(data.relayerCapitalFee.total),
-    },
-    relayerGasFee: {
-      pct: BigInt(data.relayerGasFee.pct),
-      total: BigInt(data.relayerGasFee.total),
-    },
-    lpFee: {
-      pct: BigInt(data.lpFee.pct),
-      total: BigInt(data.lpFee.total),
-    },
-    limits: {
-      minDeposit: BigInt(data.limits.minDeposit),
-      maxDeposit: BigInt(data.limits.maxDeposit),
-      maxDepositInstant: BigInt(data.limits.maxDepositInstant),
-    },
   };
 }
 
-export type SuggestedFeesResponse = {
-  estimatedFillTimeSec: number;
-  capitalFeePct: string;
-  capitalFeeTotal: string;
-  relayGasFeePct: string;
-  relayGasFeeTotal: string;
-  relayFeePct: string;
-  relayFeeTotal: string;
-  lpFeePct: string;
-  timestamp: string;
-  isAmountTooLow: boolean;
-  quoteBlock: string;
-  exclusiveRelayer: string;
-  exclusivityDeadline: number;
-  spokePoolAddress: Address;
-  destinationSpokePoolAddress: Address;
-  totalRelayFee: {
-    pct: string;
-    total: string;
+export function parseSuggestedFees(
+  raw: SuggestedFeesApiResponse,
+): Omit<GetSuggestedFeesReturnType, "outputAmount"> {
+  return {
+    // ensure even unformatted values get passed through
+    ...raw,
+    estimatedFillTimeSec: raw.estimatedFillTimeSec,
+    capitalFeePct: Number(raw.capitalFeePct),
+    capitalFeeTotal: BigInt(raw.capitalFeeTotal),
+    relayGasFeePct: Number(raw.relayGasFeePct),
+    relayGasFeeTotal: BigInt(raw.relayGasFeeTotal),
+    relayFeePct: Number(raw.relayFeePct),
+    relayFeeTotal: BigInt(raw.relayFeeTotal),
+    lpFeePct: raw.lpFeePct, // deprecated
+    timestamp: Number(raw.timestamp),
+    isAmountTooLow: raw.isAmountTooLow,
+    quoteBlock: Number(raw.quoteBlock),
+    exclusiveRelayer: raw.exclusiveRelayer as Address,
+    exclusivityDeadline: raw.exclusivityDeadline,
+    spokePoolAddress: raw.spokePoolAddress as Address,
+    destinationSpokePoolAddress: raw.destinationSpokePoolAddress as Address,
+    fillDeadline: Number(raw.fillDeadline),
+    totalRelayFee: {
+      pct: BigInt(raw.totalRelayFee.pct),
+      total: BigInt(raw.totalRelayFee.total),
+    },
+    relayerCapitalFee: {
+      pct: BigInt(raw.relayerCapitalFee.pct),
+      total: BigInt(raw.relayerCapitalFee.total),
+    },
+    relayerGasFee: {
+      pct: BigInt(raw.relayerGasFee.pct),
+      total: BigInt(raw.relayerGasFee.total),
+    },
+    lpFee: {
+      pct: BigInt(raw.lpFee.pct),
+      total: BigInt(raw.lpFee.total),
+    },
+    limits: {
+      minDeposit: BigInt(raw.limits.minDeposit),
+      maxDeposit: BigInt(raw.limits.maxDeposit),
+      maxDepositInstant: BigInt(raw.limits.maxDepositInstant),
+      maxDepositShortDelay: BigInt(raw.limits.maxDepositShortDelay),
+      recommendedDepositInstant: BigInt(raw.limits.recommendedDepositInstant),
+    },
   };
-  relayerCapitalFee: {
-    pct: string;
-    total: string;
-  };
-  relayerGasFee: {
-    pct: string;
-    total: string;
-  };
-  lpFee: {
-    pct: string;
-    total: string;
-  };
-  limits: {
-    minDeposit: string;
-    maxDeposit: string;
-    maxDepositInstant: string;
-    maxDepositShortDelay: string;
-    recommendedDepositInstant: string;
-  };
-};
+}

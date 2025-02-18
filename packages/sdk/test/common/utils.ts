@@ -167,3 +167,42 @@ export async function fundWeth({
     console.log(e);
   }
 }
+
+/**
+ * Recursively checks if all fields in the `raw` object are present in the `parsed` object.
+ *
+ * @param raw - The original object containing the fields to check.
+ * @param parsed - The object to validate against, ensuring it contains all fields from `raw`.
+ * @returns `true` if all fields in `raw` are present in `parsed`, otherwise `false`.
+ */
+export function checkFields(raw: unknown, parsed: unknown): boolean {
+  // If raw is not an object, there's nothing to check
+  if (typeof raw !== "object" || raw === null) {
+    return true;
+  }
+
+  // If parsed is not an object while raw is, it's a mismatch
+  if (typeof parsed !== "object" || parsed === null) {
+    return false;
+  }
+
+  for (const key of Object.keys(raw)) {
+    if (!(key in (parsed as Record<string, unknown>))) {
+      console.log(`Key ${key} from raw is not present in parsed.`);
+      // Field is missing in parsed
+      return false;
+    }
+
+    const rawValue = (raw as Record<string, unknown>)[key];
+    const parsedValue = (parsed as Record<string, unknown>)[key];
+
+    // If the value is an object, perform a recursive check
+    if (typeof rawValue === "object" && rawValue !== null) {
+      if (!checkFields(rawValue, parsedValue)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
