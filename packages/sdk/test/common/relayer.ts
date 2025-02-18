@@ -1,7 +1,8 @@
-import { type Address, type TransactionReceipt } from "viem";
+import { maxUint256, type Address, type TransactionReceipt } from "viem";
 import {
   addressToBytes32,
   getDepositFromLogs,
+  simulateApproveTx,
   type AcrossClient,
   type ConfiguredPublicClient,
 } from "../../src/index.js";
@@ -61,31 +62,32 @@ export async function waitForDepositAndFillV3_5({
     addressToBytes32(relayerAddress),
   ] as const;
 
-  // console.log(`Doing fill with args:`, args);
+  console.log("Simulating fill approval...");
 
-  // const { request: approveRequest } = await simulateApproveTx({
-  //   walletClient: chainClient,
-  //   publicClient: destinationPublicClient,
-  //   spender: destinationSpokepoolAddress,
-  //   approvalAmount: maxUint256,
-  //   tokenAddress: v3RelayData.outputToken,
-  // });
+  const { request: approveRequest } = await simulateApproveTx({
+    walletClient: chainClient,
+    publicClient: destinationPublicClient,
+    spender: destinationSpokepoolAddress,
+    approvalAmount: maxUint256,
+    tokenAddress: v3RelayData.outputToken,
+  });
 
-  // console.log("Simulating fill approval...");
+  console.log("Approving...");
 
-  // const approveTxHash = await chainClient.writeContract({
-  //   account: chainClient.account,
-  //   ...approveRequest,
-  // });
+  const approveTxHash = await chainClient.writeContract({
+    account: chainClient.account,
+    ...approveRequest,
+  });
 
-  // console.log("Approving fill spend...");
+  console.log("Waiting for approval to be mined...");
 
-  // const fillApprovalReceipt =
-  //   await destinationPublicClient.waitForTransactionReceipt({
-  //     hash: approveTxHash,
-  //   });
+  const fillApprovalReceipt =
+    await destinationPublicClient.waitForTransactionReceipt({
+      hash: approveTxHash,
+    });
 
-  // console.log("Fill Approval Success!", fillApprovalReceipt);
+  console.log("Fill Approval Success!", fillApprovalReceipt);
+  console.log("Doing Fill...");
 
   const { request } = await destinationPublicClient.simulateContract({
     address: destinationSpokepoolAddress,

@@ -60,8 +60,9 @@ export function bytes32ToAddress(hex: Hex): Address | Hex {
     throw new Error("Invalid hex input");
   }
 
-  if (hex.length !== 66) {
-    throw new Error("Hex string must be 32 bytes");
+  //  already address
+  if (hex.length === 42) {
+    return hex as Address;
   }
 
   // Check if the first 12 bytes (24 hex characters) are padding (zeros)
