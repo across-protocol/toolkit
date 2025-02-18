@@ -27,7 +27,7 @@ export const USDC_MAINNET = getAddress(
   "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
 );
 export const USDC_WHALE = getAddress(
-  "0x55fe002aeff02f77364de339a1292923a15844b8",
+  "0x37305B1cD40574E4C5Ce33f8e8306Be057fD7341",
 );
 
 function getEnv(key: string): string {
@@ -50,11 +50,10 @@ export const FORK_URL_ARBITRUM = `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY
 export const FORK_URL_SEPOLIA = `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`;
 
 // FORK BLOCK NUMBERS
-export const BLOCK_NUMBER_OPTIMISM = BigInt(126951625);
-export const BLOCK_NUMBER_BASE = BigInt(21363706);
-export const BLOCK_NUMBER_MAINNET = BigInt(21722489);
-export const BLOCK_NUMBER_ARBITRUM = BigInt(300129506);
-export const BLOCK_NUMBER_SEPOLIA = BigInt(7596767);
+export const BLOCK_NUMBER_OPTIMISM = BigInt(131833751);
+export const BLOCK_NUMBER_BASE = BigInt(26238472);
+export const BLOCK_NUMBER_MAINNET = BigInt(21822400);
+export const BLOCK_NUMBER_ARBITRUM = BigInt(304904223);
 
 export const TENDERLY_KEY = getMaybeEnv("VITE_TENDERLY_KEY");
 export const MOCK_API = getMaybeEnv("VITE_MOCK_API") === "true";

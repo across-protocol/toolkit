@@ -6,7 +6,11 @@ import {
   zeroAddress,
 } from "viem";
 import { Quote } from "./getQuote.js";
-import { getIntegratorDataSuffix, LoggerT } from "../utils/index.js";
+import {
+  addressToBytes32,
+  getIntegratorDataSuffix,
+  LoggerT,
+} from "../utils/index.js";
 import { spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 
 export type SimulateDepositTxParams = {
@@ -91,16 +95,16 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
     account: walletClient.account,
     abi: spokePoolAbiV3_5,
     address: spokePoolAddress,
-    functionName: "depositV3",
+    functionName: "deposit",
     args: [
-      account.address,
-      recipient ?? account.address,
-      inputToken,
-      outputToken,
+      addressToBytes32(account.address),
+      addressToBytes32(recipient ?? account.address),
+      addressToBytes32(inputToken),
+      addressToBytes32(outputToken),
       BigInt(inputAmount),
       outputAmount,
       BigInt(destinationChainId),
-      exclusiveRelayer,
+      addressToBytes32(exclusiveRelayer),
       quoteTimestamp,
       fillDeadline,
       exclusivityDeadline,

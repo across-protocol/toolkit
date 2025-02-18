@@ -5,6 +5,7 @@ import {
   SimulateContractReturnType,
   WalletClient,
 } from "viem";
+import { bytes32ToAddress } from "../utils/hex.js";
 
 export type SimulateApproveTxParams = {
   walletClient: WalletClient;
@@ -27,9 +28,9 @@ export async function simulateApproveTx(params: SimulateApproveTxParams) {
     abi: parseAbi([
       "function approve(address spender, uint256 amount) public returns (bool)",
     ]),
-    address: tokenAddress,
+    address: bytes32ToAddress(tokenAddress),
     functionName: "approve",
-    args: [spender, approvalAmount],
+    args: [bytes32ToAddress(spender), approvalAmount],
   });
 
   return simulationResult as unknown as SimulateContractReturnType;
