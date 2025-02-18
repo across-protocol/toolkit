@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.1.2
+
+### Patch Changes
+
+- 6481f02: Adds tests for API queries.
+
 ## 0.1.1
 
 ### Patch Changes
