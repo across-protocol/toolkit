@@ -112,3 +112,65 @@ export function toV3RelayData(v3LegacyData: Deposit): V3RelayData {
     outputAmount: v3LegacyData.outputAmount,
   };
 }
+
+type FieldMapping = {
+  [key: string]: string | FieldMapping;
+};
+
+function remapValues(raw: unknown, mapping: FieldMapping): unknown {
+  if (typeof raw !== "object" || raw === null) return raw;
+
+  const remapped: Record<string, unknown> = {};
+
+  Object.entries(mapping).forEach(([oldKey, mapValue]) => {
+    const rawValue = (raw as Record<string, unknown>)[oldKey];
+
+    if (typeof mapValue === "string") {
+      // Rename the key using the provided string.
+      remapped[mapValue] = rawValue;
+    } else if (typeof mapValue === "object") {
+      // For a nested mapping, recursively remap the value.
+      remapped[oldKey] = remapValues(rawValue, mapValue as FieldMapping);
+    }
+  });
+
+  return remapped;
+}
+
+export function checkFields(
+  _raw: unknown,
+  parsed: unknown,
+  fieldMapping?: FieldMapping,
+): boolean {
+  const raw = fieldMapping ? remapValues(_raw, fieldMapping) : _raw;
+
+  // If raw is not an object, there's nothing to check
+  if (typeof raw !== "object" || raw === null) {
+    return true;
+  }
+
+  // If parsed is not an object while raw is, it's a mismatch
+  if (typeof parsed !== "object" || parsed === null) {
+    return false;
+  }
+
+  for (const key of Object.keys(raw)) {
+    if (!(key in (parsed as Record<string, unknown>))) {
+      console.log(`Key ${key} from raw is not present in parsed.`);
+      // Field is missing in parsed
+      return false;
+    }
+
+    const rawValue = (raw as Record<string, unknown>)[key];
+    const parsedValue = (parsed as Record<string, unknown>)[key];
+
+    // If the value is an object, perform a recursive check
+    if (typeof rawValue === "object" && rawValue !== null) {
+      if (!checkFields(rawValue, parsedValue)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
