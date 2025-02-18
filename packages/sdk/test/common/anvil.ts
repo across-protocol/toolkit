@@ -1,11 +1,9 @@
-import { arbitrum, type Chain, mainnet, sepolia } from "viem/chains";
+import { arbitrum, type Chain, mainnet } from "viem/chains";
 import {
   BLOCK_NUMBER_ARBITRUM,
   BLOCK_NUMBER_MAINNET,
-  BLOCK_NUMBER_SEPOLIA,
   FORK_URL_ARBITRUM,
   FORK_URL_MAINNET,
-  FORK_URL_SEPOLIA,
   pool,
   PRIVATE_KEY,
 } from "./constants.js";
@@ -182,51 +180,12 @@ export function forkMethods(
   };
 }
 
-// Define the Sepolia fork
-export const sepoliaFork = {
-  blockNumber: BLOCK_NUMBER_SEPOLIA,
-  url: FORK_URL_SEPOLIA,
-} as const satisfies Fork;
-
-// Define Sepolia Anvil configuration on PORT: 8549
-export const sepoliaAnvil = {
-  ...sepolia,
-  ...getRpcUrls({ port: 8549 }),
-  fork: sepoliaFork,
-} as const satisfies AnvilChain;
-
-// Create Sepolia Chain Client
-export const chainClientSepolia: ChainClient = createTestClient({
-  account: testAccount,
-  chain: sepoliaAnvil,
-  mode: "anvil",
-  transport: http(),
-})
-  .extend(forkMethods)
-  .extend(publicActions)
-  .extend(walletActions);
-
-// Create Sepolia Public Client
-export const publicClientSepolia = createPublicClient({
-  chain: sepoliaAnvil,
-  transport: http(),
-});
-
-// Create Sepolia Wallet Client
-export const testWalletSepolia = createWalletClient({
-  account: testAccount,
-  chain: sepoliaAnvil,
-  transport: http(),
-});
-
 export const chains = {
   arbitrumAnvil,
   mainnetAnvil,
-  sepoliaAnvil,
 };
 
 export const chainClients: Record<string, ChainClient> = {
   chainClientMainnet,
   chainClientArbitrum,
-  chainClientSepolia,
 };

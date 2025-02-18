@@ -9,11 +9,12 @@ import {
 } from "vitest";
 import { mainnetTestClient as testClient } from "../common/sdk.js";
 import {
-  type FilledV3RelayEvent,
+  parseDepositLogs,
+  parseFillLogs,
   type Quote,
   type Route,
 } from "../../src/index.js";
-import { parseEther, parseEventLogs, parseUnits, type Hash } from "viem";
+import { getAddress, parseEther, parseUnits } from "viem";
 import {
   chainClientArbitrum,
   chainClientMainnet,
@@ -27,7 +28,6 @@ import {
 } from "../common/constants.js";
 import { fundUsdc } from "../common/utils.js";
 import { waitForDepositAndFillV3_5 } from "../common/relayer.js";
-import { spokePoolAbiV3 } from "../../src/abis/SpokePool/index.js";
 
 const inputToken = {
   address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -56,8 +56,8 @@ let approvalTxSuccess = false;
 let depositSimulationSuccess = false;
 let depositTxSuccess = false;
 let fillTxSuccess = false;
-let fillHash: Hash | undefined;
-let fillLog: FilledV3RelayEvent | undefined;
+let depositLog: ReturnType<typeof parseDepositLogs> | undefined;
+let fillLog: ReturnType<typeof parseFillLogs> | undefined;
 
 describe("executeQuote", async () => {
   test("Gets available routes for intent", async () => {
@@ -152,8 +152,11 @@ describe("executeQuote", async () => {
               }
               if (progress.status === "txSuccess") {
                 depositTxSuccess = true;
-                const { txReceipt } = progress;
-                const _fillHash = await waitForDepositAndFillV3_5({
+
+                const { txReceipt, depositLog: _depositLog } = progress;
+                depositLog = _depositLog;
+
+                await waitForDepositAndFillV3_5({
                   depositReceipt: txReceipt,
                   acrossClient: testClient,
                   originPublicClient: publicClientMainnet,
@@ -161,15 +164,20 @@ describe("executeQuote", async () => {
                   chainClient: chainClientArbitrum,
                   exclusiveRelayer: deposit.exclusiveRelayer,
                 });
-
-                fillHash = _fillHash;
               }
             }
 
             if (progress.step === "fill") {
               if (progress.status === "txSuccess") {
+                const { fillLog: _fillLog } = progress;
+                fillLog = _fillLog;
                 fillTxSuccess = true;
                 res(true);
+              }
+
+              if (progress.status === "simulationError") {
+                console.log(progress.error);
+                rej(false);
               }
             }
 
@@ -179,21 +187,6 @@ describe("executeQuote", async () => {
           },
         });
       });
-
-      const fillReceipt = fillHash
-        ? await publicClientArbitrum.waitForTransactionReceipt({
-            hash: fillHash,
-          })
-        : undefined;
-
-      const _fillLog =
-        fillReceipt &&
-        parseEventLogs({
-          abi: spokePoolAbiV3,
-          eventName: "FilledV3Relay",
-          logs: fillReceipt?.logs,
-        });
-      fillLog = _fillLog?.[0]?.args;
     });
 
     test("Deposit approval simulation succeeds", async () => {
@@ -209,6 +202,25 @@ describe("executeQuote", async () => {
       expect(depositTxSuccess).toBe(true);
     });
 
+    describe("Deposit Logs", async () => {
+      test("Deposit Log values", () => {
+        expect(depositLog).toBeDefined();
+      });
+      test("Depositor address correct", () => {
+        expect(getAddress(depositLog?.depositor ?? "")).toBe(
+          testWalletMainnet.account.address,
+        );
+      });
+      test("Output amount correct", () => {
+        expect(depositLog?.outputAmount).toBe(quote.deposit.outputAmount);
+      });
+      test("Output token correct", () => {
+        expect(getAddress(depositLog?.outputToken ?? "")).toBe(
+          quote.deposit.outputToken,
+        );
+      });
+    });
+
     test("Fill tx succeeds", async () => {
       expect(fillTxSuccess).toBe(true);
     });
@@ -217,13 +229,17 @@ describe("executeQuote", async () => {
         expect(fillLog).toBeDefined();
       });
       test("Depositor address correct", async () => {
-        expect(fillLog?.depositor).toBe(testWalletMainnet.account.address);
+        expect(getAddress(fillLog?.depositor ?? "")).toBe(
+          testWalletMainnet.account.address,
+        );
       });
       test("Output amount correct", async () => {
         expect(fillLog?.outputAmount).toBe(quote.deposit.outputAmount);
       });
       test("Output token correct", async () => {
-        expect(fillLog?.outputToken).toBe(quote.deposit.outputToken);
+        expect(getAddress(fillLog?.outputToken ?? "")).toBe(
+          quote.deposit.outputToken,
+        );
       });
     });
   });

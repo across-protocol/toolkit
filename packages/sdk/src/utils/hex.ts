@@ -60,8 +60,9 @@ export function bytes32ToAddress(hex: Hex): Address | Hex {
     throw new Error("Invalid hex input");
   }
 
-  if (hex.length !== 66) {
-    throw new Error("Hex string must be 32 bytes");
+  //  already address
+  if (hex.length === 42) {
+    return hex as Address;
   }
 
   // Check if the first 12 bytes (24 hex characters) are padding (zeros)
@@ -80,4 +81,12 @@ export function bytes32ToAddress(hex: Hex): Address | Hex {
 
   // Return the full bytes32 if not padded (SVM addresses)
   return hex;
+}
+
+export const ZERO_BYTES_32 =
+  "0x0000000000000000000000000000000000000000000000000000000000000000" as Hex;
+
+// check either the message itself or the messageHash
+export function hasMessage(message: string): boolean {
+  return message !== "" && message !== "0x" && message !== ZERO_BYTES_32;
 }
