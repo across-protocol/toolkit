@@ -16,9 +16,7 @@ import { spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 export type SimulateDepositTxParams = {
   walletClient: WalletClient;
   publicClient: PublicClient;
-  deposit: Quote["deposit"] & {
-    fillDeadline?: number;
-  };
+  deposit: Quote["deposit"];
   integratorId: Hex;
   logger?: LoggerT;
 };
@@ -62,30 +60,10 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
   let fillDeadline = _fillDeadline;
 
   if (!fillDeadline) {
-    const [fillDeadlineBufferResult, getCurrentTimeResult] =
-      await publicClient.multicall({
-        contracts: [
-          {
-            address: spokePoolAddress,
-            abi: spokePoolAbiV3_5,
-            functionName: "fillDeadlineBuffer",
-          },
-          {
-            address: spokePoolAddress,
-            abi: spokePoolAbiV3_5,
-            functionName: "getCurrentTime",
-          },
-        ],
-      });
-    if (fillDeadlineBufferResult.error || getCurrentTimeResult.error) {
-      const error =
-        fillDeadlineBufferResult.error || getCurrentTimeResult.error;
-      throw new Error(
-        `Failed to fetch 'fillDeadlineBuffer' or 'getCurrentTime': ${error}`,
-      );
-    }
-    fillDeadline =
-      Number(getCurrentTimeResult.result) + fillDeadlineBufferResult.result;
+    fillDeadline = await getMaxFillDeadline(
+      publicClient,
+      deposit.spokePoolAddress,
+    );
   }
 
   const useExclusiveRelayer =
@@ -119,4 +97,32 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
   logger?.debug("Simulation result", result);
 
   return result as unknown as SimulateContractReturnType;
+}
+
+export async function getMaxFillDeadline(
+  publicClient: SimulateDepositTxParams["publicClient"],
+  spokePoolAddress: SimulateDepositTxParams["deposit"]["spokePoolAddress"],
+) {
+  const [fillDeadlineBufferResult, getCurrentTimeResult] =
+    await publicClient.multicall({
+      contracts: [
+        {
+          address: spokePoolAddress,
+          abi: spokePoolAbiV3_5,
+          functionName: "fillDeadlineBuffer",
+        },
+        {
+          address: spokePoolAddress,
+          abi: spokePoolAbiV3_5,
+          functionName: "getCurrentTime",
+        },
+      ],
+    });
+  if (fillDeadlineBufferResult.error || getCurrentTimeResult.error) {
+    const error = fillDeadlineBufferResult.error || getCurrentTimeResult.error;
+    throw new Error(
+      `Failed to fetch 'fillDeadlineBuffer' or 'getCurrentTime': ${error}`,
+    );
+  }
+  return Number(getCurrentTimeResult.result) + fillDeadlineBufferResult.result;
 }

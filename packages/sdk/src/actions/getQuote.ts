@@ -73,6 +73,7 @@ export type Quote = {
     recipient: Address;
     message: Hex;
     quoteTimestamp: number;
+    fillDeadline: number;
     exclusiveRelayer: Address;
     exclusivityDeadline: number;
     spokePoolAddress: Address;
@@ -221,7 +222,10 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
     totalRelayFee,
     // misc
     estimatedFillTimeSec,
+    fillDeadline,
   } = fees;
+
+  console.log("fillDeadline", fillDeadline);
 
   return {
     deposit: {
@@ -234,6 +238,7 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
       exclusivityDeadline,
       spokePoolAddress: spokePoolAddress as Address,
       destinationSpokePoolAddress: destinationSpokePoolAddress as Address,
+      fillDeadline,
       ...route,
     },
     limits,

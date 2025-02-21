@@ -9,6 +9,7 @@ import {
 } from "vitest";
 import { mainnetTestClient as testClient } from "../common/sdk.js";
 import {
+  getMaxFillDeadline,
   parseDepositLogs,
   parseFillLogs,
   type Quote,
@@ -117,9 +118,16 @@ describe("executeQuote", async () => {
         blockTag: "latest",
       });
 
+      // override the API's fill deadline to compensate for fork
+      const maxFillDeadline = await getMaxFillDeadline(
+        publicClientMainnet,
+        quote.deposit.spokePoolAddress,
+      );
+
       // override quote timestamp
       const deposit = {
         ...quote.deposit,
+        fillDeadline: maxFillDeadline - 3600,
         quoteTimestamp: Number(latestBlock.timestamp),
       };
 
