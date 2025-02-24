@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.2.0
+
+### Minor Changes
+
+- 51eea3d: Pull fillDeadline from suggested-fees response, pass to deposit()
+
 ## 0.1.2
 
 ### Patch Changes
