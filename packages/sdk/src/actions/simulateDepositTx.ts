@@ -16,9 +16,7 @@ import { spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 export type SimulateDepositTxParams = {
   walletClient: WalletClient;
   publicClient: PublicClient;
-  deposit: Quote["deposit"] & {
-    fillDeadline?: number;
-  };
+  deposit: Quote["deposit"];
   integratorId: Hex;
   logger?: LoggerT;
 };
@@ -37,7 +35,7 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
     message,
     isNative,
     spokePoolAddress,
-    fillDeadline: _fillDeadline,
+    fillDeadline,
     exclusiveRelayer,
     exclusivityDeadline,
     quoteTimestamp,
@@ -55,37 +53,6 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
     throw new Error(
       `Connected chainId ${connectedChainId} does not match originChainId ${originChainId}`,
     );
-  }
-
-  // TODO: Add support for `SpokePoolVerifier` contract
-
-  let fillDeadline = _fillDeadline;
-
-  if (!fillDeadline) {
-    const [fillDeadlineBufferResult, getCurrentTimeResult] =
-      await publicClient.multicall({
-        contracts: [
-          {
-            address: spokePoolAddress,
-            abi: spokePoolAbiV3_5,
-            functionName: "fillDeadlineBuffer",
-          },
-          {
-            address: spokePoolAddress,
-            abi: spokePoolAbiV3_5,
-            functionName: "getCurrentTime",
-          },
-        ],
-      });
-    if (fillDeadlineBufferResult.error || getCurrentTimeResult.error) {
-      const error =
-        fillDeadlineBufferResult.error || getCurrentTimeResult.error;
-      throw new Error(
-        `Failed to fetch 'fillDeadlineBuffer' or 'getCurrentTime': ${error}`,
-      );
-    }
-    fillDeadline =
-      Number(getCurrentTimeResult.result) + fillDeadlineBufferResult.result;
   }
 
   const useExclusiveRelayer =

@@ -1,4 +1,9 @@
-import { maxUint256, type Address, type TransactionReceipt } from "viem";
+import {
+  maxUint256,
+  parseEther,
+  type Address,
+  type TransactionReceipt,
+} from "viem";
 import {
   addressToBytes32,
   getDepositFromLogs,
@@ -8,7 +13,12 @@ import {
 } from "../../src/index.js";
 import type { ChainClient } from "./anvil.js";
 import { spokePoolAbiV3_5 } from "../../src/abis/SpokePool/v3_5.js";
-import { isAddressDefined, toV3RelayData } from "./utils.js";
+import {
+  fundUsdc,
+  getUsdcBalance,
+  isAddressDefined,
+  toV3RelayData,
+} from "./utils.js";
 
 type RelayerParams = {
   depositReceipt: TransactionReceipt;
@@ -35,12 +45,6 @@ export async function waitForDepositAndFillV3_5({
     spokePoolAddress ??
     (await acrossClient.getSpokePoolAddress(destinationPublicClient.chain.id));
 
-  if (isAddressDefined(exclusiveRelayer)) {
-    await chainClient.impersonateAccount({
-      address: exclusiveRelayer,
-    });
-  }
-
   const deposit = getDepositFromLogs({
     originChainId: originPublicClient.chain.id,
     receipt: depositReceipt,
@@ -54,6 +58,18 @@ export async function waitForDepositAndFillV3_5({
     ? exclusiveRelayer
     : chainClient.account.address;
 
+  await chainClient.setBalance({
+    address: relayerAddress,
+    value: parseEther("1"),
+  });
+
+  // fund relayer with USDC on destination chain
+  await fundUsdc(
+    chainClient,
+    relayerAddress,
+    destinationPublicClient?.chain?.id,
+  );
+
   const v3RelayData = toV3RelayData(deposit);
 
   const args = [
@@ -63,6 +79,18 @@ export async function waitForDepositAndFillV3_5({
   ] as const;
 
   console.log("Simulating fill approval...");
+
+  await chainClient.impersonateAccount({
+    address: relayerAddress,
+  });
+
+  const [ethBalance, usdcBalance] = await Promise.all([
+    destinationPublicClient.getBalance({ address: relayerAddress }),
+    getUsdcBalance(relayerAddress, destinationPublicClient),
+  ]);
+
+  console.log("ethBalance", ethBalance);
+  console.log("usdcBalance", usdcBalance);
 
   const { request: approveRequest } = await simulateApproveTx({
     walletClient: chainClient,

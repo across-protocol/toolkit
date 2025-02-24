@@ -26,7 +26,7 @@ import {
   BLOCK_NUMBER_ARBITRUM,
   BLOCK_NUMBER_MAINNET,
 } from "../common/constants.js";
-import { fundUsdc } from "../common/utils.js";
+import { fundUsdc, getFillDeadline } from "../common/utils.js";
 import { waitForDepositAndFillV3_5 } from "../common/relayer.js";
 
 const inputToken = {
@@ -111,15 +111,26 @@ describe("executeQuote", async () => {
         }),
       ]);
       // fund test wallet clients with 1000 USDC
-      await fundUsdc(chainClientMainnet, testWalletMainnet.account.address);
+      await fundUsdc(
+        chainClientMainnet,
+        testWalletMainnet.account.address,
+        route.originChainId,
+      );
 
       const latestBlock = await chainClientMainnet.getBlock({
         blockTag: "latest",
       });
 
+      // override the API's fill deadline to compensate for fork
+      const maxFillDeadline = await getFillDeadline({
+        publicClient: publicClientArbitrum,
+        spokePoolAddress: quote.deposit.destinationSpokePoolAddress,
+      });
+
       // override quote timestamp
       const deposit = {
         ...quote.deposit,
+        fillDeadline: maxFillDeadline,
         quoteTimestamp: Number(latestBlock.timestamp),
       };
 
@@ -163,7 +174,7 @@ describe("executeQuote", async () => {
                   destinationPublicClient: publicClientArbitrum,
                   chainClient: chainClientArbitrum,
                   exclusiveRelayer: deposit.exclusiveRelayer,
-                });
+                }).catch((e) => rej(e));
               }
             }
 

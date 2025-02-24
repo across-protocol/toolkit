@@ -1,7 +1,14 @@
-import { Hex, zeroAddress, type Address, type PublicClient } from "viem";
-import { USDC_MAINNET, USDC_WHALE } from "./constants.js";
+import {
+  Hex,
+  parseEther,
+  zeroAddress,
+  type Address,
+  type PublicClient,
+} from "viem";
+import { USDC_ADDRESS, USDC_WHALES } from "./constants.js";
 import { type ChainClient } from "./anvil.js";
 import { addressToBytes32, type Deposit } from "../../src/index.js";
+import { spokePoolAbiV3_5 } from "../../src/abis/SpokePool/v3_5.js";
 
 export function isAddressDefined(address?: Address): address is Address {
   return address && address !== "0x" && address !== zeroAddress ? true : false;
@@ -44,10 +51,19 @@ export const transferAmount = 1_000_000_000n;
 
 export async function getUsdcBalance(
   walletAddress: Address,
-  publicClient: PublicClient,
+  publicClient: PublicClient | ChainClient,
 ) {
+  const chainId = publicClient.chain?.id;
+  const tokenAddress = chainId ? USDC_ADDRESS?.[chainId] : undefined;
+
+  if (!tokenAddress) {
+    throw new Error(
+      `Unable to fetch USDC address on chain: ${publicClient?.chain?.name}`,
+    );
+  }
+
   const data = await publicClient.readContract({
-    address: USDC_MAINNET,
+    address: tokenAddress,
     abi: balanceOfAbi,
     functionName: "balanceOf",
     args: [walletAddress],
@@ -59,24 +75,49 @@ export async function getUsdcBalance(
 export async function fundUsdc(
   testClient: ChainClient,
   walletAddress: Address,
+  chainId: number,
   amount = transferAmount,
 ) {
-  await testClient.impersonateAccount({
-    address: USDC_WHALE,
+  const sender = USDC_WHALES?.[chainId];
+  const tokenAddress = USDC_ADDRESS?.[chainId];
+
+  if (!sender || !tokenAddress) {
+    throw new Error(`USDC config missing for chainId ${chainId}`);
+  }
+  await testClient.setBalance({
+    address: sender,
+    value: parseEther("1"),
   });
 
+  await testClient.impersonateAccount({
+    address: sender,
+  });
+
+  const amountWithPadding = amount * 2n;
+
+  const sponsorBalance = await getUsdcBalance(sender, testClient);
+
+  if (sponsorBalance <= amountWithPadding) {
+    throw new Error(
+      `Sponsor with address ${testClient.account.address} does not have enough balance. Sponsor balance: ${sponsorBalance}`,
+    );
+  }
+
   const { request } = await testClient.simulateContract({
-    address: USDC_MAINNET,
+    address: tokenAddress,
     abi: transferAbi,
     functionName: "transfer",
-    args: [walletAddress, amount],
-    account: USDC_WHALE,
+    args: [walletAddress, amountWithPadding],
+    account: sender,
   });
 
   const hash = await testClient.writeContract(request);
   const receipt = await testClient.waitForTransactionReceipt({ hash });
 
   console.log("USDC funded!", receipt);
+  await testClient.stopImpersonatingAccount({
+    address: sender,
+  });
 
   return receipt;
 }
@@ -173,4 +214,22 @@ export function checkFields(
   }
 
   return true;
+}
+
+export async function getFillDeadline({
+  publicClient,
+  spokePoolAddress,
+  buffer = 3600, // 1 hour
+}: {
+  publicClient: PublicClient;
+  spokePoolAddress: Address;
+  buffer?: number;
+}): Promise<number> {
+  const currentTime = await publicClient.readContract({
+    address: spokePoolAddress,
+    abi: spokePoolAbiV3_5,
+    functionName: "getCurrentTime",
+  });
+
+  return Number(currentTime) + buffer;
 }
