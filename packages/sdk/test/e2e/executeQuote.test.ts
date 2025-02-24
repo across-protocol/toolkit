@@ -112,7 +112,11 @@ describe("executeQuote", async () => {
         }),
       ]);
       // fund test wallet clients with 1000 USDC
-      await fundUsdc(chainClientMainnet, testWalletMainnet.account.address);
+      await fundUsdc(
+        chainClientMainnet,
+        testWalletMainnet.account.address,
+        route.originChainId,
+      );
 
       const latestBlock = await chainClientMainnet.getBlock({
         blockTag: "latest",
@@ -171,7 +175,7 @@ describe("executeQuote", async () => {
                   destinationPublicClient: publicClientArbitrum,
                   chainClient: chainClientArbitrum,
                   exclusiveRelayer: deposit.exclusiveRelayer,
-                });
+                }).catch((e) => rej(e));
               }
             }
 

@@ -1,4 +1,5 @@
-import { getAddress } from "viem";
+import { Address, getAddress } from "viem";
+import { arbitrum, mainnet } from "viem/chains";
 
 export const pool = Number(process.env.VITEST_POOL_ID ?? 1);
 
@@ -23,12 +24,15 @@ export const PRIVATE_KEY =
 // Named accounts
 export const [ALICE, BOB, RELAYER] = ACCOUNTS;
 
-export const USDC_MAINNET = getAddress(
-  "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-);
-export const USDC_WHALE = getAddress(
-  "0x37305B1cD40574E4C5Ce33f8e8306Be057fD7341",
-);
+export const USDC_ADDRESS: Record<number | string, Address> = {
+  [mainnet.id]: getAddress("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"),
+  [arbitrum.id]: getAddress("0xaf88d065e77c8cc2239327c5edb3a432268e5831"),
+};
+
+export const USDC_WHALES: Record<number | string, Address> = {
+  [mainnet.id]: getAddress("0x37305B1cD40574E4C5Ce33f8e8306Be057fD7341"),
+  [arbitrum.id]: getAddress("0x2Df1c51E09aECF9cacB7bc98cB1742757f163dF7"),
+};
 
 function getEnv(key: string): string {
   const value = process.env[key];
@@ -52,8 +56,8 @@ export const FORK_URL_SEPOLIA = `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_
 // FORK BLOCK NUMBERS
 export const BLOCK_NUMBER_OPTIMISM = BigInt(131833751);
 export const BLOCK_NUMBER_BASE = BigInt(26238472);
-export const BLOCK_NUMBER_MAINNET = BigInt(21822400);
-export const BLOCK_NUMBER_ARBITRUM = BigInt(304904223);
+export const BLOCK_NUMBER_MAINNET = BigInt(21915632);
+export const BLOCK_NUMBER_ARBITRUM = BigInt(309377890);
 
 export const TENDERLY_KEY = getMaybeEnv("VITE_TENDERLY_KEY");
 export const MOCK_API = getMaybeEnv("VITE_MOCK_API") === "true";
