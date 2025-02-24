@@ -225,8 +225,6 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
     fillDeadline,
   } = fees;
 
-  console.log("fillDeadline", fillDeadline);
-
   return {
     deposit: {
       inputAmount: BigInt(inputAmount),
