@@ -9,7 +9,6 @@ import {
 } from "vitest";
 import { mainnetTestClient as testClient } from "../common/sdk.js";
 import {
-  getMaxFillDeadline,
   parseDepositLogs,
   parseFillLogs,
   type Quote,
@@ -27,7 +26,7 @@ import {
   BLOCK_NUMBER_ARBITRUM,
   BLOCK_NUMBER_MAINNET,
 } from "../common/constants.js";
-import { fundUsdc } from "../common/utils.js";
+import { fundUsdc, getFillDeadline } from "../common/utils.js";
 import { waitForDepositAndFillV3_5 } from "../common/relayer.js";
 
 const inputToken = {
@@ -123,15 +122,15 @@ describe("executeQuote", async () => {
       });
 
       // override the API's fill deadline to compensate for fork
-      const maxFillDeadline = await getMaxFillDeadline(
-        publicClientMainnet,
-        quote.deposit.spokePoolAddress,
-      );
+      const maxFillDeadline = await getFillDeadline({
+        publicClient: publicClientArbitrum,
+        spokePoolAddress: quote.deposit.destinationSpokePoolAddress,
+      });
 
       // override quote timestamp
       const deposit = {
         ...quote.deposit,
-        fillDeadline: maxFillDeadline - 3600,
+        fillDeadline: maxFillDeadline,
         quoteTimestamp: Number(latestBlock.timestamp),
       };
 

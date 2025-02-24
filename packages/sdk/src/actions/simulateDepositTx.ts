@@ -35,7 +35,7 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
     message,
     isNative,
     spokePoolAddress,
-    fillDeadline: _fillDeadline,
+    fillDeadline,
     exclusiveRelayer,
     exclusivityDeadline,
     quoteTimestamp,
@@ -52,17 +52,6 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
   if (connectedChainId !== originChainId) {
     throw new Error(
       `Connected chainId ${connectedChainId} does not match originChainId ${originChainId}`,
-    );
-  }
-
-  // TODO: Add support for `SpokePoolVerifier` contract
-
-  let fillDeadline = _fillDeadline;
-
-  if (!fillDeadline) {
-    fillDeadline = await getMaxFillDeadline(
-      publicClient,
-      deposit.spokePoolAddress,
     );
   }
 
@@ -97,32 +86,4 @@ export async function simulateDepositTx(params: SimulateDepositTxParams) {
   logger?.debug("Simulation result", result);
 
   return result as unknown as SimulateContractReturnType;
-}
-
-export async function getMaxFillDeadline(
-  publicClient: SimulateDepositTxParams["publicClient"],
-  spokePoolAddress: SimulateDepositTxParams["deposit"]["spokePoolAddress"],
-) {
-  const [fillDeadlineBufferResult, getCurrentTimeResult] =
-    await publicClient.multicall({
-      contracts: [
-        {
-          address: spokePoolAddress,
-          abi: spokePoolAbiV3_5,
-          functionName: "fillDeadlineBuffer",
-        },
-        {
-          address: spokePoolAddress,
-          abi: spokePoolAbiV3_5,
-          functionName: "getCurrentTime",
-        },
-      ],
-    });
-  if (fillDeadlineBufferResult.error || getCurrentTimeResult.error) {
-    const error = fillDeadlineBufferResult.error || getCurrentTimeResult.error;
-    throw new Error(
-      `Failed to fetch 'fillDeadlineBuffer' or 'getCurrentTime': ${error}`,
-    );
-  }
-  return Number(getCurrentTimeResult.result) + fillDeadlineBufferResult.result;
 }

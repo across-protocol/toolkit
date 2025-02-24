@@ -8,6 +8,7 @@ import {
 import { USDC_ADDRESS, USDC_WHALES } from "./constants.js";
 import { type ChainClient } from "./anvil.js";
 import { addressToBytes32, type Deposit } from "../../src/index.js";
+import { spokePoolAbiV3_5 } from "../../src/abis/SpokePool/v3_5.js";
 
 export function isAddressDefined(address?: Address): address is Address {
   return address && address !== "0x" && address !== zeroAddress ? true : false;
@@ -213,4 +214,22 @@ export function checkFields(
   }
 
   return true;
+}
+
+export async function getFillDeadline({
+  publicClient,
+  spokePoolAddress,
+  buffer = 3600, // 1 hour
+}: {
+  publicClient: PublicClient;
+  spokePoolAddress: Address;
+  buffer?: number;
+}): Promise<number> {
+  const currentTime = await publicClient.readContract({
+    address: spokePoolAddress,
+    abi: spokePoolAbiV3_5,
+    functionName: "getCurrentTime",
+  });
+
+  return Number(currentTime) + buffer;
 }
