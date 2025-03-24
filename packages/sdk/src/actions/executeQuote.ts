@@ -146,6 +146,10 @@ export type ExecuteQuoteParams = {
    */
   skipAllowanceCheck?: boolean;
   /**
+   * Whether to skip waiting for the fill transaction.
+   */
+  skipWaitingForFill?: boolean;
+  /**
    * Whether to throw if an error occurs.
    */
   throwOnError?: boolean;
@@ -185,6 +189,7 @@ export async function executeQuote(params: ExecuteQuoteParams) {
     forceOriginChain,
     onProgress,
     logger,
+    skipWaitingForFill = false,
   } = params;
 
   const onProgressHandler =
@@ -359,6 +364,11 @@ export async function executeQuote(params: ExecuteQuoteParams) {
       depositLog,
     };
     onProgressHandler(currentTransactionProgress);
+
+    // Return after deposit is confirmed if so configured
+    if (skipWaitingForFill) {
+      return { depositId, depositTxReceipt };
+    }
 
     // After successful deposit, wait for fill
     currentProgressMeta = {
