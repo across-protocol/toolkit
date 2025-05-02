@@ -116,3 +116,5 @@ export type V3FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositV3Event>;
 
 export type V3_5FilledRelayEvent = NoNullValuesOfObject<MaybeFilledRelayEvent>;
 export type V3_5FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositEvent>;
+
+export type BoolString = "true" | "false";

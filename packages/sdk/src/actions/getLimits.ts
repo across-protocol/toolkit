@@ -1,7 +1,7 @@
 import { Address, Hex } from "viem";
 import { fetchAcrossApi, LoggerT } from "../utils/index.js";
 import { MAINNET_API_URL } from "../constants/index.js";
-import { Amount } from "../types/index.js";
+import { Amount, BoolString } from "../types/index.js";
 
 type LimitsQueryParams = {
   originChainId: number;
@@ -30,6 +30,11 @@ type LimitsQueryParams = {
    * [Optional] The relayer address to simulate fill with. Defaults to the Across relayer.
    */
   relayer?: Address;
+  /**
+   * [Optional] Caller specifies whether to includes routes where input token
+   * and output token do not have the same decimals
+   */
+  allowUnmatchedDecimals?: BoolString;
 };
 
 /**

@@ -1,6 +1,6 @@
 import { Address } from "viem";
 import { LoggerT, fetchAcrossApi } from "../utils/index.js";
-import { Amount } from "../types/index.js";
+import { Amount, BoolString } from "../types/index.js";
 import { MAINNET_API_URL } from "../constants/index.js";
 import { SuggestedFeesApiResponse } from "../api/suggested-fees.js";
 
@@ -45,6 +45,11 @@ export type SuggestedFeesQueryParams = {
    * [Optional] Whether to skip the amount limit check. Defaults to `false`.
    */
   skipAmountLimit?: boolean;
+  /**
+   * [Optional] Caller specifies whether to includes routes where input token
+   * and output token do not have the same decimals
+   */
+  allowUnmatchedDecimals?: BoolString;
 };
 
 /**
@@ -146,6 +151,18 @@ export type GetSuggestedFeesReturnType = {
     maxDepositShortDelay: bigint;
     recommendedDepositInstant: bigint;
   };
+  inputToken: {
+    address: Address;
+    symbol: string;
+    decimals: number;
+    chainId: number;
+  };
+  outputToken: {
+    address: Address;
+    symbol: string;
+    decimals: number;
+    chainId: number;
+  };
 };
 
 /**
@@ -165,19 +182,16 @@ export async function getSuggestedFees({
     logger,
   );
 
-  const parsed = parseSuggestedFees(data);
-  return {
-    ...parsed,
-    outputAmount: BigInt(params.amount) - BigInt(data.totalRelayFee.total),
-  };
+  return parseSuggestedFees(data);
 }
 
 export function parseSuggestedFees(
   raw: SuggestedFeesApiResponse,
-): Omit<GetSuggestedFeesReturnType, "outputAmount"> {
+): GetSuggestedFeesReturnType {
   return {
     // ensure even unformatted values get passed through
     ...raw,
+    outputAmount: BigInt(raw.outputAmount),
     estimatedFillTimeSec: raw.estimatedFillTimeSec,
     capitalFeePct: Number(raw.capitalFeePct),
     capitalFeeTotal: BigInt(raw.capitalFeeTotal),
@@ -216,6 +230,18 @@ export function parseSuggestedFees(
       maxDepositInstant: BigInt(raw.limits.maxDepositInstant),
       maxDepositShortDelay: BigInt(raw.limits.maxDepositShortDelay),
       recommendedDepositInstant: BigInt(raw.limits.recommendedDepositInstant),
+    },
+    inputToken: {
+      address: raw.inputToken.address as Address,
+      symbol: raw.inputToken.symbol,
+      decimals: raw.inputToken.decimals,
+      chainId: raw.inputToken.chainId,
+    },
+    outputToken: {
+      address: raw.outputToken.address as Address,
+      symbol: raw.outputToken.symbol,
+      decimals: raw.outputToken.decimals,
+      chainId: raw.outputToken.chainId,
     },
   };
 }
