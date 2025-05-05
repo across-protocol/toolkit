@@ -158,7 +158,7 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
     message,
     logger,
     apiUrl,
-    allowUnmatchedDecimals: "true",
+    allowUnmatchedDecimals: true,
   });
 
   logger?.debug("fees", fees);

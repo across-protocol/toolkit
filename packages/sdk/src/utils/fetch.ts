@@ -24,7 +24,7 @@ export function buildSearchParams<
   for (const key in params) {
     const value = params[key];
 
-    if (!value) {
+    if (!isDefined(value)) {
       continue;
     }
 
@@ -43,6 +43,10 @@ export function isOk(res: Response) {
     return true;
   }
   return false;
+}
+
+export function isDefined<T>(value: T): value is NonNullable<T> {
+  return value !== undefined && value !== null ? true : false;
 }
 
 function makeFetcher(

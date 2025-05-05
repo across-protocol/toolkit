@@ -1,6 +1,6 @@
 import { Address } from "viem";
 import { LoggerT, fetchAcrossApi } from "../utils/index.js";
-import { Amount, BoolString } from "../types/index.js";
+import { Amount } from "../types/index.js";
 import { MAINNET_API_URL } from "../constants/index.js";
 import { SuggestedFeesApiResponse } from "../api/suggested-fees.js";
 
@@ -49,7 +49,7 @@ export type SuggestedFeesQueryParams = {
    * [Optional] Caller specifies whether to includes routes where input token
    * and output token do not have the same decimals
    */
-  allowUnmatchedDecimals?: BoolString;
+  allowUnmatchedDecimals?: boolean;
 };
 
 /**
