@@ -1,6 +1,6 @@
 {
   "name": "@across-protocol/app-sdk",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "./dist/index.js",
   "type": "module",
   "description": "The official SDK for integrating Across bridge into your dapp.",

@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.2.2
+
+### Patch Changes
+
+- b778821: Add support for outputAmount field returned by suggested fees. this allows the safe handling of routes where input and output tokens do not have the same decimals
+
 ## 0.2.0
 
 ### Minor Changes
