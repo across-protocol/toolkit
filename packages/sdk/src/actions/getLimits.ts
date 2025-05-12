@@ -30,6 +30,11 @@ type LimitsQueryParams = {
    * [Optional] The relayer address to simulate fill with. Defaults to the Across relayer.
    */
   relayer?: Address;
+  /**
+   * [Optional] Caller specifies whether to includes routes where input token
+   * and output token do not have the same decimals
+   */
+  allowUnmatchedDecimals?: boolean;
 };
 
 /**

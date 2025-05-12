@@ -1,4 +1,7 @@
-import { getSuggestedFees } from "../../../src/actions/getSuggestedFees.js";
+import {
+  getSuggestedFees,
+  GetSuggestedFeesParams,
+} from "../../../src/actions/getSuggestedFees.js";
 import { suggestedFeesResponseJsonSchema } from "../../../src/api/suggested-fees.js";
 import { MAINNET_API_URL } from "../../../src/constants/index.js";
 import { buildSearchParams } from "../../../src/utils/fetch.js";
@@ -11,7 +14,8 @@ const params = {
   outputToken: "0x4200000000000000000000000000000000000006",
   destinationChainId: 10,
   amount: "2000000000000000000",
-} as const;
+  allowUnmatchedDecimals: true,
+} as const satisfies GetSuggestedFeesParams;
 
 describe("suggested-fees", async () => {
   // first test the raw response from the API.

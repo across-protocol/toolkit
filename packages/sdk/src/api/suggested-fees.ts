@@ -47,6 +47,19 @@ export const suggestedFeesResponseJsonSchema = z.object({
     recommendedDepositInstant: bigNumberString,
   }),
   fillDeadline: numericString,
+  outputAmount: bigNumberString,
+  inputToken: z.object({
+    address: ethereumAddress,
+    symbol: z.string(),
+    decimals: z.number(),
+    chainId: z.number(),
+  }),
+  outputToken: z.object({
+    address: ethereumAddress,
+    symbol: z.string(),
+    decimals: z.number(),
+    chainId: z.number(),
+  }),
 });
 
 export type SuggestedFeesApiResponse = z.infer<
