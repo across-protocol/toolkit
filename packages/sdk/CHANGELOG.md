@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.2.3
+
+### Patch Changes
+
+- b18629c: Improve: use Indexer API instead of Scraper API
+
 ## 0.2.2
 
 ### Patch Changes
