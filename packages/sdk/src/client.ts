@@ -33,6 +33,7 @@ import {
   SimulateUpdateDepositTxParams,
   signUpdateDepositTypedData,
   SignUpdateDepositTypedDataParams,
+  ExecuteQuoteResponseParams,
 } from "./actions/index.js";
 import {
   MAINNET_API_URL,
@@ -286,7 +287,7 @@ export class AcrossClient {
       ExecuteQuoteParams,
       "logger" | "originClient" | "destinationClient" | "integratorId"
     >,
-  ) {
+  ): Promise<ExecuteQuoteResponseParams> {
     const logger = params?.logger ?? this.logger;
     const originClient =
       params?.originClient ??
@@ -304,7 +305,7 @@ export class AcrossClient {
     }
 
     try {
-      await executeQuote({
+      return await executeQuote({
         ...params,
         integratorId,
         logger,
