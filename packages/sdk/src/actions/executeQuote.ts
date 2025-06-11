@@ -164,15 +164,37 @@ export type ExecuteQuoteParams = {
 };
 
 /**
+ * Response parameters for {@link executeQuote}.
+ */
+export type ExecuteQuoteResponseParams = {
+  /**
+   * The ID of the deposit transaction.
+   */
+  depositId?: DepositStatus["depositId"];
+  /**
+   * The receipt of the deposit transaction.
+   */
+  depositTxReceipt?: TransactionReceipt;
+  /**
+   * The receipt of the fill transaction.
+   */
+  fillTxReceipt?: TransactionReceipt;
+  /**
+   * Error object if an error occurred and throwOnError was false.
+   */
+  error?: Error;
+};
+
+/**
  * Executes a quote by:
  * 1. Approving the SpokePool contract if necessary
  * 2. Depositing the input token on the origin chain
  * 3. Waiting for the deposit to be filled on the destination chain
  * @param params - See {@link ExecuteQuoteParams}.
- * @returns The deposit ID and receipts for the deposit and fill transactions.
+ * @returns The deposit ID and receipts for the deposit and fill transactions. See {@link ExecuteQuoteResponseParams}.
  * @public
  */
-export async function executeQuote(params: ExecuteQuoteParams) {
+export async function executeQuote(params: ExecuteQuoteParams): Promise<ExecuteQuoteResponseParams> {
   const {
     integratorId,
     deposit,
@@ -409,7 +431,7 @@ export async function executeQuote(params: ExecuteQuoteParams) {
     });
 
     if (!throwOnError) {
-      return { error };
+      return { error: error as Error };
     }
 
     throw error;

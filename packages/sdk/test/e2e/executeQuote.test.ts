@@ -9,6 +9,7 @@ import {
 } from "vitest";
 import { mainnetTestClient as testClient } from "../common/sdk.js";
 import {
+  ExecuteQuoteResponseParams,
   parseDepositLogs,
   parseFillLogs,
   type Quote,
@@ -58,6 +59,7 @@ let depositTxSuccess = false;
 let fillTxSuccess = false;
 let depositLog: ReturnType<typeof parseDepositLogs> | undefined;
 let fillLog: ReturnType<typeof parseFillLogs> | undefined;
+let executeQuoteResult: ExecuteQuoteResponseParams;
 
 describe("executeQuote", async () => {
   test("Gets available routes for intent", async () => {
@@ -196,6 +198,8 @@ describe("executeQuote", async () => {
               rej(false);
             }
           },
+        }).then((result: ExecuteQuoteResponseParams) => {
+          executeQuoteResult = result;
         });
       });
     });
@@ -252,6 +256,13 @@ describe("executeQuote", async () => {
           quote.deposit.outputToken,
         );
       });
+    });
+
+    test("ExecuteQuote returns expected result", () => {
+      expect(executeQuoteResult.depositId).toBeDefined();
+      expect(executeQuoteResult.depositTxReceipt).toBeDefined();
+      expect(executeQuoteResult.fillTxReceipt).toBeDefined();
+      expect(executeQuoteResult.error).toBeUndefined();
     });
   });
 });
