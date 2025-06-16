@@ -18,6 +18,8 @@ import {
 } from "../types/index.js";
 import { parseFillLogs, waitForFillTx } from "./waitForFillTx.js";
 import { parseDepositLogs } from "./getDepositFromLogs.js";
+import { prepareAtomicTx } from "./prepareAtomicTx.js";
+import { waitForAtomicTx } from "./waitForAtomicTx.js";
 
 export type ExecutionProgress = TransactionProgress;
 
@@ -194,7 +196,9 @@ export type ExecuteQuoteResponseParams = {
  * @returns The deposit ID and receipts for the deposit and fill transactions. See {@link ExecuteQuoteResponseParams}.
  * @public
  */
-export async function executeQuote(params: ExecuteQuoteParams): Promise<ExecuteQuoteResponseParams> {
+export async function executeQuote(
+  params: ExecuteQuoteParams,
+): Promise<ExecuteQuoteResponseParams> {
   const {
     integratorId,
     deposit,
@@ -281,6 +285,109 @@ export async function executeQuote(params: ExecuteQuoteParams): Promise<ExecuteQ
 
         onProgressHandler(currentTransactionProgress);
 
+        // Check if wallet supports atomic transactions
+        const capabilities = await walletClient.getCapabilities({
+          account,
+          chainId: deposit.originChainId,
+        });
+
+        if (
+          capabilities?.atomic?.status === "supported" ||
+          capabilities?.atomic?.status === "ready"
+        ) {
+          try {
+            logger?.debug(
+              "Wallet supports atomic sendCalls, triggering atomic flow",
+            );
+            // Simulate both approval and deposit calls
+            const { calls } = await prepareAtomicTx({
+              walletClient,
+              // publicClient: originClient, #TODO: uncomment this when more public RPCs support eth_simulateV1
+              deposit,
+              approvalAmount,
+              integratorId,
+              logger,
+            });
+
+            const { id: callId } = await walletClient.sendCalls({
+              account,
+              calls,
+              forceAtomic: true,
+            });
+
+            logger?.debug(`Atomic call ID: ${callId}`);
+
+            const destinationBlock = await destinationClient.getBlockNumber();
+
+            const { depositId, depositTxReceipt } = await waitForAtomicTx({
+              callId,
+              originChainId: deposit.originChainId,
+              walletClient,
+            });
+
+            const depositLog = parseDepositLogs(depositTxReceipt.logs);
+
+            const depositSuccessProgress: TransactionProgress = {
+              step: "deposit",
+              status: "txSuccess",
+              txReceipt: depositTxReceipt,
+              depositId,
+              depositLog,
+              meta: { deposit },
+            };
+            onProgressHandler(depositSuccessProgress);
+
+            // After successful deposit, wait for fill
+            const fillMeta: FillMeta = {
+              depositId,
+              deposit,
+            };
+            const fillPendingProgress: TransactionProgress = {
+              step: "fill",
+              status: "txPending",
+              meta: fillMeta,
+            };
+            onProgressHandler(fillPendingProgress);
+
+            const { fillTxReceipt, fillTxTimestamp, actionSuccess } =
+              await waitForFillTx({
+                deposit,
+                depositId,
+                depositTxHash: depositTxReceipt.transactionHash,
+                destinationChainClient: destinationClient,
+                fromBlock: destinationBlock - 100n, // TODO: use dynamic block buffer based chain
+              });
+
+            const fillLog = parseFillLogs(fillTxReceipt.logs);
+
+            const fillSuccessProgress: TransactionProgress = {
+              step: "fill",
+              status: "txSuccess",
+              txReceipt: fillTxReceipt,
+              fillTxTimestamp,
+              actionSuccess,
+              fillLog,
+              meta: fillMeta,
+            };
+            onProgressHandler(fillSuccessProgress);
+            return { depositId, depositTxReceipt, fillTxReceipt };
+          } catch (error) {
+            if (
+              error instanceof Error &&
+              error.message
+                .toLowerCase()
+                .includes("user rejected account upgrade")
+            ) {
+              logger?.debug(
+                "User rejected smart account upgrade, falling back to regular flow",
+              );
+            } else {
+              throw error;
+            }
+          }
+        }
+
+        // Fall back to regular approval flow
         const { request } = await simulateApproveTx({
           walletClient,
           publicClient: originClient,
