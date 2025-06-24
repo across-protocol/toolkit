@@ -1,9 +1,9 @@
 import {
   Hex,
-  // PublicClient,
+  PublicClient,
   WalletClient,
   parseAbi,
-  // SimulateCallsReturnType,
+  SimulateCallsReturnType,
   Call,
   encodeFunctionData,
   concatHex,
@@ -13,27 +13,27 @@ import { LoggerT } from "../utils/index.js";
 import { spokePoolAbiV3_5 } from "../abis/SpokePool/index.js";
 import { addressToBytes32, getIntegratorDataSuffix } from "../utils/index.js";
 
-export type PrepareAtomicTxParams = {
+export type PrepareAtomicApproveDepositTxParams = {
   walletClient: WalletClient;
-  // publicClient: PublicClient;
+  publicClient: PublicClient;
   deposit: Quote["deposit"];
   approvalAmount: bigint;
   integratorId: Hex;
   logger?: LoggerT;
 };
 
-export type PrepareAtomicTxResult = {
-  // simulateResult?: SimulateCallsReturnType<readonly Call[]>;
+export type PrepareAtomicApproveDepositTxResult = {
+  simulationResult?: SimulateCallsReturnType<readonly Call[]>;
   calls: readonly Call[];
-  error?: Error;
+  simulationError?: Error;
 };
 
-export async function prepareAtomicTx(
-  params: PrepareAtomicTxParams,
-): Promise<PrepareAtomicTxResult> {
+export async function prepareAtomicApproveDepositTx(
+  params: PrepareAtomicApproveDepositTxParams,
+): Promise<PrepareAtomicApproveDepositTxResult> {
   const {
     walletClient,
-    // publicClient,
+    publicClient,
     deposit,
     approvalAmount,
     integratorId,
@@ -91,22 +91,21 @@ export async function prepareAtomicTx(
   ] as const;
 
   try {
-    // Commented out due to limited support for eth_simulateV1 on public RPCs
-    // const simulateResult = await publicClient.simulateCalls({
-    //   account,
-    //   calls,
-    // });
+    const simulationResult = await publicClient.simulateCalls({
+      account,
+      calls,
+    });
 
-    // logger?.debug("Atomic transaction simulation result", simulateResult);
+    logger?.debug("Atomic transaction simulation result", simulationResult);
 
     return {
-      // simulateResult,
+      simulationResult: simulationResult,
       calls,
     };
   } catch (error) {
     logger?.debug("Atomic transaction simulation failed", error);
     return {
-      error: error as Error,
+      simulationError: error as Error,
       calls,
     };
   }
