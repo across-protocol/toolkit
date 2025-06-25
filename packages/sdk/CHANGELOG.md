@@ -1,5 +1,15 @@
 # @across-protocol/app-sdk
 
+## 0.3.0
+
+### Minor Changes
+
+- 050a2e4: The executeQuote client function should return a deposit id and deposit/fill transaction receipts.
+
+### Patch Changes
+
+- 284e24d: Added atomic sendCalls with fallback to `executeQuote`
+
 ## 0.2.3
 
 ### Patch Changes
