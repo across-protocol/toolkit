@@ -53,7 +53,7 @@
     "typedoc": "^0.26.7",
     "typedoc-plugin-markdown": "^4.4.1",
     "typescript": "^5.3.3",
-    "viem": "^2.20.1",
+    "viem": "2.31.2",
     "vitest": "^2.0.5",
     "zod": "^3.24.2"
   },
@@ -61,6 +61,6 @@
     "access": "public"
   },
   "peerDependencies": {
-    "viem": "^2.20.1"
+    "viem": "^2.31.2"
   }
 }
