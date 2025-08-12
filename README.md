@@ -90,4 +90,5 @@ await client.executeQuote({
 - Website: <https://across.to>
 - App: <https://app.across.to>
 - Docs: <https://docs.across.to>
+- X/Twitter: <https://x.com/AcrossProtocol>
 - Medium: <https://medium.com/across-protocol>
