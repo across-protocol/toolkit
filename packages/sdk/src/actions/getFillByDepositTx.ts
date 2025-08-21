@@ -55,17 +55,8 @@ export async function getFillByDepositTx(
 
       // if message in deposit, check for CallsFailed event
       if (params.deposit.message !== "0x") {
-        const [callsFailedLog] = parseEventLogs({
-          abi: [
-            parseAbiItem(
-              "event CallsFailed(Call[] calls, address indexed fallbackRecipient)",
-            ),
-          ],
-          logs: fillTxReceipt.logs,
-        });
-
         return {
-          actionSuccess: !callsFailedLog,
+          actionSuccess: data.actionsSucceeded,
           fillTxReceipt: fillTxReceipt,
           fillTxTimestamp: fillTxBlock.timestamp,
           parsedFillEvent,
