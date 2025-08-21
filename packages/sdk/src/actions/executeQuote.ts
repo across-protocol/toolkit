@@ -282,14 +282,6 @@ export async function executeQuote(
           spender: spokePoolAddress,
         };
 
-        currentTransactionProgress = {
-          step: "approve",
-          status: "simulationPending",
-          meta: currentProgressMeta,
-        };
-
-        onProgressHandler(currentTransactionProgress);
-
         if (atomicIfSupported) {
           logger?.debug("Checking if wallet supports atomic transactions");
           try {
@@ -315,6 +307,16 @@ export async function executeQuote(
                 logger,
               });
 
+              const callProgressMeta: DepositMeta = {
+                deposit,
+              };
+              const callSimulationProgress: TransactionProgress = {
+                step: "deposit",
+                status: "simulationPending",
+                meta: callProgressMeta,
+              };
+              onProgressHandler(callSimulationProgress);
+
               const { id: callId } = await walletClient.sendCalls({
                 account,
                 calls,
@@ -322,6 +324,14 @@ export async function executeQuote(
               });
 
               logger?.debug(`Atomic call ID: ${callId}`);
+
+              const depositTransactionProgress: TransactionProgress = {
+                step: "deposit",
+                status: "txPending",
+                txHash: callId as Hash,
+                meta: { deposit },
+              };
+              onProgressHandler(depositTransactionProgress);
 
               const destinationBlock = await destinationClient.getBlockNumber();
 
@@ -393,6 +403,14 @@ export async function executeQuote(
             }
           }
         }
+
+        currentTransactionProgress = {
+          step: "approve",
+          status: "simulationPending",
+          meta: currentProgressMeta,
+        };
+
+        onProgressHandler(currentTransactionProgress);
 
         // Fall back to regular approval flow
         const { request } = await simulateApproveTx({
