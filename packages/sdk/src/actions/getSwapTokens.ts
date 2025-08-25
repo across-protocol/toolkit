@@ -15,9 +15,9 @@ export type SwapApiToken = {
 type SwapApiTokensResponse = SwapApiToken[];
 
 /**
- * Params for {@link getSwapApiTokens}.
+ * Params for {@link getSwapTokens}.
  */
-export type GetSwapApiTokensParams = Partial<{
+export type GetSwapTokensParams = Partial<{
   /**
    * [Optional] Filter tokens by chain ID. If provided, only tokens from this chain will be returned.
    */
@@ -32,19 +32,19 @@ export type GetSwapApiTokensParams = Partial<{
   logger: LoggerT;
 }>;
 
-export type GetSwapApiTokensReturnType = SwapApiToken[];
+export type GetSwapTokensReturnType = SwapApiToken[];
 
 /**
  * Get available tokens across all supported chains or filtered by chain ID.
- * @param params - See {@link GetSwapApiTokensParams}.
- * @returns See {@link GetSwapApiTokensReturnType}.
+ * @param params - See {@link GetSwapTokensParams}.
+ * @returns See {@link GetSwapTokensReturnType}.
  * @public
  */
-export async function getSwapApiTokens({
+export async function getSwapTokens({
   chainId,
   apiUrl = MAINNET_API_URL,
   logger,
-}: GetSwapApiTokensParams = {}): Promise<GetSwapApiTokensReturnType> {
+}: GetSwapTokensParams = {}): Promise<GetSwapTokensReturnType> {
   const tokens = await fetchAcrossApi<SwapApiTokensResponse>(
     `${apiUrl}/swap/tokens`,
     {},

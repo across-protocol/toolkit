@@ -10,7 +10,7 @@ import {
   getSuggestedFees,
   getLimits,
   getQuote,
-  getSwapApiTokens,
+  getSwapTokens,
   waitForDepositTx,
   getDeposit,
   getFillByDepositTx,
@@ -21,8 +21,8 @@ import {
   GetSuggestedFeesReturnType,
   GetLimitsParams,
   GetLimitsReturnType,
-  GetSwapApiTokensParams,
-  GetSwapApiTokensReturnType,
+  GetSwapTokensParams,
+  GetSwapTokensReturnType,
   simulateDepositTx,
   SimulateDepositTxParams,
   waitForFillTx,
@@ -379,14 +379,14 @@ export class AcrossClient {
   }
 
   /**
-   * Get available tokens from the swap API. See {@link getSwapApiTokens}.
-   * @param params - See {@link GetSwapApiTokensParams}.
-   * @returns See {@link GetSwapApiTokensReturnType}.
+   * Get available tokens from the swap API. See {@link getSwapTokens}.
+   * @param params - See {@link GetSwapTokensParams}.
+   * @returns See {@link GetSwapTokensReturnType}.
    */
-  async getSwapApiTokens(
-    params: MakeOptional<GetSwapApiTokensParams, "apiUrl" | "logger"> = {},
-  ): Promise<GetSwapApiTokensReturnType> {
-    return getSwapApiTokens({
+  async getSwapTokens(
+    params: MakeOptional<GetSwapTokensParams, "apiUrl" | "logger"> = {},
+  ): Promise<GetSwapTokensReturnType> {
+    return getSwapTokens({
       ...params,
       apiUrl: params?.apiUrl || this.apiUrl,
       logger: params?.logger ?? this.logger,
