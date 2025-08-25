@@ -38,6 +38,7 @@ export type IndexerStatusResponse = {
   message?: string;
   status: "pending" | "filled";
   fillTx: null | Hash;
+  actionsSucceeded: boolean;
 };
 
 export type Route = {
