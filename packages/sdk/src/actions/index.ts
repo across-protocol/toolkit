@@ -4,6 +4,7 @@ export * from "./getLimits.js";
 export * from "./getQuote.js";
 export * from "./getSwapTokens.js";
 export * from "./getSwapQuote.js";
+export * from "./executeSwapQuote.js";
 export * from "./simulateDepositTx.js";
 export * from "./waitForDepositTx.js";
 export * from "./getFillByDepositTx.js";
