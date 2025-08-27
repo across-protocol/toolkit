@@ -10,6 +10,7 @@ import {
   getSuggestedFees,
   getLimits,
   getQuote,
+  getSwapChains,
   getSwapTokens,
   waitForDepositTx,
   getDeposit,
@@ -21,6 +22,8 @@ import {
   GetSuggestedFeesReturnType,
   GetLimitsParams,
   GetLimitsReturnType,
+  GetSwapChainsParams,
+  GetSwapChainsReturnType,
   GetSwapTokensParams,
   GetSwapTokensReturnType,
   simulateDepositTx,
@@ -390,6 +393,21 @@ export class AcrossClient {
       ...params,
       apiUrl: params?.apiUrl || this.apiUrl,
       logger: params?.logger ?? this.logger,
+    });
+  }
+
+  /**
+   * Get the available chains from the swap API. See {@link getSwapChains}.
+   * @param params - See {@link GetSwapChainsParams}.
+   * @returns See {@link GetSwapChainsReturnType}.
+   */
+  async getSwapChains(
+    params: MakeOptional<GetSwapChainsParams, "apiUrl" | "logger"> = {},
+  ): Promise<GetSwapChainsReturnType> {
+    return getSwapChains({
+      ...params,
+      logger: params?.logger ?? this.logger,
+      apiUrl: params?.apiUrl ?? this.apiUrl,
     });
   }
 
