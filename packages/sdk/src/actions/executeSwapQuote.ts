@@ -65,6 +65,10 @@ type SwapTransactionProgress =
  */
 export type ExecuteSwapQuoteParams = {
   /**
+   * An identifier for the integrator.
+   */
+  integratorId: Hex;
+  /**
    * The swap quote response from {@link getSwapQuote}.
    */
   swapQuote: SwapApprovalApiResponse;
