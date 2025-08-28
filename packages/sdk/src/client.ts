@@ -450,7 +450,7 @@ export class AcrossClient {
       }
 
       // The Across API only throws an `AcrossApiSimulationError` when simulating fills
-      // on the destination chain.
+      // on the destination chain since we will skip origin tx estimation.
       const isFillSimulationError = e instanceof AcrossApiSimulationError;
       const simParams = isFillSimulationError
         ? {
@@ -642,6 +642,7 @@ export class AcrossClient {
     try {
       const quote = await getSwapQuote({
         ...params,
+        skipOriginTxEstimation: "true",
         logger: params?.logger ?? this.logger,
         apiUrl: params?.apiUrl ?? this.apiUrl,
       });
@@ -655,7 +656,7 @@ export class AcrossClient {
       }
 
       const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
-        networkId: params.originChainId.toString(),
+        networkId: params.destinationChainId.toString(),
         to: e.transaction.to,
         data: e.transaction.data,
         from: e.transaction.from,
