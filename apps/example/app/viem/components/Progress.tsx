@@ -1,9 +1,9 @@
 import { LoadingIndicator, Status } from "@/components/LoadingIndicator";
 import { cn } from "@/lib/utils";
-import { ExecutionProgress } from "@across-protocol/app-sdk";
+import { ExecutionProgress, SwapExecutionProgress } from "@across-protocol/app-sdk";
 
 export type ProgressProps = {
-  progress: ExecutionProgress;
+  progress: ExecutionProgress | SwapExecutionProgress;
   error?: Error | null;
   className?: string;
 };
