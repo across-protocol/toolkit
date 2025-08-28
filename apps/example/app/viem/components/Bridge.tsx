@@ -7,7 +7,7 @@ import { Button, Label, Skeleton } from "@/components/ui";
 import { useAvailableRoutes } from "@/lib/hooks/useAvailableRoutes";
 import { useInputTokens } from "@/lib/hooks/useInputTokens";
 import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
-import { useQuote } from "@/lib/hooks/useQuote";
+import { useSwapQuote } from "@/lib/hooks/useSwapQuote";
 import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
 import { getExplorerLink, isNativeToken } from "@/lib/utils";
 import { TokenInfo } from "@across-protocol/app-sdk";
@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, useBalance, useChains } from "wagmi";
 import { useDebounceValue } from "usehooks-ts";
-import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
+import { useExecuteSwapQuote } from "@/lib/hooks/useExecuteSwapQuote";
 import { Progress } from "./Progress";
 import { TokenInput } from "@/components/TokenInput";
 import { ExternalLink } from "@/components/ExternalLink";
@@ -101,11 +101,15 @@ export function Bridge() {
   });
 
   const quoteConfig =
-    route && debouncedInputAmount && fromToken
+    route && debouncedInputAmount && fromToken && destinationChainId && originChainId && address && toToken
       ? {
-          route,
+          originChainId: originChainId.toString(),
+          destinationChainId: destinationChainId.toString(),
+          inputToken: fromToken.address,
+          outputToken: toToken.address,
+          amount: parseUnits(debouncedInputAmount, fromToken?.decimals).toString(),
+          depositor: address,
           recipient: address,
-          inputAmount: parseUnits(debouncedInputAmount, fromToken?.decimals),
         }
       : undefined;
 
@@ -113,16 +117,16 @@ export function Bridge() {
     quote,
     isLoading: quoteLoading,
     isRefetching,
-  } = useQuote(quoteConfig);
+  } = useSwapQuote(quoteConfig);
 
   const {
-    executeQuote,
+    executeSwapQuote,
     progress,
     error,
     isPending,
     depositReceipt,
     fillReceipt,
-  } = useExecuteQuote(quote);
+  } = useExecuteSwapQuote(quote ? { swapQuote: quote } : undefined);
   const inputBalance = fromTokenBalance
     ? parseFloat(
         formatUnits(fromTokenBalance?.value, fromTokenBalance?.decimals),
@@ -232,12 +236,12 @@ export function Bridge() {
         {quote && toToken && (
           <p className="text-md font-normal text-text">
             {parseFloat(
-              formatUnits(quote.deposit.outputAmount, toToken.decimals),
+              formatUnits(BigInt(quote.minOutputAmount), toToken.decimals),
             ).toFixed(3)}
           </p>
         )}
         <Button
-          onClick={() => executeQuote()}
+          onClick={() => executeSwapQuote()}
           disabled={!(quote && toToken) || isRefetching || isPending}
           className="mt-2"
           variant="accent"
