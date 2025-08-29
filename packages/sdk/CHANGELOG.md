@@ -1,5 +1,20 @@
 # @across-protocol/app-sdk
 
+## 0.4.0
+
+### Minor Changes
+
+- 75248ce: Added getSwapQuote action
+- 3a018ba: Added executeSwapQuote action
+
+### Patch Changes
+
+- 4d33487: add getSwapTokens action
+- ebe66cd: align progress updates for 5792 deposits
+- 0de91e6: update AcrossApiErrors
+- 2aca217: add getSwapChains
+- f7a6521: use actionsSucceeded from indexer response
+
 ## 0.3.0
 
 ### Minor Changes
