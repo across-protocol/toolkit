@@ -40,6 +40,12 @@ import {
   signUpdateDepositTypedData,
   SignUpdateDepositTypedDataParams,
   ExecuteQuoteResponseParams,
+  ExecuteSwapQuoteParams,
+  ExecuteSwapQuoteResponseParams,
+  executeSwapQuote,
+  GetSwapQuoteParams,
+  getSwapQuote,
+  Quote,
 } from "./actions/index.js";
 import {
   MAINNET_API_URL,
@@ -71,6 +77,7 @@ import {
   ConfiguredWalletClient,
 } from "./types/index.js";
 import { MakeOptional } from "./utils/index.js";
+import { SwapApprovalApiResponse } from "./api/swap-approval.js";
 
 const CLIENT_DEFAULTS = {
   pollingInterval: 3_000,
@@ -291,7 +298,11 @@ export class AcrossClient {
   async executeQuote(
     params: MakeOptional<
       ExecuteQuoteParams,
-      "logger" | "originClient" | "destinationClient" | "integratorId"
+      | "logger"
+      | "originClient"
+      | "destinationClient"
+      | "integratorId"
+      | "walletClient"
     >,
   ): Promise<ExecuteQuoteResponseParams> {
     const logger = params?.logger ?? this.logger;
@@ -362,6 +373,118 @@ export class AcrossClient {
         simulationId,
         simulationUrl,
         message: `simulation failed while executing quote: ${reason}`,
+      });
+    }
+  }
+
+  /**
+   * Execute a swap quote by:
+   * 1. Executing approval transactions if present
+   * 2. Executing the swap/bridge transaction
+   * 3. Waiting for the deposit transaction to be confirmed
+   * 4. Waiting for the fill transaction to be confirmed
+   *
+   * See {@link executeSwapQuote} for more details.
+   *
+   * @example
+   * ```ts
+   * const quote = await client.getSwapQuote({
+   *   originChainId: 1,
+   *   destinationChainId: 10,
+   *   inputToken: "0x...",
+   *   outputToken: "0x...",
+   *   amount: "10",
+   *   depositor: "0x...",
+   * });
+   * const { depositId, swapTxReceipt, fillTxReceipt } = await client.executeSwapQuote({ swapQuote: quote });
+   * ```
+   *
+   * @param params - See {@link ExecuteSwapQuoteParams}.
+   * @returns The deposit ID and receipts for the deposit and fill transactions.
+   */
+  async executeSwapQuote(
+    params: MakeOptional<
+      ExecuteSwapQuoteParams,
+      | "logger"
+      | "originClient"
+      | "destinationClient"
+      | "integratorId"
+      | "walletClient"
+    >,
+  ): Promise<ExecuteSwapQuoteResponseParams> {
+    const logger = params?.logger ?? this.logger;
+    const originChainId = params.swapQuote.inputToken.chainId;
+    const destinationChainId = params.swapQuote.outputToken.chainId;
+    const originClient =
+      params?.originClient ?? this.getPublicClient(originChainId);
+    const destinationClient =
+      params?.destinationClient ?? this.getPublicClient(destinationChainId);
+    const integratorId = params?.integratorId ?? this.integratorId;
+    const walletClient = params?.walletClient ?? this?.walletClient;
+    const destinationSpokePoolAddress =
+      await this.getSpokePoolAddress(destinationChainId);
+
+    if (!walletClient) {
+      throw new ConfigError(
+        "WalletClient needs to be set to call 'executeSwapQuote'",
+      );
+    }
+
+    try {
+      return await executeSwapQuote({
+        ...params,
+        integratorId,
+        logger,
+        walletClient,
+        originClient,
+        destinationClient,
+        destinationSpokePoolAddress,
+      });
+    } catch (e) {
+      if (
+        !this.isTenderlyEnabled ||
+        !this.tenderly?.simOnError ||
+        !(
+          e instanceof AcrossApiSimulationError ||
+          e instanceof ContractFunctionExecutionError
+        )
+      ) {
+        throw e;
+      }
+
+      // The Across API only throws an `AcrossApiSimulationError` when simulating fills
+      // on the destination chain since we will skip origin tx estimation.
+      const isFillSimulationError = e instanceof AcrossApiSimulationError;
+      const simParams = isFillSimulationError
+        ? {
+            networkId: destinationChainId.toString(),
+            from: e.transaction.from,
+            to: e.transaction.to,
+            data: e.transaction.data,
+          }
+        : {
+            networkId: originChainId.toString(),
+            from: e.sender!,
+            to: e.contractAddress!,
+            data: encodeFunctionData({
+              abi: e.abi,
+              functionName: e.functionName,
+              args: e.args,
+            }),
+          };
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        value:
+          params.swapQuote.inputToken.address ===
+          "0x0000000000000000000000000000000000000000"
+            ? String(params.swapQuote.inputAmount)
+            : "0",
+        ...simParams,
+      });
+      const reason = isFillSimulationError ? e.message : e.shortMessage;
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `Simulation failed while executing swap quote: ${reason}`,
       });
     }
   }
@@ -493,7 +616,9 @@ export class AcrossClient {
    * @param params - See {@link GetQuoteParams}.
    * @returns See {@link Quote}.
    */
-  async getQuote(params: MakeOptional<GetQuoteParams, "logger" | "apiUrl">) {
+  async getQuote(
+    params: MakeOptional<GetQuoteParams, "logger" | "apiUrl">,
+  ): Promise<Quote> {
     try {
       const quote = await getQuote({
         ...params,
@@ -520,6 +645,45 @@ export class AcrossClient {
         simulationId,
         simulationUrl,
         message: `simulation failed while fetching quote: ${e.message}`,
+      });
+    }
+  }
+
+  /**
+   * Get a swap quote for a given set of parameters. See {@link getSwapQuote}.
+   * @param params - See {@link GetSwapQuoteParams}.
+   * @returns See {@link SwapApprovalApiResponse}.
+   */
+  async getSwapQuote(
+    params: MakeOptional<GetSwapQuoteParams, "logger" | "apiUrl">,
+  ): Promise<SwapApprovalApiResponse> {
+    try {
+      const quote = await getSwapQuote({
+        ...params,
+        skipOriginTxEstimation: "true",
+        logger: params?.logger ?? this.logger,
+        apiUrl: params?.apiUrl ?? this.apiUrl,
+      });
+      return quote;
+    } catch (e) {
+      if (
+        !this.tenderly?.simOnError ||
+        !(e instanceof AcrossApiSimulationError)
+      ) {
+        throw e;
+      }
+
+      const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
+        networkId: params.destinationChainId.toString(),
+        to: e.transaction.to,
+        data: e.transaction.data,
+        from: e.transaction.from,
+        value: e.transaction.value ?? "0",
+      });
+      throw new SimulationError({
+        simulationId,
+        simulationUrl,
+        message: `Simulation failed while fetching swap quote: ${e.message}`,
       });
     }
   }

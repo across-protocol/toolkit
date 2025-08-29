@@ -90,14 +90,14 @@ const bridgeStepSchema = z.object({
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
-    name: z.string(),
+    name: z.string().optional(),
   }),
   tokenOut: z.object({
     address: ethereumAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
-    name: z.string(),
+    name: z.string().optional(),
   }),
   fees: z.object({
     totalRelay: z.object({
@@ -150,10 +150,14 @@ const eip712Schema = z.object({
     chainId: positiveInteger,
     verifyingContract: ethereumAddress,
   }),
-  types: z.record(z.array(z.object({
-    name: z.string(),
-    type: z.string(),
-  }))),
+  types: z.record(
+    z.array(
+      z.object({
+        name: z.string(),
+        type: z.string(),
+      }),
+    ),
+  ),
   value: z.record(z.any()),
 });
 
@@ -170,11 +174,15 @@ export const swapApprovalResponseSchema = z.object({
     allowance: allowanceCheckSchema,
     balance: balanceCheckSchema,
   }),
-  approvalTxns: z.array(z.object({
-    chainId: positiveInteger,
-    to: ethereumAddress,
-    data: z.string(),
-  })).optional(),
+  approvalTxns: z
+    .array(
+      z.object({
+        chainId: positiveInteger,
+        to: ethereumAddress,
+        data: z.string(),
+      }),
+    )
+    .optional(),
   steps: z.object({
     originSwap: swapStepSchema.optional(),
     bridge: bridgeStepSchema,
@@ -185,21 +193,21 @@ export const swapApprovalResponseSchema = z.object({
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
-    name: z.string(),
+    name: z.string().optional(),
   }),
   outputToken: z.object({
     address: ethereumAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
-    name: z.string(),
+    name: z.string().optional(),
   }),
   refundToken: z.object({
     address: ethereumAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
-    name: z.string(),
+    name: z.string().optional(),
   }),
   fees: z.object({
     total: feeComponentSchema,
@@ -219,4 +227,6 @@ export const swapApprovalResponseSchema = z.object({
 });
 
 export type BaseSwapQueryParams = z.infer<typeof BaseSwapQueryParamsSchema>;
-export type SwapApprovalApiResponse = z.infer<typeof swapApprovalResponseSchema>;
+export type SwapApprovalApiResponse = z.infer<
+  typeof swapApprovalResponseSchema
+>;
