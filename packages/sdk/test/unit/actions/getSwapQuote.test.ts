@@ -20,12 +20,12 @@ const outputToken = {
 } as const;
 
 const testRecipient = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
-const inputAmount = 1; // 1 WETH
+const inputAmount = "1"; // 1 WETH
 
 describe("getSwapQuote", () => {
   test("Gets a swap quote for a simple bridge transfer", async () => {
     const quote = await getSwapQuote({
-      amount: parseEther("inputAmount"),
+      amount: parseEther(inputAmount),
       tradeType: "exactInput",
       inputToken: inputToken.address,
       outputToken: outputToken.address,
