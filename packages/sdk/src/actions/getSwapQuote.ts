@@ -22,9 +22,9 @@ export type GetSwapQuoteParams = Omit<
   amount: Amount;
   originChainId: number;
   destinationChainId: number;
-  skipOriginTxEstimation: boolean;
-  slippage: number;
-  appFee: number;
+  skipOriginTxEstimation?: boolean;
+  slippage?: number;
+  appFee?: number;
   /**
    * [Optional] The logger to use.
    */

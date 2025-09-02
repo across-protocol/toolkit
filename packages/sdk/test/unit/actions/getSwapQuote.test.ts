@@ -25,16 +25,16 @@ const inputAmount = 1; // 1 WETH
 describe("getSwapQuote", () => {
   test("Gets a swap quote for a simple bridge transfer", async () => {
     const quote = await getSwapQuote({
-      amount: parseEther(inputAmount.toString()).toString(),
+      amount: parseEther("inputAmount"),
       tradeType: "exactInput",
       inputToken: inputToken.address,
       outputToken: outputToken.address,
-      originChainId: "1", // Mainnet
-      destinationChainId: "10", // Optimism
+      originChainId: 1, // Mainnet
+      destinationChainId: 10, // Optimism
       depositor: testRecipient,
       recipient: testRecipient,
-      slippage: "0.01",
-      appFee: "0.001",
+      slippage: 0.01,
+      appFee: 0.001,
       appFeeRecipient: testRecipient,
     });
 
