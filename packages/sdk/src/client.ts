@@ -660,7 +660,7 @@ export class AcrossClient {
     try {
       const quote = await getSwapQuote({
         ...params,
-        skipOriginTxEstimation: "true",
+        skipOriginTxEstimation: true,
         logger: params?.logger ?? this.logger,
         apiUrl: params?.apiUrl ?? this.apiUrl,
       });

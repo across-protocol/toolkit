@@ -1,15 +1,30 @@
 import { LoggerT, fetchAcrossApi } from "../utils/index.js";
 import { MAINNET_API_URL } from "../constants/index.js";
-import { 
-  BaseSwapQueryParams, 
+import {
+  BaseSwapQueryParams,
   SwapApprovalApiResponse,
-  swapApprovalResponseSchema 
+  swapApprovalResponseSchema,
 } from "../api/swap-approval.js";
+import { Amount } from "../types/index.js";
 
 /**
  * Params for {@link getSwapQuote}.
  */
-export type GetSwapQuoteParams = BaseSwapQueryParams & {
+export type GetSwapQuoteParams = Omit<
+  BaseSwapQueryParams,
+  | "amount"
+  | "originChainId"
+  | "destinationChainId"
+  | "skipOriginTxEstimation"
+  | "slippage"
+  | "appFee"
+> & {
+  amount: Amount;
+  originChainId: number;
+  destinationChainId: number;
+  skipOriginTxEstimation: boolean;
+  slippage: number;
+  appFee: number;
   /**
    * [Optional] The logger to use.
    */
@@ -26,7 +41,9 @@ export type GetSwapQuoteParams = BaseSwapQueryParams & {
  * @returns See {@link SwapApprovalApiResponse}.
  * @public
  */
-export async function getSwapQuote(params: GetSwapQuoteParams): Promise<SwapApprovalApiResponse> {
+export async function getSwapQuote(
+  params: GetSwapQuoteParams,
+): Promise<SwapApprovalApiResponse> {
   const { logger, apiUrl = MAINNET_API_URL, ...queryParams } = params;
 
   logger?.debug("Getting swap quote with params:", queryParams);
@@ -40,8 +57,12 @@ export async function getSwapQuote(params: GetSwapQuoteParams): Promise<SwapAppr
   // Validate the response against our schema
   const validated = swapApprovalResponseSchema.safeParse(data);
   if (!validated.success) {
-    logger?.error(`Invalid swap approval response: ${JSON.stringify(data)}. Error: ${validated.error.message}.`);
-    throw new Error(`Invalid swap approval response. Error: ${validated.error.message}. Please contact support for assistance.`);
+    logger?.error(
+      `Invalid swap approval response: ${JSON.stringify(data)}. Error: ${validated.error.message}.`,
+    );
+    throw new Error(
+      `Invalid swap approval response. Error: ${validated.error.message}. Please contact support for assistance.`,
+    );
   }
 
   return validated.data;
