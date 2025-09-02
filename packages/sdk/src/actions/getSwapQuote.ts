@@ -1,9 +1,10 @@
-import { LoggerT, fetchAcrossApi } from "../utils/index.js";
+import { LoggerT, fetchAcrossApi, fetchAcrossApiPost } from "../utils/index.js";
 import { MAINNET_API_URL } from "../constants/index.js";
 import {
   BaseSwapQueryParams,
   SwapApprovalApiResponse,
   swapApprovalResponseSchema,
+  Action,
 } from "../api/swap-approval.js";
 import { Amount } from "../types/index.js";
 import { Address } from "viem";
@@ -32,6 +33,7 @@ export type GetSwapQuoteParams = Omit<
   skipOriginTxEstimation?: boolean;
   slippage?: number;
   appFee?: number;
+  actions?: Action[];
   /**
    * [Optional] The logger to use.
    */
@@ -51,23 +53,40 @@ export type GetSwapQuoteParams = Omit<
 export async function getSwapQuote(
   params: GetSwapQuoteParams,
 ): Promise<SwapApprovalApiResponse> {
-  const { logger, apiUrl = MAINNET_API_URL, ...queryParams } = params;
+  const { logger, apiUrl = MAINNET_API_URL, ...otherParams } = params;
 
-  logger?.debug("Getting swap quote with params:", queryParams);
+  logger?.debug("Getting swap quote with params:", otherParams);
 
-  const { route, ...rest } = queryParams;
+  const { route, actions, ...rest } = otherParams;
   const routeAsQueryParams = {
     originChainId: route.originChainId,
     inputToken: route.inputToken,
     destinationChainId: route.destinationChainId,
     outputToken: route.outputToken,
   };
+  const queryParams = { ...rest, ...routeAsQueryParams };
 
-  const data = await fetchAcrossApi<SwapApprovalApiResponse>(
-    `${apiUrl}/swap/approval`,
-    { ...rest, ...routeAsQueryParams },
-    logger,
-  );
+  let data: SwapApprovalApiResponse;
+  const url = `${apiUrl}/swap/approval`;
+  if (actions && actions.length > 0) {
+    data = await fetchAcrossApiPost<SwapApprovalApiResponse>(
+      url,
+      queryParams,
+      logger,
+      {
+        actions: actions.map((action) => ({
+          ...action,
+          value: action.value.toString(),
+        })),
+      },
+    );
+  } else {
+    data = await fetchAcrossApi<SwapApprovalApiResponse>(
+      url,
+      queryParams,
+      logger,
+    );
+  }
 
   // Validate the response against our schema
   const validated = swapApprovalResponseSchema.safeParse(data);

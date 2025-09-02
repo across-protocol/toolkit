@@ -20,7 +20,7 @@ const outputToken = {
 } as const;
 
 const testRecipient = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
-const inputAmount = "1"; // 1 WETH
+const inputAmount = "0.001"; // 0.001 WETH
 
 describe("getSwapQuote", () => {
   test("Gets a swap quote for a simple bridge transfer", async () => {
@@ -38,6 +38,33 @@ describe("getSwapQuote", () => {
       slippage: 0.01,
       appFee: 0.001,
       appFeeRecipient: testRecipient,
+    });
+
+    assert(quote, "No swap quote returned for the provided parameters");
+    assertType<SwapApprovalApiResponse>(quote);
+  });
+
+  test("Gets a swap quote for a simple bridge transfer with actions", async () => {
+    const quote = await getSwapQuote({
+      amount: parseEther(inputAmount),
+      route: {
+        originChainId: 1, // Mainnet
+        inputToken: inputToken.address,
+        destinationChainId: 10, // Optimism
+        outputToken: "0x0000000000000000000000000000000000000000", // Native ETH
+      },
+      depositor: testRecipient,
+      recipient: testRecipient,
+      actions: [
+        {
+          target: "0x733Debf51574c70CfCdb7918F032E16F686bd9f8", // Test staking contract on OP
+          functionSignature: "function stake(address recipient)",
+          isNativeTransfer: false,
+          args: [{ value: testRecipient }],
+          value: 0n,
+          populateCallValueDynamically: true,
+        },
+      ],
     });
 
     assert(quote, "No swap quote returned for the provided parameters");

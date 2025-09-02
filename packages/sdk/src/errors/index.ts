@@ -37,6 +37,7 @@ export class AcrossApiError extends HttpError {
       url: string;
       message?: string;
       code: AcrossErrorCodeType;
+      requestId?: string;
     },
     opts?: ErrorOptions,
   ) {
@@ -62,6 +63,7 @@ export class AcrossApiSimulationError extends AcrossApiError {
     params: {
       url: string;
       message?: string;
+      requestId?: string;
       transaction: {
         from: Address;
         to: Address;

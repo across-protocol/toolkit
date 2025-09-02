@@ -10,7 +10,7 @@ import {
 } from "./validators.js";
 
 // Request schema
-export const BaseSwapQueryParamsSchema = z.object({
+export const baseSwapQueryParamsSchema = z.object({
   amount: positiveIntString,
   tradeType: z.enum(["minOutput", "exactOutput", "exactInput"]).optional(),
   inputToken: ethereumAddress,
@@ -29,6 +29,26 @@ export const BaseSwapQueryParamsSchema = z.object({
   appFee: positiveFloatString(1).optional(),
   appFeeRecipient: ethereumAddress.optional(),
   strictTradeType: booleanString.optional(),
+});
+
+const actionArgSchema = z.object({
+  value: z.unknown(), // will be validated at runtime
+  populateDynamically: z.boolean().optional(),
+  balanceSourceToken: ethereumAddress.optional(),
+});
+
+const recursiveArgArraySchema = z.union([
+  z.array(actionArgSchema),
+  actionArgSchema,
+]);
+
+const actionSchema = z.object({
+  target: ethereumAddress,
+  functionSignature: z.string().optional().default(""),
+  isNativeTransfer: z.boolean().optional().default(false),
+  args: recursiveArgArraySchema.default([]),
+  value: z.union([bigNumberString, z.bigint()]).default(0n),
+  populateCallValueDynamically: z.boolean().optional(),
 });
 
 // Response schema components
@@ -226,7 +246,8 @@ export const swapApprovalResponseSchema = z.object({
   id: z.string().optional(),
 });
 
-export type BaseSwapQueryParams = z.infer<typeof BaseSwapQueryParamsSchema>;
+export type BaseSwapQueryParams = z.infer<typeof baseSwapQueryParamsSchema>;
 export type SwapApprovalApiResponse = z.infer<
   typeof swapApprovalResponseSchema
 >;
+export type Action = z.infer<typeof actionSchema>;

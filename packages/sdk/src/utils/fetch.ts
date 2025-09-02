@@ -57,18 +57,29 @@ function makeFetcher(
     data: any,
     url: string,
   ) => void,
+  method?: "GET" | "POST",
 ) {
   return async <ResBody>(
     apiUrl: string,
     params: Record<string, ParamBaseValue | Array<ParamBaseValue>>,
     logger?: LoggerT,
+    body?: Record<string, unknown>,
   ): Promise<ResBody> => {
     const searchParams = buildSearchParams(params);
     const url = `${apiUrl}?${searchParams}`;
 
     logger?.debug(`Fetching ${name}...`, url);
 
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      method,
+      body: method === "POST" ? JSON.stringify(body) : undefined,
+      headers:
+        method === "POST"
+          ? {
+              "Content-Type": "application/json",
+            }
+          : undefined,
+    });
 
     // Try to parse the response as JSON. If it fails, parse it as text.
     let data: ResBody;
@@ -100,7 +111,17 @@ function makeFetcher(
   };
 }
 
-export const fetchAcrossApi = makeFetcher("Across API", (res, data, url) => {
+export const fetchAcrossApi = makeFetcher("Across API", (res, data, url) =>
+  handleAcrossApiError(res, data, url),
+);
+
+export const fetchAcrossApiPost = makeFetcher(
+  "Across API",
+  (res, data, url) => handleAcrossApiError(res, data, url),
+  "POST",
+);
+
+function handleAcrossApiError(res: Response, data: unknown, url: string) {
   // Check for Across API errors
   if (
     typeof data === "object" &&
@@ -109,6 +130,7 @@ export const fetchAcrossApi = makeFetcher("Across API", (res, data, url) => {
     data.type === "AcrossApiError"
   ) {
     const acrossApiError = data as unknown as {
+      requestId: string;
       message: string;
       code: AcrossErrorCodeType;
       transaction: {
@@ -120,6 +142,7 @@ export const fetchAcrossApi = makeFetcher("Across API", (res, data, url) => {
 
     if (acrossApiError.code === "SIMULATION_ERROR") {
       throw new AcrossApiSimulationError({
+        requestId: acrossApiError.requestId,
         message: acrossApiError.message,
         url,
         transaction: acrossApiError.transaction,
@@ -127,13 +150,14 @@ export const fetchAcrossApi = makeFetcher("Across API", (res, data, url) => {
     }
 
     throw new AcrossApiError({
+      requestId: acrossApiError.requestId,
       status: res.status,
       message: acrossApiError.message,
       url,
       code: acrossApiError.code,
     });
   }
-});
+}
 
 export const fetchIndexerApi = makeFetcher("Indexer API", (res, data, url) => {
   if (typeof data === "object" && data !== null && "error" in data) {
