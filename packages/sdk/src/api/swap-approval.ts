@@ -31,26 +31,6 @@ export const baseSwapQueryParamsSchema = z.object({
   strictTradeType: booleanString.optional(),
 });
 
-const actionArgSchema = z.object({
-  value: z.unknown(), // will be validated at runtime
-  populateDynamically: z.boolean().optional(),
-  balanceSourceToken: ethereumAddress.optional(),
-});
-
-const recursiveArgArraySchema = z.union([
-  z.array(actionArgSchema),
-  actionArgSchema,
-]);
-
-const actionSchema = z.object({
-  target: ethereumAddress,
-  functionSignature: z.string().optional().default(""),
-  isNativeTransfer: z.boolean().optional().default(false),
-  args: recursiveArgArraySchema.default([]),
-  value: z.union([bigNumberString, z.bigint()]).default(0n),
-  populateCallValueDynamically: z.boolean().optional(),
-});
-
 // Response schema components
 const feeComponentSchema = z.object({
   amount: bigNumberString,
@@ -250,4 +230,3 @@ export type BaseSwapQueryParams = z.infer<typeof baseSwapQueryParamsSchema>;
 export type SwapApprovalApiResponse = z.infer<
   typeof swapApprovalResponseSchema
 >;
-export type Action = z.infer<typeof actionSchema>;

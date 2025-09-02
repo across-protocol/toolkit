@@ -117,3 +117,39 @@ export type V3FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositV3Event>;
 
 export type V3_5FilledRelayEvent = NoNullValuesOfObject<MaybeFilledRelayEvent>;
 export type V3_5FundsDepositedEvent = NoNullValuesOfObject<MaybeDepositEvent>;
+
+export type ActionArg = {
+  value: unknown;
+  populateDynamically?: boolean;
+  balanceSourceToken?: Address;
+};
+
+export type RecursiveActionArg = ActionArg | ActionArg[];
+
+export type Action =
+  | {
+      target: Address;
+      functionSignature: string;
+      args: ActionArg[];
+      value: bigint;
+      populateCallValueDynamically?: false;
+    }
+  | {
+      target: Address;
+      functionSignature: string;
+      args: ActionArg[];
+      value?: bigint;
+      populateCallValueDynamically: true;
+    }
+  | {
+      target: Address;
+      isNativeTransfer: true;
+      value: bigint;
+      populateCallValueDynamically?: false;
+    }
+  | {
+      target: Address;
+      isNativeTransfer: true;
+      value?: bigint;
+      populateCallValueDynamically: true;
+    };

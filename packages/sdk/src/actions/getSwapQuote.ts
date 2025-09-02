@@ -4,9 +4,8 @@ import {
   BaseSwapQueryParams,
   SwapApprovalApiResponse,
   swapApprovalResponseSchema,
-  Action,
 } from "../api/swap-approval.js";
-import { Amount } from "../types/index.js";
+import { Amount, Action } from "../types/index.js";
 import { Address } from "viem";
 
 /**
@@ -76,7 +75,7 @@ export async function getSwapQuote(
       {
         actions: actions.map((action) => ({
           ...action,
-          value: action.value.toString(),
+          value: action.value?.toString() ?? "0",
         })),
       },
     );

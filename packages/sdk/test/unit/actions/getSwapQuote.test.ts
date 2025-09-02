@@ -59,9 +59,7 @@ describe("getSwapQuote", () => {
         {
           target: "0x733Debf51574c70CfCdb7918F032E16F686bd9f8", // Test staking contract on OP
           functionSignature: "function stake(address recipient)",
-          isNativeTransfer: false,
           args: [{ value: testRecipient }],
-          value: 0n,
           populateCallValueDynamically: true,
         },
       ],
