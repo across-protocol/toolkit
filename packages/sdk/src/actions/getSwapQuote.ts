@@ -6,6 +6,7 @@ import {
   swapApprovalResponseSchema,
 } from "../api/swap-approval.js";
 import { Amount } from "../types/index.js";
+import { Address } from "viem";
 
 /**
  * Params for {@link getSwapQuote}.
@@ -13,6 +14,8 @@ import { Amount } from "../types/index.js";
 export type GetSwapQuoteParams = Omit<
   BaseSwapQueryParams,
   | "amount"
+  | "inputToken"
+  | "outputToken"
   | "originChainId"
   | "destinationChainId"
   | "skipOriginTxEstimation"
@@ -20,8 +23,12 @@ export type GetSwapQuoteParams = Omit<
   | "appFee"
 > & {
   amount: Amount;
-  originChainId: number;
-  destinationChainId: number;
+  route: {
+    originChainId: number;
+    inputToken: Address;
+    destinationChainId: number;
+    outputToken: Address;
+  };
   skipOriginTxEstimation?: boolean;
   slippage?: number;
   appFee?: number;
@@ -48,9 +55,17 @@ export async function getSwapQuote(
 
   logger?.debug("Getting swap quote with params:", queryParams);
 
+  const { route, ...rest } = queryParams;
+  const routeAsQueryParams = {
+    originChainId: route.originChainId,
+    inputToken: route.inputToken,
+    destinationChainId: route.destinationChainId,
+    outputToken: route.outputToken,
+  };
+
   const data = await fetchAcrossApi<SwapApprovalApiResponse>(
     `${apiUrl}/swap/approval`,
-    queryParams,
+    { ...rest, ...routeAsQueryParams },
     logger,
   );
 

@@ -27,10 +27,12 @@ describe("getSwapQuote", () => {
     const quote = await getSwapQuote({
       amount: parseEther(inputAmount),
       tradeType: "exactInput",
-      inputToken: inputToken.address,
-      outputToken: outputToken.address,
-      originChainId: 1, // Mainnet
-      destinationChainId: 10, // Optimism
+      route: {
+        originChainId: 1, // Mainnet
+        inputToken: inputToken.address,
+        destinationChainId: 10, // Optimism
+        outputToken: outputToken.address,
+      },
       depositor: testRecipient,
       recipient: testRecipient,
       slippage: 0.01,
