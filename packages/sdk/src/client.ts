@@ -674,7 +674,7 @@ export class AcrossClient {
       }
 
       const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
-        networkId: params.destinationChainId.toString(),
+        networkId: params.route.destinationChainId.toString(),
         to: e.transaction.to,
         data: e.transaction.data,
         from: e.transaction.from,
