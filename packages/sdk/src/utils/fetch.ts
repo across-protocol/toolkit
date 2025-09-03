@@ -72,7 +72,12 @@ function makeFetcher(
 
     const res = await fetch(url, {
       method,
-      body: method === "POST" ? JSON.stringify(body) : undefined,
+      body:
+        method === "POST"
+          ? JSON.stringify(body, (_, value) =>
+              typeof value === "bigint" ? value.toString() : value,
+            )
+          : undefined,
       headers:
         method === "POST"
           ? {

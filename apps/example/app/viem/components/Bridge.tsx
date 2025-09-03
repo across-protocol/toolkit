@@ -70,14 +70,13 @@ export function Bridge() {
     originChainId &&
     address
       ? {
-          originChainId: originChainId.toString(),
-          destinationChainId: destinationChainId.toString(),
-          inputToken: fromToken.address,
-          outputToken: toToken.address,
-          amount: parseUnits(
-            debouncedInputAmount,
-            fromToken?.decimals,
-          ).toString(),
+          route: {
+            originChainId: originChainId,
+            destinationChainId: destinationChainId,
+            inputToken: fromToken.address,
+            outputToken: toToken.address,
+          },
+          amount: parseUnits(debouncedInputAmount, fromToken?.decimals),
           depositor: address,
           recipient: address,
         }

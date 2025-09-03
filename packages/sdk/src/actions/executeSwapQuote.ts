@@ -285,7 +285,7 @@ export async function executeSwapQuote(
     onProgressHandler(currentTransactionProgress);
 
     // simulate swap transaction
-    await originClient.call(txRequest);
+    await originClient.call({ account, ...txRequest });
 
     currentTransactionProgress = {
       step: "swap",
