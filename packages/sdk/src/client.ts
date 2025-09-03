@@ -660,7 +660,7 @@ export class AcrossClient {
     try {
       const quote = await getSwapQuote({
         ...params,
-        skipOriginTxEstimation: "true",
+        skipOriginTxEstimation: true,
         logger: params?.logger ?? this.logger,
         apiUrl: params?.apiUrl ?? this.apiUrl,
       });
@@ -674,7 +674,7 @@ export class AcrossClient {
       }
 
       const { simulationId, simulationUrl } = await this.simulateTxOnTenderly({
-        networkId: params.destinationChainId.toString(),
+        networkId: params.route.destinationChainId.toString(),
         to: e.transaction.to,
         data: e.transaction.data,
         from: e.transaction.from,

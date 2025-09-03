@@ -10,7 +10,7 @@ import {
 } from "./validators.js";
 
 // Request schema
-export const BaseSwapQueryParamsSchema = z.object({
+export const baseSwapQueryParamsSchema = z.object({
   amount: positiveIntString,
   tradeType: z.enum(["minOutput", "exactOutput", "exactInput"]).optional(),
   inputToken: ethereumAddress,
@@ -226,7 +226,7 @@ export const swapApprovalResponseSchema = z.object({
   id: z.string().optional(),
 });
 
-export type BaseSwapQueryParams = z.infer<typeof BaseSwapQueryParamsSchema>;
+export type BaseSwapQueryParams = z.infer<typeof baseSwapQueryParamsSchema>;
 export type SwapApprovalApiResponse = z.infer<
   typeof swapApprovalResponseSchema
 >;
