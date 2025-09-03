@@ -18,6 +18,14 @@ type SwapTransactionProgress =
     }
   | {
       step: "approve";
+      status: "simulationPending";
+    }
+  | {
+      step: "approve";
+      status: "simulationSuccess";
+    }
+  | {
+      step: "approve";
       status: "txPending";
       txHash: Hash;
     }
@@ -29,6 +37,14 @@ type SwapTransactionProgress =
   | {
       step: "swap";
       status: "idle";
+    }
+  | {
+      step: "swap";
+      status: "simulationPending";
+    }
+  | {
+      step: "swap";
+      status: "simulationSuccess";
     }
   | {
       step: "swap";
@@ -56,7 +72,7 @@ type SwapTransactionProgress =
     }
   | {
       step: "approve" | "swap" | "fill";
-      status: "txError" | "error";
+      status: "txError" | "error" | "simulationError";
       error: Error;
     };
 
@@ -160,7 +176,7 @@ export async function executeSwapQuote(
 
   let currentTransactionProgress: SwapTransactionProgress = {
     status: "idle",
-    step: "swap",
+    step: "approve",
   };
 
   try {
@@ -195,10 +211,25 @@ export async function executeSwapQuote(
 
     // Execute approval transactions if present
     if (swapQuote.approvalTxns && swapQuote.approvalTxns.length > 0) {
+      onProgressHandler(currentTransactionProgress);
+
       for (const approvalTxn of swapQuote.approvalTxns) {
         currentTransactionProgress = {
           step: "approve",
-          status: "idle",
+          status: "simulationPending",
+        };
+        onProgressHandler(currentTransactionProgress);
+
+        // simulate approval transaction
+        await originClient.call({
+          account: walletClient.account,
+          data: approvalTxn.data as Hex,
+          to: approvalTxn.to as Address,
+        });
+
+        currentTransactionProgress = {
+          step: "approve",
+          status: "simulationSuccess",
         };
         onProgressHandler(currentTransactionProgress);
 
@@ -228,6 +259,12 @@ export async function executeSwapQuote(
       }
     }
 
+    currentTransactionProgress = {
+      step: "swap",
+      status: "idle",
+    };
+    onProgressHandler(currentTransactionProgress);
+
     const txRequest = {
       to: swapTx.to as Address,
       data: swapTx.data as Hex,
@@ -239,6 +276,20 @@ export async function executeSwapQuote(
       maxPriorityFeePerGas: swapTx.maxPriorityFeePerGas
         ? BigInt(swapTx.maxPriorityFeePerGas)
         : undefined,
+    };
+
+    currentTransactionProgress = {
+      step: "swap",
+      status: "simulationPending",
+    };
+    onProgressHandler(currentTransactionProgress);
+
+    // simulate swap transaction
+    await originClient.call(txRequest);
+
+    currentTransactionProgress = {
+      step: "swap",
+      status: "simulationSuccess",
     };
 
     const swapTxHash = await walletClient.sendTransaction({
@@ -315,7 +366,11 @@ export async function executeSwapQuote(
     }
   } catch (error) {
     const errorStatus =
-      currentTransactionProgress.status === "txPending" ? "txError" : "error";
+      currentTransactionProgress.status === "txPending"
+        ? "txError"
+        : currentTransactionProgress.status === "simulationPending"
+          ? "simulationError"
+          : "error";
 
     onProgressHandler({
       ...currentTransactionProgress,
