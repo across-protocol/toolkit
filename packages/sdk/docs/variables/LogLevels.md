@@ -4,7 +4,9 @@
 
 > `const` **LogLevels**: `object`
 
-## Type declaration
+Defined in: [packages/sdk/src/utils/logger.ts:2](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L2)
+
+## Type Declaration
 
 ### DEBUG
 
@@ -21,7 +23,3 @@
 ### WARN
 
 > `readonly` **WARN**: `1` = `1`
-
-## Defined in
-
-[packages/sdk/src/utils/logger.ts:2](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L2)

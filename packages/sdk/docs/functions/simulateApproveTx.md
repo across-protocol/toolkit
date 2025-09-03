@@ -4,14 +4,14 @@
 
 > **simulateApproveTx**(`params`): `Promise`\<`SimulateContractReturnType`\>
 
+Defined in: [packages/sdk/src/actions/simulateApproveTx.ts:18](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateApproveTx.ts#L18)
+
 ## Parameters
 
-• **params**: [`SimulateApproveTxParams`](../type-aliases/SimulateApproveTxParams.md)
+### params
+
+[`SimulateApproveTxParams`](../type-aliases/SimulateApproveTxParams.md)
 
 ## Returns
 
 `Promise`\<`SimulateContractReturnType`\>
-
-## Defined in
-
-[packages/sdk/src/actions/simulateApproveTx.ts:17](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/simulateApproveTx.ts#L17)

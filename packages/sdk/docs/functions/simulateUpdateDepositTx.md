@@ -4,6 +4,8 @@
 
 > **simulateUpdateDepositTx**(`params`): `Promise`\<`SimulateContractReturnType`\>
 
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:62](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L62)
+
 This function simulates the update of a deposit on the origin chain. Can be used to
 update:
 - the recipient address
@@ -13,7 +15,9 @@ Note that this requires a signature from the depositor.
 
 ## Parameters
 
-• **params**: [`SimulateUpdateDepositTxParams`](../type-aliases/SimulateUpdateDepositTxParams.md)
+### params
+
+[`SimulateUpdateDepositTxParams`](../type-aliases/SimulateUpdateDepositTxParams.md)
 
 See [SimulateUpdateDepositTxParams](../type-aliases/SimulateUpdateDepositTxParams.md).
 
@@ -42,7 +46,3 @@ const txHash = await walletClient.writeContract({
   ...txRequest,
 });
 ```
-
-## Defined in
-
-[packages/sdk/src/actions/simulateUpdateDepositTx.ts:62](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L62)

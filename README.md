@@ -50,22 +50,22 @@ const client = createAcrossClient({
   chains: [mainnet, optimism, arbitrum],
 });
 
-// 2. Retrieve quote for USDC from Arbitrum -> Optimism
+// 2. Retrieve quote for USDC from Arbitrum -> ETH on Optimism
 const route = {
   originChainId: arbitrum.id,
   destinationChainId: optimism.id,
-  inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-  outputToken: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+  inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC
+  outputToken: "0x0000000000000000000000000000000000000000", // Native ETH
 };
-const quote = await client.getQuote({
+const swapQuote = await client.getSwapQuote({
   route,
-  inputAmount: parseUnit("1000", 6) // USDC decimals
-})
+  amount: parseUnit("10", 6), // USDC decimals
+});
 
 // 3. Execute quote
-await client.executeQuote({
+await client.executeSwapQuote({
   walletClient: wallet,
-  deposit: quote.deposit,
+  swapQuote,
   onProgress: (progress) => {
     // handle progress
   },

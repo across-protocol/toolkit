@@ -2,11 +2,13 @@
 
 # Type Alias: GetSuggestedFeesParams
 
-> **GetSuggestedFeesParams**: [`SuggestedFeesQueryParams`](SuggestedFeesQueryParams.md) & `object`
+> **GetSuggestedFeesParams** = [`SuggestedFeesQueryParams`](SuggestedFeesQueryParams.md) & `object`
+
+Defined in: [packages/sdk/src/actions/getSuggestedFees.ts:58](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getSuggestedFees.ts#L58)
 
 Params for [getSuggestedFees](../functions/getSuggestedFees.md).
 
-## Type declaration
+## Type Declaration
 
 ### apiUrl?
 
@@ -19,7 +21,3 @@ Params for [getSuggestedFees](../functions/getSuggestedFees.md).
 > `optional` **logger**: [`LoggerT`](LoggerT.md)
 
 [Optional] The logger to use.
-
-## Defined in
-
-[packages/sdk/src/actions/getSuggestedFees.ts:52](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getSuggestedFees.ts#L52)

@@ -62,22 +62,22 @@ const client = createAcrossClient({
 
 ### 2. Retrieve a quote
 
-Now, you can retrieve a quote for a given route.
+Now, you can retrieve a quote for a given route with an arbitrary token pair.
 
 ```ts
 import { parseEther } from "viem";
 
-// WETH from Arbitrum -> Optimism
+// USDC from Arbitrum -> ETH on Optimism
 const route = {
   originChainId: arbitrum.id,
   destinationChainId: optimism.id,
-  inputToken: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", // WETH arb
-  outputToken: "0x4200000000000000000000000000000000000006", // WETH opt
+  inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC
+  outputToken: "0x0000000000000000000000000000000000000000", // Native ETH
 };
 
-const quote = await client.getQuote({
+const swapQuote = await client.getSwapQuote({
   route,
-  inputAmount: parseEther("1"),
+  amount: parseUnit("10", 6), // USDC decimals
 });
 ```
 
@@ -93,9 +93,9 @@ import { useWalletClient } from "wagmi";
 
 const wallet = useWalletClient();
 
-await client.executeQuote({
+await client.executeSwapQuote({
   walletClient: wallet,
-  deposit: quote.deposit, // returned by `getQuote`
+  swapQuote, // returned by `client.getSwapQuote`
   onProgress: (progress) => {
     if (progress.step === "approve" && progress.status === "txSuccess") {
       // if approving an ERC20, you have access to the approval receipt
@@ -116,8 +116,8 @@ await client.executeQuote({
 
 The method will execute a quote by:
 
-1. Approving the SpokePool contract if necessary
-2. Depositing the input token on the origin chain
+1. Approving the `SpokePool` or `SpokePoolPeriphery` contract if necessary
+2. Depositing the input token on the origin chain (also facilitating an origin swap if necessary)
 3. Waiting for the deposit to be filled on the destination chain
 
 You can use the `onProgress` callback to act on different stages of the execution.
@@ -129,123 +129,53 @@ Across enables users to seamlessly interact with your dApp or chain using assets
 
 ### Example: Stake Native ETH on Destination Chain
 
-To stake native ETH in one step:
-
-1. Bridge WETH to the destination chain, sending the output tokens (WETH) to Across's MulticallHandler contract (since contracts receive WETH).
-2. Unwrap WETH to obtain native ETH.
-3. Stake the ETH on your staking contract.
-
-**Note**: If your calldata depends on the output amount, you must use the `update()` function.
-
-### 1. Craft a cross-chain message
+This example shows you how to use the app-sdk to swap, bridge and stake native ETH across chains.
+You only need to specify the destination chain actions.
 
 ```ts
-import { type Amount } from "@across-protocol/app-sdk";
-import { encodeFunctionData } from "viem";
-import { optimism } from "viem/chains";
-
-// constants
-const userAddress = "0xFoo";
-const multicallHandlerOptimism = "0x924a9f036260DdD5808007E1AA95f08eD08aA569";
-
-export const WETH_OPTIMISM = {
-  chain: optimism,
-  abi: WethAbi,
-  address: "0x4200000000000000000000000000000000000006",
-  decimals: 18,
-  logoUrl:
-    "https://raw.githubusercontent.com/across-protocol/frontend/master/src/assets/token-logos/weth.svg",
-  name: "Wrapped Ether",
-  symbol: "WETH",
-} as const;
-
-export const STAKE_CONTRACT = {
-  address: "0x733Debf51574c70CfCdb7918F032E16F686bd9f8",
-  chain: optimism,
-  abi: StakerContractABI,
-} as const;
-
-// WETH unwrap action
-function generateUnwrapCallData(wethAmount: Amount) {
-  return encodeFunctionData({
-    abi: WETH_OPTIMISM.abi,
-    functionName: "withdraw",
-    args: [BigInt(wethAmount)],
-  });
-}
-
-// STAKE action
-function generateStakeCallData(userAddress: Address) {
-  return encodeFunctionData({
-    abi: STAKE_CONTRACT.abi,
-    functionName: "stake",
-    args: [userAddress],
-  });
-}
-
-const unwrapAndStakeMessage = {
-  actions: [
-    {
-      target: WETH_OPTIMISM.address,
-      callData: generateUnwrapCallData(inputAmount),
-      value: 0n,
-      // we only update the calldata since the unwrap call is non-payable, but we DO care about the output amount.
-      update: (updatedOutputAmount) => {
-        return {
-          callData: generateUnwrapCallData(updatedOutputAmount),
-        };
-      },
-    },
-    {
-      target: STAKE_CONTRACT.address,
-      callData: generateStakeCallData(userAddress),
-      // 🔔 the initial value may be set equal to the output amount. This MUST be updated via the `update()` function below oir this call will fail!
-      value: inputAmount,
-      // now we MUST update msg.value since this last call is calling a payable function.
-      update: (updatedOutputAmount) => {
-        return {
-          value: updatedOutputAmount,
-        };
-      },
-    },
-  ],
-  fallbackRecipient: userAddress,
-};
-```
-
-### 2. Retrieve a quote
-
-After specifying a cross-chain message, you simply can fetch a quote the same way as a normal bridge
-
-```ts
-const route = {
-  originChainId: arbitrum.id,
-  destinationChainId: optimism.id,
-  inputToken: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", // WETH arbitrum
-  outputToken: "0x4200000000000000000000000000000000000006", // WETH optimism
-};
-
-const quote = await client.getQuote({
-  route,
-  inputAmount: parseEther("1"),
-  // 🔔 Notice the recipient is not the staking contract itself or even the user, but the contract that will execute our cross chain messages
-  recipient: multicallHandlerOptimism,
-  crossChainMessage: unwrapAndStakeMessage,
-});
-```
-
-### 3. Execute a quote
-
-If the quote is available, you can execute like so
-
-```ts
+import { createAcrossClient } from "@across-protocol/app-sdk";
+import { mainnet, optimism, arbitrum } from "viem/chains";
 import { useWalletClient } from "wagmi";
 
 const wallet = useWalletClient();
 
-await client.executeQuote({
+// Example Staking contract on OP
+const stakingAddress = "0x733Debf51574c70CfCdb7918F032E16F686bd9f8";
+
+// 1. Create client
+const client = createAcrossClient({
+  integratorId: "0xdead", // 2-byte hex string
+  chains: [mainnet, optimism, arbitrum],
+});
+
+// 2. Retrieve quote for USDC from Arbitrum -> ETH on Optimism
+const route = {
+  originChainId: arbitrum.id,
+  destinationChainId: optimism.id,
+  inputToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC
+  outputToken: "0x0000000000000000000000000000000000000000", // Native ETH
+};
+const swapQuote = await client.getSwapQuote({
+  route,
+  amount: parseUnit("10", 6), // USDC decimals
+  actions: [
+    {
+      // Target contract of destination chain actions
+      target: stakingAddress,
+      // Human-readable ABI format of method to call
+      functionSignature: "function stake(address stakerAddress)",
+      // Args to above
+      args: [{ value: wallet.address }],
+      // Allows to set call value to available balance AFTER bridge
+      populateCallValueDynamically: true,
+    },
+  ],
+});
+
+// 3. Execute quote
+await client.executeSwapQuote({
   walletClient: wallet,
-  deposit: quote.deposit, // returned by `getQuote`
+  swapQuote,
   onProgress: (progress) => {
     // handle progress
   },
@@ -277,17 +207,16 @@ For the full detailed reference see [here](./docs/README.md).
 
 ### Chains and Routes
 
-- [`getSupportedChains`](./docs/classes/AcrossClient.md#getsupportedchains)
-- [`getAvailableRoutes`](./docs/classes/AcrossClient.md#getavailableroutes)
+- [`getSwapChains`](./docs/classes/AcrossClient.md#getswapchains)
+- [`getSwapTokens`](./docs/classes/AcrossClient.md#getswaptokens)
 
 ### Quotes, Fees and Limits
 
-- [`getQuote`](./docs/classes/AcrossClient.md#getquote)
+- [`getSwapQuote`](./docs/classes/AcrossClient.md#getswapquote)
 
 ### Transaction Simulations and Executions
 
-- [`executeQuote`](./docs/classes/AcrossClient.md#executequote)
-- [`simulateDepositTx`](./docs/classes/AcrossClient.md#simulatedeposittx)
+- [`executeSwapQuote`](./docs/classes/AcrossClient.md#executeswapquote)
 
 ### Deposit and Fill Status
 

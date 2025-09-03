@@ -2,16 +2,16 @@
 
 # Function: getIntegratorDataSuffix()
 
-> **getIntegratorDataSuffix**(`integratorId`): \`0x$\{string\}\`
+> **getIntegratorDataSuffix**(`integratorId`): `` `0x${string}` ``
+
+Defined in: [packages/sdk/src/utils/hex.ts:11](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/hex.ts#L11)
 
 ## Parameters
 
-• **integratorId**: \`0x$\{string\}\`
+### integratorId
+
+`` `0x${string}` ``
 
 ## Returns
 
-\`0x$\{string\}\`
-
-## Defined in
-
-[packages/sdk/src/utils/hex.ts:11](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/hex.ts#L11)
+`` `0x${string}` ``

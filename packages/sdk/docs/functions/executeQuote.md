@@ -2,7 +2,9 @@
 
 # Function: executeQuote()
 
-> **executeQuote**(`params`): `Promise`\<`object` \| `object`\>
+> **executeQuote**(`params`): `Promise`\<[`ExecuteQuoteResponseParams`](../type-aliases/ExecuteQuoteResponseParams.md)\>
+
+Defined in: [packages/sdk/src/actions/executeQuote.ts:203](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/executeQuote.ts#L203)
 
 Executes a quote by:
 1. Approving the SpokePool contract if necessary
@@ -11,16 +13,14 @@ Executes a quote by:
 
 ## Parameters
 
-• **params**: [`ExecuteQuoteParams`](../type-aliases/ExecuteQuoteParams.md)
+### params
+
+[`ExecuteQuoteParams`](../type-aliases/ExecuteQuoteParams.md)
 
 See [ExecuteQuoteParams](../type-aliases/ExecuteQuoteParams.md).
 
 ## Returns
 
-`Promise`\<`object` \| `object`\>
+`Promise`\<[`ExecuteQuoteResponseParams`](../type-aliases/ExecuteQuoteResponseParams.md)\>
 
-The deposit ID and receipts for the deposit and fill transactions.
-
-## Defined in
-
-[packages/sdk/src/actions/executeQuote.ts:172](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/executeQuote.ts#L172)
+The deposit ID and receipts for the deposit and fill transactions. See [ExecuteQuoteResponseParams](../type-aliases/ExecuteQuoteResponseParams.md).

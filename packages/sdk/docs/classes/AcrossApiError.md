@@ -2,6 +2,8 @@
 
 # Class: AcrossApiError
 
+Defined in: [packages/sdk/src/errors/index.ts:32](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L32)
+
 ## Extends
 
 - [`HttpError`](HttpError.md)
@@ -12,37 +14,51 @@
 
 ## Constructors
 
-### new AcrossApiError()
+### Constructor
 
-> **new AcrossApiError**(`params`, `opts`?): [`AcrossApiError`](AcrossApiError.md)
+> **new AcrossApiError**(`params`, `opts?`): `AcrossApiError`
+
+Defined in: [packages/sdk/src/errors/index.ts:33](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L33)
 
 #### Parameters
 
-• **params**
+##### params
 
-• **params.code**: `"INVALID_PARAM"` \| `"MISSING_PARAM"` \| `"SIMULATION_ERROR"` \| `"AMOUNT_TOO_LOW"` \| `"AMOUNT_TOO_HIGH"` \| `"ROUTE_NOT_ENABLED"` \| `"UPSTREAM_RPC_ERROR"` \| `"UPSTREAM_HTTP_ERROR"`
+###### code
 
-• **params.message?**: `string`
+`"INVALID_PARAM"` \| `"INVALID_METHOD"` \| `"MISSING_PARAM"` \| `"SIMULATION_ERROR"` \| `"AMOUNT_TOO_LOW"` \| `"AMOUNT_TOO_HIGH"` \| `"ROUTE_NOT_ENABLED"` \| `"SWAP_LIQUIDITY_INSUFFICIENT"` \| `"SWAP_QUOTE_UNAVAILABLE"` \| `"SWAP_TYPE_NOT_GUARANTEED"` \| `"ABI_ENCODING_ERROR"` \| `"UPSTREAM_RPC_ERROR"` \| `"UPSTREAM_HTTP_ERROR"` \| `"UPSTREAM_GATEWAY_TIMEOUT"` \| `"UNEXPECTED_ERROR"`
 
-• **params.name?**: `string`
+###### message?
 
-• **params.status?**: `number`
+`string`
 
-• **params.url?**: `string`
+###### name?
 
-• **opts?**: `ErrorOptions`
+`string`
+
+###### requestId?
+
+`string`
+
+###### status
+
+`number`
+
+###### url
+
+`string`
+
+##### opts?
+
+`ErrorOptions`
 
 #### Returns
 
-[`AcrossApiError`](AcrossApiError.md)
+`AcrossApiError`
 
 #### Overrides
 
-[`HttpError`](HttpError.md).[`constructor`](HttpError.md#constructors)
-
-#### Defined in
-
-[packages/sdk/src/errors/index.ts:33](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L33)
+[`HttpError`](HttpError.md).[`constructor`](HttpError.md#constructor)
 
 ## Properties
 
@@ -50,13 +66,11 @@
 
 > `optional` **cause**: `unknown`
 
+Defined in: node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.error.d.ts:24
+
 #### Inherited from
 
 [`HttpError`](HttpError.md).[`cause`](HttpError.md#cause)
-
-#### Defined in
-
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.error.d.ts:24
 
 ***
 
@@ -64,13 +78,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.err
 
 > **message**: `string`
 
+Defined in: node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1076
+
 #### Inherited from
 
 [`HttpError`](HttpError.md).[`message`](HttpError.md#message)
-
-#### Defined in
-
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1076
 
 ***
 
@@ -78,13 +90,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > **name**: `string`
 
+Defined in: node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1075
+
 #### Inherited from
 
 [`HttpError`](HttpError.md).[`name`](HttpError.md#name)
-
-#### Defined in
-
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1075
 
 ***
 
@@ -92,13 +102,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `optional` **stack**: `string`
 
+Defined in: node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1077
+
 #### Inherited from
 
 [`HttpError`](HttpError.md).[`stack`](HttpError.md#stack)
-
-#### Defined in
-
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1077
 
 ***
 
@@ -106,13 +114,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `readonly` **status**: `number`
 
+Defined in: [packages/sdk/src/errors/index.ts:15](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L15)
+
 #### Inherited from
 
 [`HttpError`](HttpError.md).[`status`](HttpError.md#status)
-
-#### Defined in
-
-[packages/sdk/src/errors/index.ts:15](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L15)
 
 ***
 
@@ -120,13 +126,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `readonly` **url**: `string`
 
+Defined in: [packages/sdk/src/errors/index.ts:14](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L14)
+
 #### Inherited from
 
 [`HttpError`](HttpError.md).[`url`](HttpError.md#url)
-
-#### Defined in
-
-[packages/sdk/src/errors/index.ts:14](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L14)
 
 ***
 
@@ -134,13 +138,19 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `static` `optional` **prepareStackTrace**: (`err`, `stackTraces`) => `any`
 
+Defined in: node\_modules/.pnpm/@types+node@20.17.16/node\_modules/@types/node/globals.d.ts:98
+
 Optional override for formatting stack traces
 
 #### Parameters
 
-• **err**: `Error`
+##### err
 
-• **stackTraces**: `CallSite`[]
+`Error`
+
+##### stackTraces
+
+`CallSite`[]
 
 #### Returns
 
@@ -154,37 +164,37 @@ https://v8.dev/docs/stack-trace-api#customizing-stack-traces
 
 [`HttpError`](HttpError.md).[`prepareStackTrace`](HttpError.md#preparestacktrace)
 
-#### Defined in
-
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:28
-
 ***
 
 ### stackTraceLimit
 
 > `static` **stackTraceLimit**: `number`
 
+Defined in: node\_modules/.pnpm/@types+node@20.17.16/node\_modules/@types/node/globals.d.ts:100
+
 #### Inherited from
 
 [`HttpError`](HttpError.md).[`stackTraceLimit`](HttpError.md#stacktracelimit)
-
-#### Defined in
-
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:30
 
 ## Methods
 
 ### captureStackTrace()
 
-> `static` **captureStackTrace**(`targetObject`, `constructorOpt`?): `void`
+> `static` **captureStackTrace**(`targetObject`, `constructorOpt?`): `void`
+
+Defined in: node\_modules/.pnpm/@types+node@20.17.16/node\_modules/@types/node/globals.d.ts:91
 
 Create .stack property on a target object
 
 #### Parameters
 
-• **targetObject**: `object`
+##### targetObject
 
-• **constructorOpt?**: `Function`
+`object`
+
+##### constructorOpt?
+
+`Function`
 
 #### Returns
 
@@ -193,7 +203,3 @@ Create .stack property on a target object
 #### Inherited from
 
 [`HttpError`](HttpError.md).[`captureStackTrace`](HttpError.md#capturestacktrace)
-
-#### Defined in
-
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:21

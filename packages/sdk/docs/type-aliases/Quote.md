@@ -2,146 +2,166 @@
 
 # Type Alias: Quote
 
-> **Quote**: `object`
+> **Quote** = `object`
 
-## Type declaration
+Defined in: [packages/sdk/src/actions/getQuote.ts:69](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getQuote.ts#L69)
+
+## Properties
 
 ### deposit
 
 > **deposit**: `object`
 
-### deposit.destinationChainId
+Defined in: [packages/sdk/src/actions/getQuote.ts:70](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getQuote.ts#L70)
+
+#### destinationChainId
 
 > **destinationChainId**: `number`
 
-### deposit.destinationSpokePoolAddress
+#### destinationSpokePoolAddress
 
 > **destinationSpokePoolAddress**: `Address`
 
-### deposit.exclusiveRelayer
+#### exclusiveRelayer
 
 > **exclusiveRelayer**: `Address`
 
-### deposit.exclusivityDeadline
+#### exclusivityDeadline
 
 > **exclusivityDeadline**: `number`
 
-### deposit.inputAmount
+#### fillDeadline
+
+> **fillDeadline**: `number`
+
+#### inputAmount
 
 > **inputAmount**: `bigint`
 
-### deposit.inputToken
+#### inputToken
 
 > **inputToken**: `Address`
 
-### deposit.isNative?
+#### isNative?
 
 > `optional` **isNative**: `boolean`
 
-### deposit.message
+#### message
 
 > **message**: `Hex`
 
-### deposit.originChainId
+#### originChainId
 
 > **originChainId**: `number`
 
-### deposit.outputAmount
+#### outputAmount
 
 > **outputAmount**: `bigint`
 
-### deposit.outputToken
+#### outputToken
 
 > **outputToken**: `Address`
 
-### deposit.quoteTimestamp
+#### quoteTimestamp
 
 > **quoteTimestamp**: `number`
 
-### deposit.recipient
+#### recipient
 
 > **recipient**: `Address`
 
-### deposit.spokePoolAddress
+#### spokePoolAddress
 
 > **spokePoolAddress**: `Address`
+
+***
 
 ### estimatedFillTimeSec
 
 > **estimatedFillTimeSec**: `number`
 
+Defined in: [packages/sdk/src/actions/getQuote.ts:111](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getQuote.ts#L111)
+
+***
+
 ### fees
 
 > **fees**: `object`
 
-### fees.lpFee
+Defined in: [packages/sdk/src/actions/getQuote.ts:92](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getQuote.ts#L92)
+
+#### lpFee
 
 > **lpFee**: `object`
 
-### fees.lpFee.pct
+##### lpFee.pct
 
 > **pct**: `bigint`
 
-### fees.lpFee.total
+##### lpFee.total
 
 > **total**: `bigint`
 
-### fees.relayerCapitalFee
+#### relayerCapitalFee
 
 > **relayerCapitalFee**: `object`
 
-### fees.relayerCapitalFee.pct
+##### relayerCapitalFee.pct
 
 > **pct**: `bigint`
 
-### fees.relayerCapitalFee.total
+##### relayerCapitalFee.total
 
 > **total**: `bigint`
 
-### fees.relayerGasFee
+#### relayerGasFee
 
 > **relayerGasFee**: `object`
 
-### fees.relayerGasFee.pct
+##### relayerGasFee.pct
 
 > **pct**: `bigint`
 
-### fees.relayerGasFee.total
+##### relayerGasFee.total
 
 > **total**: `bigint`
 
-### fees.totalRelayFee
+#### totalRelayFee
 
 > **totalRelayFee**: `object`
 
-### fees.totalRelayFee.pct
+##### totalRelayFee.pct
 
 > **pct**: `bigint`
 
-### fees.totalRelayFee.total
+##### totalRelayFee.total
 
 > **total**: `bigint`
+
+***
 
 ### isAmountTooLow
 
 > **isAmountTooLow**: `boolean`
 
+Defined in: [packages/sdk/src/actions/getQuote.ts:110](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getQuote.ts#L110)
+
+***
+
 ### limits
 
 > **limits**: `object`
 
-### limits.maxDeposit
+Defined in: [packages/sdk/src/actions/getQuote.ts:87](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getQuote.ts#L87)
+
+#### maxDeposit
 
 > **maxDeposit**: `bigint`
 
-### limits.maxDepositInstant
+#### maxDepositInstant
 
 > **maxDepositInstant**: `bigint`
 
-### limits.minDeposit
+#### minDeposit
 
 > **minDeposit**: `bigint`
-
-## Defined in
-
-[packages/sdk/src/actions/getQuote.ts:69](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getQuote.ts#L69)

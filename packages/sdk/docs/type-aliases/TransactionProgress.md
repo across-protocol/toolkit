@@ -2,8 +2,6 @@
 
 # Type Alias: TransactionProgress
 
-> **TransactionProgress**: `object` \| `object` \| `object` \| `object` \| `object` \| `object` \| `object` \| `object` \| `object` \| `object` \| `object` \| `object`
+> **TransactionProgress** = \{ `status`: `"idle"`; `step`: `"approve"`; \} \| \{ `meta`: `ApproveMeta`; `status`: `"simulationPending"`; `step`: `"approve"`; \} \| \{ `meta`: `ApproveMeta`; `status`: `"simulationSuccess"`; `step`: `"approve"`; `txRequest`: `TxRequest`; \} \| \{ `meta`: `ApproveMeta`; `status`: `"txPending"`; `step`: `"approve"`; `txHash`: `Hash`; \} \| \{ `meta`: `ApproveMeta`; `status`: `"txSuccess"`; `step`: `"approve"`; `txReceipt`: `TransactionReceipt`; \} \| \{ `meta`: `DepositMeta`; `status`: `"simulationPending"`; `step`: `"deposit"`; \} \| \{ `meta`: `DepositMeta`; `status`: `"simulationSuccess"`; `step`: `"deposit"`; `txRequest`: `TxRequest`; \} \| \{ `meta`: `DepositMeta`; `status`: `"txPending"`; `step`: `"deposit"`; `txHash`: `Hash`; \} \| \{ `depositId`: [`DepositStatus`](DepositStatus.md)\[`"depositId"`\]; `depositLog`: `ReturnType`\<*typeof* [`parseDepositLogs`](../functions/parseDepositLogs.md)\>; `meta`: `DepositMeta`; `status`: `"txSuccess"`; `step`: `"deposit"`; `txReceipt`: `TransactionReceipt`; \} \| \{ `meta`: `FillMeta`; `status`: `"txPending"`; `step`: `"fill"`; \} \| \{ `actionSuccess`: `boolean` \| `undefined`; `fillLog`: `ReturnType`\<*typeof* [`parseFillLogs`](../functions/parseFillLogs.md)\>; `fillTxTimestamp`: `bigint`; `meta`: `FillMeta`; `status`: `"txSuccess"`; `step`: `"fill"`; `txReceipt`: `TransactionReceipt`; \} \| \{ `error`: `Error`; `meta`: `ProgressMeta`; `status`: `"simulationError"` \| `"txError"` \| `"error"`; `step`: `"approve"` \| `"deposit"` \| `"fill"`; \}
 
-## Defined in
-
-[packages/sdk/src/actions/executeQuote.ts:39](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/executeQuote.ts#L39)
+Defined in: [packages/sdk/src/actions/executeQuote.ts:42](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/executeQuote.ts#L42)

@@ -2,47 +2,67 @@
 
 # Class: AcrossApiSimulationError
 
+Defined in: [packages/sdk/src/errors/index.ts:54](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L54)
+
 ## Extends
 
 - [`AcrossApiError`](AcrossApiError.md)
 
 ## Constructors
 
-### new AcrossApiSimulationError()
+### Constructor
 
-> **new AcrossApiSimulationError**(`params`, `opts`?): [`AcrossApiSimulationError`](AcrossApiSimulationError.md)
+> **new AcrossApiSimulationError**(`params`, `opts?`): `AcrossApiSimulationError`
+
+Defined in: [packages/sdk/src/errors/index.ts:62](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L62)
 
 #### Parameters
 
-• **params**
+##### params
 
-• **params.message?**: `string`
+###### message?
 
-• **params.transaction?**
+`string`
 
-• **params.transaction.data?**: \`0x$\{string\}\`
+###### requestId?
 
-• **params.transaction.from?**: \`0x$\{string\}\`
+`string`
 
-• **params.transaction.to?**: \`0x$\{string\}\`
+###### transaction
 
-• **params.transaction.value?**: `string`
+\{ `data`: `` `0x${string}` ``; `from`: `` `0x${string}` ``; `to`: `` `0x${string}` ``; `value?`: `string`; \}
 
-• **params.url?**: `string`
+###### transaction.data
 
-• **opts?**: `ErrorOptions`
+`` `0x${string}` ``
+
+###### transaction.from
+
+`` `0x${string}` ``
+
+###### transaction.to
+
+`` `0x${string}` ``
+
+###### transaction.value?
+
+`string`
+
+###### url
+
+`string`
+
+##### opts?
+
+`ErrorOptions`
 
 #### Returns
 
-[`AcrossApiSimulationError`](AcrossApiSimulationError.md)
+`AcrossApiSimulationError`
 
 #### Overrides
 
-[`AcrossApiError`](AcrossApiError.md).[`constructor`](AcrossApiError.md#constructors)
-
-#### Defined in
-
-[packages/sdk/src/errors/index.ts:61](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L61)
+[`AcrossApiError`](AcrossApiError.md).[`constructor`](AcrossApiError.md#constructor)
 
 ## Properties
 
@@ -50,13 +70,11 @@
 
 > `optional` **cause**: `unknown`
 
+Defined in: node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.error.d.ts:24
+
 #### Inherited from
 
 [`AcrossApiError`](AcrossApiError.md).[`cause`](AcrossApiError.md#cause)
-
-#### Defined in
-
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.error.d.ts:24
 
 ***
 
@@ -64,13 +82,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es2022.err
 
 > **message**: `string`
 
+Defined in: node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1076
+
 #### Inherited from
 
 [`AcrossApiError`](AcrossApiError.md).[`message`](AcrossApiError.md#message)
-
-#### Defined in
-
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1076
 
 ***
 
@@ -78,13 +94,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > **name**: `string`
 
+Defined in: node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1075
+
 #### Inherited from
 
 [`AcrossApiError`](AcrossApiError.md).[`name`](AcrossApiError.md#name)
-
-#### Defined in
-
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1075
 
 ***
 
@@ -92,13 +106,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `optional` **stack**: `string`
 
+Defined in: node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1077
+
 #### Inherited from
 
 [`AcrossApiError`](AcrossApiError.md).[`stack`](AcrossApiError.md#stack)
-
-#### Defined in
-
-node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1077
 
 ***
 
@@ -106,13 +118,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `readonly` **status**: `number`
 
+Defined in: [packages/sdk/src/errors/index.ts:15](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L15)
+
 #### Inherited from
 
 [`AcrossApiError`](AcrossApiError.md).[`status`](AcrossApiError.md#status)
-
-#### Defined in
-
-[packages/sdk/src/errors/index.ts:15](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L15)
 
 ***
 
@@ -120,25 +130,23 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `readonly` **transaction**: `object`
 
+Defined in: [packages/sdk/src/errors/index.ts:55](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L55)
+
 #### data
 
-> **data**: \`0x$\{string\}\`
+> **data**: `` `0x${string}` ``
 
 #### from
 
-> **from**: \`0x$\{string\}\`
+> **from**: `` `0x${string}` ``
 
 #### to
 
-> **to**: \`0x$\{string\}\`
+> **to**: `` `0x${string}` ``
 
 #### value?
 
 > `optional` **value**: `string`
-
-#### Defined in
-
-[packages/sdk/src/errors/index.ts:54](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L54)
 
 ***
 
@@ -146,13 +154,11 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `readonly` **url**: `string`
 
+Defined in: [packages/sdk/src/errors/index.ts:14](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/errors/index.ts#L14)
+
 #### Inherited from
 
 [`AcrossApiError`](AcrossApiError.md).[`url`](AcrossApiError.md#url)
-
-#### Defined in
-
-[packages/sdk/src/errors/index.ts:14](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/errors/index.ts#L14)
 
 ***
 
@@ -160,13 +166,19 @@ node\_modules/.pnpm/typescript@5.3.3/node\_modules/typescript/lib/lib.es5.d.ts:1
 
 > `static` `optional` **prepareStackTrace**: (`err`, `stackTraces`) => `any`
 
+Defined in: node\_modules/.pnpm/@types+node@20.17.16/node\_modules/@types/node/globals.d.ts:98
+
 Optional override for formatting stack traces
 
 #### Parameters
 
-• **err**: `Error`
+##### err
 
-• **stackTraces**: `CallSite`[]
+`Error`
+
+##### stackTraces
+
+`CallSite`[]
 
 #### Returns
 
@@ -180,37 +192,37 @@ https://v8.dev/docs/stack-trace-api#customizing-stack-traces
 
 [`AcrossApiError`](AcrossApiError.md).[`prepareStackTrace`](AcrossApiError.md#preparestacktrace)
 
-#### Defined in
-
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:28
-
 ***
 
 ### stackTraceLimit
 
 > `static` **stackTraceLimit**: `number`
 
+Defined in: node\_modules/.pnpm/@types+node@20.17.16/node\_modules/@types/node/globals.d.ts:100
+
 #### Inherited from
 
 [`AcrossApiError`](AcrossApiError.md).[`stackTraceLimit`](AcrossApiError.md#stacktracelimit)
-
-#### Defined in
-
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:30
 
 ## Methods
 
 ### captureStackTrace()
 
-> `static` **captureStackTrace**(`targetObject`, `constructorOpt`?): `void`
+> `static` **captureStackTrace**(`targetObject`, `constructorOpt?`): `void`
+
+Defined in: node\_modules/.pnpm/@types+node@20.17.16/node\_modules/@types/node/globals.d.ts:91
 
 Create .stack property on a target object
 
 #### Parameters
 
-• **targetObject**: `object`
+##### targetObject
 
-• **constructorOpt?**: `Function`
+`object`
+
+##### constructorOpt?
+
+`Function`
 
 #### Returns
 
@@ -219,7 +231,3 @@ Create .stack property on a target object
 #### Inherited from
 
 [`AcrossApiError`](AcrossApiError.md).[`captureStackTrace`](AcrossApiError.md#capturestacktrace)
-
-#### Defined in
-
-node\_modules/.pnpm/@types+node@20.16.2/node\_modules/@types/node/globals.d.ts:21
