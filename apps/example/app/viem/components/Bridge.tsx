@@ -4,28 +4,26 @@ import { ChainSelect } from "@/components/ChainSelect";
 import { Divider } from "@/components/Divider";
 import { TokenSelect } from "@/components/TokenSelect";
 import { Button, Label, Skeleton } from "@/components/ui";
-import { useAvailableRoutes } from "@/lib/hooks/useAvailableRoutes";
-import { useInputTokens } from "@/lib/hooks/useInputTokens";
-import { useOutputTokens } from "@/lib/hooks/useOutputTokens";
-import { useQuote } from "@/lib/hooks/useQuote";
-import { useSupportedAcrossChains } from "@/lib/hooks/useSupportedAcrossChains";
+import { useSwapQuote } from "@/lib/hooks/useSwapQuote";
 import { getExplorerLink, isNativeToken } from "@/lib/utils";
 import { TokenInfo } from "@across-protocol/app-sdk";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, useBalance, useChains } from "wagmi";
 import { useDebounceValue } from "usehooks-ts";
-import { useExecuteQuote } from "@/lib/hooks/useExecuteQuote";
+import { useExecuteSwapQuote } from "@/lib/hooks/useExecuteSwapQuote";
 import { Progress } from "./Progress";
 import { TokenInput } from "@/components/TokenInput";
 import { ExternalLink } from "@/components/ExternalLink";
 import { useAcrossChains } from "@/lib/hooks/useAcrossChains";
+import { useSwapTokens } from "@/lib/hooks/useSwapTokens";
+import { useSwapChains } from "@/lib/hooks/useSwapChains";
 
 export function Bridge() {
   const { address } = useAccount();
   const chains = useChains();
   // CHAINS
-  const { supportedChains } = useSupportedAcrossChains({});
+  const { swapChains: supportedChains } = useSwapChains({});
 
   // use only token data for chains we support
   const acrossChains = useAcrossChains();
@@ -37,7 +35,7 @@ export function Bridge() {
   );
 
   // FROM TOKEN
-  const { inputTokens } = useInputTokens(originChainId);
+  const { tokens: inputTokens } = useSwapTokens(originChainId);
 
   const [fromToken, setFromToken] = useState<TokenInfo | undefined>(
     inputTokens?.[0],
@@ -55,57 +53,32 @@ export function Bridge() {
     number | undefined
   >(chains.find((chain) => chain.id !== originChainId)?.id);
 
-  const { availableRoutes } = useAvailableRoutes({
-    originChainId,
-    destinationChainId,
-    originToken: fromToken?.address,
-  });
-
-  const outputTokensForRoute = availableRoutes?.map((route) =>
-    route.outputToken.toLowerCase(),
-  );
-
-  const { outputTokens: outputTokensForChain } =
-    useOutputTokens(destinationChainId);
-
-  const [outputTokens, setOutputTokens] = useState<TokenInfo[] | undefined>();
-
-  useEffect(() => {
-    const _outputTokens = outputTokensForChain?.filter((token) =>
-      outputTokensForRoute?.includes(token.address.toLowerCase()),
-    );
-    setOutputTokens(_outputTokens);
-  }, [availableRoutes]);
+  const { tokens: outputTokens } = useSwapTokens(destinationChainId);
 
   const [toToken, setToToken] = useState<TokenInfo | undefined>(
     outputTokens?.[0],
   );
 
-  useEffect(() => {
-    if (outputTokens) {
-      setToToken(
-        outputTokens.find((token) => token.symbol === fromToken?.symbol) ??
-          outputTokens?.[0],
-      );
-    }
-  }, [outputTokens]);
-
   const [inputAmount, setInputAmount] = useState<string>("");
   const [debouncedInputAmount] = useDebounceValue(inputAmount, 300);
-  const route = availableRoutes?.find((route) => {
-    return (
-      route.outputToken.toLocaleLowerCase() ===
-        toToken?.address?.toLowerCase() &&
-      route.outputTokenSymbol === toToken.symbol
-    );
-  });
 
   const quoteConfig =
-    route && debouncedInputAmount && fromToken
+    debouncedInputAmount &&
+    fromToken &&
+    toToken &&
+    destinationChainId &&
+    originChainId &&
+    address
       ? {
-          route,
+          route: {
+            originChainId: originChainId,
+            destinationChainId: destinationChainId,
+            inputToken: fromToken.address,
+            outputToken: toToken.address,
+          },
+          amount: parseUnits(debouncedInputAmount, fromToken?.decimals),
+          depositor: address,
           recipient: address,
-          inputAmount: parseUnits(debouncedInputAmount, fromToken?.decimals),
         }
       : undefined;
 
@@ -113,16 +86,16 @@ export function Bridge() {
     quote,
     isLoading: quoteLoading,
     isRefetching,
-  } = useQuote(quoteConfig);
+  } = useSwapQuote(quoteConfig);
 
   const {
-    executeQuote,
+    executeSwapQuote,
     progress,
     error,
     isPending,
     depositReceipt,
     fillReceipt,
-  } = useExecuteQuote(quote);
+  } = useExecuteSwapQuote(quote ? { swapQuote: quote } : undefined);
   const inputBalance = fromTokenBalance
     ? parseFloat(
         formatUnits(fromTokenBalance?.value, fromTokenBalance?.decimals),
@@ -232,12 +205,12 @@ export function Bridge() {
         {quote && toToken && (
           <p className="text-md font-normal text-text">
             {parseFloat(
-              formatUnits(quote.deposit.outputAmount, toToken.decimals),
+              formatUnits(BigInt(quote.minOutputAmount), toToken.decimals),
             ).toFixed(3)}
           </p>
         )}
         <Button
-          onClick={() => executeQuote()}
+          onClick={() => executeSwapQuote()}
           disabled={!(quote && toToken) || isRefetching || isPending}
           className="mt-2"
           variant="accent"

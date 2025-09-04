@@ -23,6 +23,7 @@ import { optimism } from "viem/chains";
 import { useAccount, useBalance } from "wagmi";
 import { useStakeQuote } from "@/lib/hooks/useStakeQuote";
 import { useQueryClient } from "@tanstack/react-query";
+import { useExecuteSwapQuote } from "@/lib/hooks/useExecuteSwapQuote";
 
 export function Stake() {
   const queryClient = useQueryClient();
@@ -43,8 +44,6 @@ export function Stake() {
   const originChains = acrossChains?.filter((c) =>
     originChainIds.has(c.chainId),
   );
-
-  const toToken = stakeToken;
 
   const [originChainId, setOriginChainId] = useState<number | undefined>(
     originChains?.[0]?.chainId,
@@ -94,14 +93,6 @@ export function Stake() {
 
   const [inputAmount, setInputAmount] = useState<string>("");
   const [debouncedInputAmount] = useDebounceValue(inputAmount, 300);
-  const route = availableRoutes?.find((route) => {
-    return (
-      route.outputToken.toLowerCase() === toToken?.address?.toLowerCase() &&
-      route.inputToken.toLowerCase() === fromToken?.address.toLowerCase() &&
-      route.originChainId === originChainId &&
-      route.outputTokenSymbol === toToken.symbol
-    );
-  });
 
   const { userStakeFormatted, userStakeQueryKey } = useUserStake();
   const {
@@ -114,24 +105,25 @@ export function Stake() {
 
   const {
     stakeQuote,
-    error: stakeQuoteError,
     isLoading: stakeQuotePending,
     isRefetching: stakeQuoteRefetching,
   } = useStakeQuote(
     {
-      route,
-      inputAmount: parseUnits(
-        debouncedInputAmount,
-        STAKE_CONTRACT.token.decimals,
-      ),
+      route: {
+        originChainId: originChainId!,
+        destinationChainId: routeConfig.destinationChainId,
+        inputToken: fromToken?.address!,
+        outputToken: stakeToken.address,
+      },
+      amount: parseUnits(debouncedInputAmount, STAKE_CONTRACT.token.decimals),
     },
     {
       enabled: Boolean(debouncedInputAmount),
     },
   );
 
-  const { executeQuote, progress, isPending, fillTxLink, depositTxLink } =
-    useExecuteQuote(stakeQuote);
+  const { executeSwapQuote, progress, isPending, fillTxLink, depositTxLink } =
+    useExecuteSwapQuote(stakeQuote ? { swapQuote: stakeQuote } : undefined);
 
   useEffect(() => {
     if (withdrawConfirming) {
@@ -250,7 +242,7 @@ export function Stake() {
             onChange={(e) => setInputAmount(e.currentTarget.value)}
           />
           <Button
-            onClick={() => executeQuote()}
+            onClick={() => executeSwapQuote()}
             disabled={!stakeQuote || stakeQuoteRefetching || isPending}
             className="mt-2"
             variant="accent"
@@ -270,7 +262,10 @@ export function Stake() {
           {stakeQuote && fromToken && (
             <p className="text-md font-normal text-text">
               {parseFloat(
-                formatUnits(stakeQuote.deposit.outputAmount, toToken.decimals),
+                formatUnits(
+                  BigInt(stakeQuote.minOutputAmount),
+                  stakeToken.decimals,
+                ),
               ).toFixed(6)}
             </p>
           )}
