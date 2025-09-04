@@ -1,89 +1,95 @@
 [@across-protocol/app-sdk](../README.md) / getUpdateDepositTypedData
 
-# Function: ~~getUpdateDepositTypedData()~~
+# Function: getUpdateDepositTypedData()
 
 > **getUpdateDepositTypedData**(`__namedParameters`): `object`
 
+Defined in: [packages/sdk/src/utils/typedData.ts:4](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/typedData.ts#L4)
+
 ## Parameters
 
-• **\_\_namedParameters**
+### \_\_namedParameters
 
-• **\_\_namedParameters.depositId**: `number` \| `bigint`
+#### depositId
 
-• **\_\_namedParameters.originChainId**: `number`
+`number` \| `bigint`
 
-• **\_\_namedParameters.signerAddress**: \`0x$\{string\}\`
+#### originChainId
 
-• **\_\_namedParameters.updatedMessage**: \`0x$\{string\}\`
+`number` \| `bigint`
 
-• **\_\_namedParameters.updatedOutputAmount**: `bigint`
+#### signerAddress
 
-• **\_\_namedParameters.updatedRecipient**: \`0x$\{string\}\`
+`` `0x${string}` ``
+
+#### updatedMessage
+
+`` `0x${string}` ``
+
+#### updatedOutputAmount
+
+`bigint`
+
+#### updatedRecipient
+
+`` `0x${string}` ``
 
 ## Returns
 
 `object`
 
-### ~~account~~
+### account
 
-> `readonly` **account**: \`0x$\{string\}\` = `signerAddress`
+> `readonly` **account**: `` `0x${string}` `` = `signerAddress`
 
-### ~~domain~~
+### domain
 
 > `readonly` **domain**: `object`
 
-### domain.chainId
+#### domain.chainId
 
-> `readonly` **chainId**: `number` = `originChainId`
+> `readonly` **chainId**: `number`
 
-### domain.name
+#### domain.name
 
 > `readonly` **name**: `"ACROSS-V2"` = `"ACROSS-V2"`
 
-### domain.version
+#### domain.version
 
 > `readonly` **version**: `"1.0.0"` = `"1.0.0"`
 
-### ~~message~~
+### message
 
 > `readonly` **message**: `object`
 
-### message.depositId
+#### message.depositId
 
-> `readonly` **depositId**: `number`
+> `readonly` **depositId**: `bigint`
 
-### message.originChainId
+#### message.originChainId
 
 > `readonly` **originChainId**: `bigint`
 
-### message.updatedMessage
+#### message.updatedMessage
 
-> **updatedMessage**: \`0x$\{string\}\`
+> **updatedMessage**: `` `0x${string}` ``
 
-### message.updatedOutputAmount
+#### message.updatedOutputAmount
 
 > **updatedOutputAmount**: `bigint`
 
-### message.updatedRecipient
+#### message.updatedRecipient
 
-> **updatedRecipient**: \`0x$\{string\}\`
+> **updatedRecipient**: `` `0x${string}` ``
 
-### ~~primaryType~~
+### primaryType
 
 > `readonly` **primaryType**: `"UpdateDepositDetails"` = `"UpdateDepositDetails"`
 
-### ~~types~~
+### types
 
 > `readonly` **types**: `object`
 
-### types.UpdateDepositDetails
+#### types.UpdateDepositDetails
 
-> `readonly` **UpdateDepositDetails**: readonly [`object`, `object`, `object`, `object`, `object`]
-
-## Deprecated
-
-Use `getUpdateDepositTypedDataV3_5` instead.
-
-## Defined in
-
-[packages/sdk/src/utils/typedData.ts:7](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/typedData.ts#L7)
+> `readonly` **UpdateDepositDetails**: readonly \[\{ `name`: `"depositId"`; `type`: `"uint256"`; \}, \{ `name`: `"originChainId"`; `type`: `"uint256"`; \}, \{ `name`: `"updatedOutputAmount"`; `type`: `"uint256"`; \}, \{ `name`: `"updatedRecipient"`; `type`: `"address"`; \}, \{ `name`: `"updatedMessage"`; `type`: `"bytes"`; \}\]

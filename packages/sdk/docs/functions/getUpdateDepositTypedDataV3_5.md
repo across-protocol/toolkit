@@ -4,21 +4,35 @@
 
 > **getUpdateDepositTypedDataV3\_5**(`__namedParameters`): `object`
 
+Defined in: [packages/sdk/src/utils/typedData.ts:46](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/typedData.ts#L46)
+
 ## Parameters
 
-• **\_\_namedParameters**
+### \_\_namedParameters
 
-• **\_\_namedParameters.depositId**: `number` \| `bigint`
+#### depositId
 
-• **\_\_namedParameters.originChainId**: `number` \| `bigint`
+`number` \| `bigint`
 
-• **\_\_namedParameters.signerAddress**: \`0x$\{string\}\`
+#### originChainId
 
-• **\_\_namedParameters.updatedMessage**: \`0x$\{string\}\`
+`number` \| `bigint`
 
-• **\_\_namedParameters.updatedOutputAmount**: `bigint`
+#### signerAddress
 
-• **\_\_namedParameters.updatedRecipient**: \`0x$\{string\}\`
+`` `0x${string}` ``
+
+#### updatedMessage
+
+`` `0x${string}` ``
+
+#### updatedOutputAmount
+
+`bigint`
+
+#### updatedRecipient
+
+`` `0x${string}` ``
 
 ## Returns
 
@@ -26,21 +40,21 @@
 
 ### account
 
-> `readonly` **account**: \`0x$\{string\}\` = `signerAddress`
+> `readonly` **account**: `` `0x${string}` `` = `signerAddress`
 
 ### domain
 
 > `readonly` **domain**: `object`
 
-### domain.chainId
+#### domain.chainId
 
 > `readonly` **chainId**: `number`
 
-### domain.name
+#### domain.name
 
 > `readonly` **name**: `"ACROSS-V2"` = `"ACROSS-V2"`
 
-### domain.version
+#### domain.version
 
 > `readonly` **version**: `"1.0.0"` = `"1.0.0"`
 
@@ -48,25 +62,25 @@
 
 > `readonly` **message**: `object`
 
-### message.depositId
+#### message.depositId
 
 > `readonly` **depositId**: `bigint`
 
-### message.originChainId
+#### message.originChainId
 
 > `readonly` **originChainId**: `bigint`
 
-### message.updatedMessage
+#### message.updatedMessage
 
-> **updatedMessage**: \`0x$\{string\}\`
+> **updatedMessage**: `` `0x${string}` ``
 
-### message.updatedOutputAmount
+#### message.updatedOutputAmount
 
 > **updatedOutputAmount**: `bigint`
 
-### message.updatedRecipient
+#### message.updatedRecipient
 
-> `readonly` **updatedRecipient**: \`0x$\{string\}\`
+> `readonly` **updatedRecipient**: `` `0x${string}` ``
 
 ### primaryType
 
@@ -76,10 +90,6 @@
 
 > `readonly` **types**: `object`
 
-### types.UpdateDepositDetails
+#### types.UpdateDepositDetails
 
-> `readonly` **UpdateDepositDetails**: readonly [`object`, `object`, `object`, `object`, `object`]
-
-## Defined in
-
-[packages/sdk/src/utils/typedData.ts:49](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/typedData.ts#L49)
+> `readonly` **UpdateDepositDetails**: readonly \[\{ `name`: `"depositId"`; `type`: `"uint256"`; \}, \{ `name`: `"originChainId"`; `type`: `"uint256"`; \}, \{ `name`: `"updatedOutputAmount"`; `type`: `"uint256"`; \}, \{ `name`: `"updatedRecipient"`; `type`: `"bytes32"`; \}, \{ `name`: `"updatedMessage"`; `type`: `"bytes"`; \}\]

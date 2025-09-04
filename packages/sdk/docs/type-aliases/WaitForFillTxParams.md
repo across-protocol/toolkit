@@ -2,50 +2,70 @@
 
 # Type Alias: WaitForFillTxParams
 
-> **WaitForFillTxParams**: `object`
+> **WaitForFillTxParams** = `object`
 
-## Type declaration
+Defined in: [packages/sdk/src/actions/waitForFillTx.ts:12](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/waitForFillTx.ts#L12)
+
+## Properties
 
 ### deposit
 
 > **deposit**: `object`
 
-### deposit.destinationChainId
+Defined in: [packages/sdk/src/actions/waitForFillTx.ts:14](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/waitForFillTx.ts#L14)
+
+#### destinationChainId
 
 > **destinationChainId**: `number`
 
-### deposit.destinationSpokePoolAddress
+#### destinationSpokePoolAddress
 
 > **destinationSpokePoolAddress**: `Address`
 
-### deposit.message
+#### message
 
 > **message**: `Hex`
 
-### deposit.originChainId
+#### originChainId
 
 > **originChainId**: `number`
+
+***
 
 ### depositId
 
 > **depositId**: `bigint` \| `number`
 
+Defined in: [packages/sdk/src/actions/waitForFillTx.ts:13](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/waitForFillTx.ts#L13)
+
+***
+
 ### depositTxHash?
 
 > `optional` **depositTxHash**: `Hash`
+
+Defined in: [packages/sdk/src/actions/waitForFillTx.ts:22](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/waitForFillTx.ts#L22)
+
+***
 
 ### destinationChainClient
 
 > **destinationChainClient**: [`ConfiguredPublicClient`](ConfiguredPublicClient.md)
 
+Defined in: [packages/sdk/src/actions/waitForFillTx.ts:20](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/waitForFillTx.ts#L20)
+
+***
+
 ### fromBlock
 
 > **fromBlock**: `bigint`
+
+Defined in: [packages/sdk/src/actions/waitForFillTx.ts:21](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/waitForFillTx.ts#L21)
+
+***
 
 ### logger?
 
 > `optional` **logger**: [`LoggerT`](LoggerT.md)
 
-## Defined in
-
-[packages/sdk/src/actions/waitForFillTx.ts:11](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/waitForFillTx.ts#L11)
+Defined in: [packages/sdk/src/actions/waitForFillTx.ts:23](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/waitForFillTx.ts#L23)

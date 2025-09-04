@@ -2,8 +2,6 @@
 
 # Type Alias: FillEventLog
 
-> **FillEventLog**: `ReturnType`\<*typeof* [`parseFillLogs`](../functions/parseFillLogs.md)\>
+> **FillEventLog** = `ReturnType`\<*typeof* [`parseFillLogs`](../functions/parseFillLogs.md)\>
 
-## Defined in
-
-[packages/sdk/src/types/index.ts:87](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/types/index.ts#L87)
+Defined in: [packages/sdk/src/types/index.ts:88](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/types/index.ts#L88)

@@ -2,36 +2,46 @@
 
 # Type Alias: SimulateDepositTxParams
 
-> **SimulateDepositTxParams**: `object`
+> **SimulateDepositTxParams** = `object`
 
-## Type declaration
+Defined in: [packages/sdk/src/actions/simulateDepositTx.ts:16](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateDepositTx.ts#L16)
+
+## Properties
 
 ### deposit
 
-> **deposit**: [`Quote`](Quote.md)\[`"deposit"`\] & `object`
+> **deposit**: [`Quote`](Quote.md)\[`"deposit"`\]
 
-#### Type declaration
+Defined in: [packages/sdk/src/actions/simulateDepositTx.ts:19](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateDepositTx.ts#L19)
 
-##### fillDeadline?
-
-> `optional` **fillDeadline**: `number`
+***
 
 ### integratorId
 
 > **integratorId**: `Hex`
 
+Defined in: [packages/sdk/src/actions/simulateDepositTx.ts:20](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateDepositTx.ts#L20)
+
+***
+
 ### logger?
 
 > `optional` **logger**: [`LoggerT`](LoggerT.md)
+
+Defined in: [packages/sdk/src/actions/simulateDepositTx.ts:21](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateDepositTx.ts#L21)
+
+***
 
 ### publicClient
 
 > **publicClient**: `PublicClient`
 
+Defined in: [packages/sdk/src/actions/simulateDepositTx.ts:18](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateDepositTx.ts#L18)
+
+***
+
 ### walletClient
 
 > **walletClient**: `WalletClient`
 
-## Defined in
-
-[packages/sdk/src/actions/simulateDepositTx.ts:12](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/simulateDepositTx.ts#L12)
+Defined in: [packages/sdk/src/actions/simulateDepositTx.ts:17](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateDepositTx.ts#L17)

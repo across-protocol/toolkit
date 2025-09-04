@@ -2,16 +2,16 @@
 
 # Function: waitForFillByDepositTx()
 
-> **waitForFillByDepositTx**(`params`): `ReturnType`\<*typeof* [`getFillByDepositTx`](getFillByDepositTx.md)\>
+> **waitForFillByDepositTx**(`params`): `Promise`\<[`FillStatus`](../type-aliases/FillStatus.md)\>
+
+Defined in: [packages/sdk/src/actions/getFillByDepositTx.ts:130](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getFillByDepositTx.ts#L130)
 
 ## Parameters
 
-• **params**: [`GetFillByDepositTxParams`](../type-aliases/GetFillByDepositTxParams.md) & `object`
+### params
+
+[`GetFillByDepositTxParams`](../type-aliases/GetFillByDepositTxParams.md) & `object`
 
 ## Returns
 
-`ReturnType`\<*typeof* [`getFillByDepositTx`](getFillByDepositTx.md)\>
-
-## Defined in
-
-[packages/sdk/src/actions/getFillByDepositTx.ts:139](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getFillByDepositTx.ts#L139)
+`Promise`\<[`FillStatus`](../type-aliases/FillStatus.md)\>

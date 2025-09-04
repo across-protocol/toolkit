@@ -2,8 +2,6 @@
 
 # Type Alias: V3\_5FundsDepositedEvent
 
-> **V3\_5FundsDepositedEvent**: [`NoNullValuesOfObject`](NoNullValuesOfObject.md)\<`MaybeDepositEvent`\>
+> **V3\_5FundsDepositedEvent** = [`NoNullValuesOfObject`](NoNullValuesOfObject.md)\<`MaybeDepositEvent`\>
 
-## Defined in
-
-[packages/sdk/src/types/index.ts:118](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/types/index.ts#L118)
+Defined in: [packages/sdk/src/types/index.ts:119](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/types/index.ts#L119)

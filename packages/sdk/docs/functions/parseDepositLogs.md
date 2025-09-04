@@ -2,18 +2,20 @@
 
 # Function: parseDepositLogs()
 
-> **parseDepositLogs**(`logs`, `filter`?): [`DepositLog`](../type-aliases/DepositLog.md) \| `undefined`
+> **parseDepositLogs**(`logs`, `filter?`): `undefined` \| [`DepositLog`](../type-aliases/DepositLog.md)
+
+Defined in: [packages/sdk/src/actions/getDepositFromLogs.ts:20](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getDepositFromLogs.ts#L20)
 
 ## Parameters
 
-• **logs**: `Log`[]
+### logs
 
-• **filter?**: `Partial`\<`object`\>
+`Log`[]
+
+### filter?
+
+`Partial`\<\{ `destinationChainId`: `bigint`; `inputAmount`: `bigint`; `inputToken`: `` `0x${string}` ``; `outputAmount`: `bigint`; `outputToken`: `` `0x${string}` ``; \}\>
 
 ## Returns
 
-[`DepositLog`](../type-aliases/DepositLog.md) \| `undefined`
-
-## Defined in
-
-[packages/sdk/src/actions/getDepositFromLogs.ts:20](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getDepositFromLogs.ts#L20)
+`undefined` \| [`DepositLog`](../type-aliases/DepositLog.md)

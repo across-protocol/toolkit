@@ -2,37 +2,37 @@
 
 # Class: DefaultLogger
 
+Defined in: [packages/sdk/src/utils/logger.ts:11](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L11)
+
 ## Implements
 
 - [`LoggerT`](../type-aliases/LoggerT.md)
 
 ## Constructors
 
-### new DefaultLogger()
+### Constructor
 
-> **new DefaultLogger**(`logLevel`): [`DefaultLogger`](DefaultLogger.md)
+> **new DefaultLogger**(`logLevel`): `DefaultLogger`
+
+Defined in: [packages/sdk/src/utils/logger.ts:16](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L16)
 
 #### Parameters
 
-• **logLevel**: `"ERROR"` \| `"DEBUG"` \| `"INFO"` \| `"WARN"`
+##### logLevel
+
+`"DEBUG"` | `"INFO"` | `"WARN"` | `"ERROR"`
 
 #### Returns
 
-[`DefaultLogger`](DefaultLogger.md)
-
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:16](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L16)
+`DefaultLogger`
 
 ## Properties
 
 ### logLevel
 
-> **logLevel**: `"ERROR"` \| `"DEBUG"` \| `"INFO"` \| `"WARN"`
+> **logLevel**: `"DEBUG"` \| `"INFO"` \| `"WARN"` \| `"ERROR"`
 
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:12](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L12)
+Defined in: [packages/sdk/src/utils/logger.ts:12](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L12)
 
 ***
 
@@ -40,9 +40,7 @@
 
 > `readonly` **logPrefix**: `">"` = `">"`
 
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:14](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L14)
+Defined in: [packages/sdk/src/utils/logger.ts:14](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L14)
 
 ***
 
@@ -50,9 +48,7 @@
 
 > `readonly` **secondaryLabel**: `"@across-protocol/app-sdk"` = `"@across-protocol/app-sdk"`
 
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:13](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L13)
+Defined in: [packages/sdk/src/utils/logger.ts:13](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L13)
 
 ## Methods
 
@@ -60,9 +56,13 @@
 
 > **createLogLevelLabel**(`logLevel`): `object`
 
+Defined in: [packages/sdk/src/utils/logger.ts:20](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L20)
+
 #### Parameters
 
-• **logLevel**: `"ERROR"` \| `"DEBUG"` \| `"INFO"` \| `"WARN"`
+##### logLevel
+
+`"DEBUG"` | `"INFO"` | `"WARN"` | `"ERROR"`
 
 #### Returns
 
@@ -76,19 +76,19 @@
 
 > **prefix**: `string`
 
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:20](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L20)
-
 ***
 
 ### debug()
 
 > **debug**(...`data`): `void`
 
+Defined in: [packages/sdk/src/utils/logger.ts:42](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L42)
+
 #### Parameters
 
-• ...**data**: `unknown`[]
+##### data
+
+...`unknown`[]
 
 #### Returns
 
@@ -98,19 +98,19 @@
 
 `LoggerT.debug`
 
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:42](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L42)
-
 ***
 
 ### error()
 
 > **error**(...`data`): `void`
 
+Defined in: [packages/sdk/src/utils/logger.ts:61](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L61)
+
 #### Parameters
 
-• ...**data**: `unknown`[]
+##### data
+
+...`unknown`[]
 
 #### Returns
 
@@ -120,19 +120,19 @@
 
 `LoggerT.error`
 
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:61](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L61)
-
 ***
 
 ### info()
 
 > **info**(...`data`): `void`
 
+Defined in: [packages/sdk/src/utils/logger.ts:49](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L49)
+
 #### Parameters
 
-• ...**data**: `unknown`[]
+##### data
+
+...`unknown`[]
 
 #### Returns
 
@@ -142,31 +142,29 @@
 
 `LoggerT.info`
 
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:49](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L49)
-
 ***
 
 ### log()
 
 > **log**(`logLevel`, ...`data`): `void`
 
+Defined in: [packages/sdk/src/utils/logger.ts:33](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L33)
+
 Description - creates an indentation group for each call to `logger.[logLevel]()`
 
 #### Parameters
 
-• **logLevel**: `"ERROR"` \| `"DEBUG"` \| `"INFO"` \| `"WARN"`
+##### logLevel
 
-• ...**data**: `unknown`[]
+`"DEBUG"` | `"INFO"` | `"WARN"` | `"ERROR"`
+
+##### data
+
+...`unknown`[]
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:33](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L33)
 
 ***
 
@@ -174,9 +172,13 @@ Description - creates an indentation group for each call to `logger.[logLevel]()
 
 > **warn**(...`data`): `void`
 
+Defined in: [packages/sdk/src/utils/logger.ts:55](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/logger.ts#L55)
+
 #### Parameters
 
-• ...**data**: `unknown`[]
+##### data
+
+...`unknown`[]
 
 #### Returns
 
@@ -185,7 +187,3 @@ Description - creates an indentation group for each call to `logger.[logLevel]()
 #### Implementation of
 
 `LoggerT.warn`
-
-#### Defined in
-
-[packages/sdk/src/utils/logger.ts:55](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/logger.ts#L55)

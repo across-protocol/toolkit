@@ -2,54 +2,70 @@
 
 # Type Alias: GetFillByDepositTxParams
 
-> **GetFillByDepositTxParams**: `object`
+> **GetFillByDepositTxParams** = `object`
 
-## Type declaration
+Defined in: [packages/sdk/src/actions/getFillByDepositTx.ts:16](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getFillByDepositTx.ts#L16)
+
+## Properties
 
 ### deposit
 
 > **deposit**: `object`
 
-### deposit.depositId
+Defined in: [packages/sdk/src/actions/getFillByDepositTx.ts:17](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getFillByDepositTx.ts#L17)
+
+#### depositId
 
 > **depositId**: `bigint` \| `number`
 
-### deposit.depositTxHash?
+#### depositTxHash?
 
 > `optional` **depositTxHash**: `Hash`
 
-### deposit.destinationChainId
+#### destinationChainId
 
 > **destinationChainId**: `number`
 
-### deposit.destinationSpokePoolAddress
+#### destinationSpokePoolAddress
 
 > **destinationSpokePoolAddress**: `Address`
 
-### deposit.message
+#### message
 
 > **message**: `Hex`
 
-### deposit.originChainId
+#### originChainId
 
 > **originChainId**: `number`
+
+***
 
 ### destinationChainClient
 
 > **destinationChainClient**: `PublicClient`
 
+Defined in: [packages/sdk/src/actions/getFillByDepositTx.ts:25](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getFillByDepositTx.ts#L25)
+
+***
+
 ### fromBlock?
 
 > `optional` **fromBlock**: `bigint`
+
+Defined in: [packages/sdk/src/actions/getFillByDepositTx.ts:26](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getFillByDepositTx.ts#L26)
+
+***
 
 ### indexerUrl?
 
 > `optional` **indexerUrl**: `string`
 
+Defined in: [packages/sdk/src/actions/getFillByDepositTx.ts:27](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getFillByDepositTx.ts#L27)
+
+***
+
 ### logger?
 
 > `optional` **logger**: [`LoggerT`](LoggerT.md)
 
-## Defined in
-
-[packages/sdk/src/actions/getFillByDepositTx.ts:16](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getFillByDepositTx.ts#L16)
+Defined in: [packages/sdk/src/actions/getFillByDepositTx.ts:28](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getFillByDepositTx.ts#L28)

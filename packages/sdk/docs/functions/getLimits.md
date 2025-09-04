@@ -4,11 +4,15 @@
 
 > **getLimits**(`params`): `Promise`\<[`GetLimitsReturnType`](../type-aliases/GetLimitsReturnType.md)\>
 
+Defined in: [packages/sdk/src/actions/getLimits.ts:74](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getLimits.ts#L74)
+
 Returns the deposit limits for a given route.
 
 ## Parameters
 
-• **params**: [`GetLimitsParams`](../type-aliases/GetLimitsParams.md)
+### params
+
+[`GetLimitsParams`](../type-aliases/GetLimitsParams.md)
 
 See [GetLimitsParams](../type-aliases/GetLimitsParams.md).
 
@@ -17,7 +21,3 @@ See [GetLimitsParams](../type-aliases/GetLimitsParams.md).
 `Promise`\<[`GetLimitsReturnType`](../type-aliases/GetLimitsReturnType.md)\>
 
 See [GetLimitsReturnType](../type-aliases/GetLimitsReturnType.md).
-
-## Defined in
-
-[packages/sdk/src/actions/getLimits.ts:69](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getLimits.ts#L69)

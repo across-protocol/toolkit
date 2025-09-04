@@ -2,26 +2,6 @@
 
 # Type Alias: ChainsQueryParams
 
-> **ChainsQueryParams**: `Partial`\<`object`\>
+> **ChainsQueryParams** = `Partial`\<\{ `chainId`: `number` \| `number`[]; `inputTokenSymbol`: `string`; `omitTokens`: `boolean`; `outputTokenSymbol`: `string`; \}\>
 
-## Type declaration
-
-### chainId
-
-> **chainId**: `number` \| `number`[]
-
-### inputTokenSymbol
-
-> **inputTokenSymbol**: `string`
-
-### omitTokens
-
-> **omitTokens**: `boolean`
-
-### outputTokenSymbol
-
-> **outputTokenSymbol**: `string`
-
-## Defined in
-
-[packages/sdk/src/utils/getSupportedChains.ts:6](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/utils/getSupportedChains.ts#L6)
+Defined in: [packages/sdk/src/utils/getSupportedChains.ts:6](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/utils/getSupportedChains.ts#L6)

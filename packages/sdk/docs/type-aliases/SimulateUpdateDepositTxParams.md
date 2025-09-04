@@ -2,72 +2,82 @@
 
 # Type Alias: SimulateUpdateDepositTxParams
 
-> **SimulateUpdateDepositTxParams**: `object`
+> **SimulateUpdateDepositTxParams** = `object`
 
-## Type declaration
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:9](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L9)
+
+## Properties
 
 ### apiUrl?
 
 > `optional` **apiUrl**: `string`
 
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:30](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L30)
+
+***
+
 ### deposit
 
 > **deposit**: `object`
 
-### deposit.depositId
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:13](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L13)
+
+#### depositId
 
 > **depositId**: `bigint` \| `number`
 
-### deposit.destinationChainId
+#### destinationChainId
 
 > **destinationChainId**: `number`
 
-### deposit.destinationSpokePoolAddress
+#### destinationSpokePoolAddress
 
 > **destinationSpokePoolAddress**: `Address`
 
-### deposit.originChainId
+#### originChainId
 
 > **originChainId**: `number`
 
-### deposit.originSpokePoolAddress
+#### originSpokePoolAddress
 
 > **originSpokePoolAddress**: `Address`
+
+***
 
 ### destinationChainClient
 
 > **destinationChainClient**: [`ConfiguredPublicClient`](ConfiguredPublicClient.md)
 
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:12](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L12)
+
+***
+
 ### logger?
 
 > `optional` **logger**: [`LoggerT`](LoggerT.md)
+
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:31](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L31)
+
+***
 
 ### originChainClient
 
 > **originChainClient**: [`ConfiguredPublicClient`](ConfiguredPublicClient.md)
 
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:11](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L11)
+
+***
+
 ### update
 
-> **update**: `Partial`\<`object`\>
+> **update**: `Partial`\<\{ `crossChainMessage`: \{ `actions`: [`CrossChainAction`](CrossChainAction.md)[]; `fallbackRecipient`: `Address`; \} \| `Hex`; `outputAmount`: `bigint`; `recipient`: `Address`; \}\>
 
-#### Type declaration
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:20](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L20)
 
-##### crossChainMessage
-
-> **crossChainMessage**: `object` \| `Hex`
-
-##### outputAmount
-
-> **outputAmount**: `bigint`
-
-##### recipient
-
-> **recipient**: `Address`
+***
 
 ### walletClient
 
 > **walletClient**: `WalletClient`
 
-## Defined in
-
-[packages/sdk/src/actions/simulateUpdateDepositTx.ts:9](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L9)
+Defined in: [packages/sdk/src/actions/simulateUpdateDepositTx.ts:10](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/simulateUpdateDepositTx.ts#L10)

@@ -4,11 +4,15 @@
 
 > **getQuote**(`params`): `Promise`\<[`Quote`](../type-aliases/Quote.md)\>
 
+Defined in: [packages/sdk/src/actions/getQuote.ts:120](https://github.com/across-protocol/toolkit/blob/6b29eb5487c0ac0b498f1f420b1793303bd8b70a/packages/sdk/src/actions/getQuote.ts#L120)
+
 Get a quote for a given set of parameters.
 
 ## Parameters
 
-• **params**: [`GetQuoteParams`](../type-aliases/GetQuoteParams.md)
+### params
+
+[`GetQuoteParams`](../type-aliases/GetQuoteParams.md)
 
 See [GetQuoteParams](../type-aliases/GetQuoteParams.md).
 
@@ -17,7 +21,3 @@ See [GetQuoteParams](../type-aliases/GetQuoteParams.md).
 `Promise`\<[`Quote`](../type-aliases/Quote.md)\>
 
 See [Quote](../type-aliases/Quote.md).
-
-## Defined in
-
-[packages/sdk/src/actions/getQuote.ts:119](https://github.com/across-protocol/toolkit/blob/d027d7c23e7230b7b5f439570f9efd60c1d715ce/packages/sdk/src/actions/getQuote.ts#L119)
