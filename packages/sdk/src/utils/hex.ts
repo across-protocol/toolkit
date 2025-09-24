@@ -1,6 +1,7 @@
 import { Address, concat, Hex, isAddress, isHex, padHex } from "viem";
 
 export const DOMAIN_CALLDATA_DELIMITER = "0x1dc0de";
+export const SWAP_CALLDATA_MARKER = "0x73c0de";
 
 export function tagIntegratorId(integratorId: Hex, txData: Hex) {
   assertValidIntegratorId(integratorId);
@@ -12,6 +13,25 @@ export function getIntegratorDataSuffix(integratorId: Hex) {
   assertValidIntegratorId(integratorId);
 
   return concat([DOMAIN_CALLDATA_DELIMITER, integratorId]);
+}
+
+export function hasIntegratorIdAppended(
+  calldata: Hex,
+  integratorId: Hex,
+  options: {
+    isSwap?: boolean;
+  } = {
+    isSwap: false,
+  },
+): boolean {
+  const integratorIdSuffix = getIntegratorDataSuffix(integratorId);
+  const swapSuffix = SWAP_CALLDATA_MARKER;
+  // swap/approval first appends the integratorId, then the swap marker
+  const suffix = options.isSwap
+    ? concat([integratorIdSuffix, swapSuffix])
+    : integratorIdSuffix;
+
+  return calldata.endsWith(suffix.slice(2));
 }
 
 export function isValidIntegratorId(integratorId: string) {

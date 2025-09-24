@@ -1,7 +1,9 @@
 import { assert, assertType, describe, test } from "vitest";
 import { type SwapApprovalApiResponse } from "../../../src/api/swap-approval.js";
 import { getSwapQuote } from "../../../src/actions/getSwapQuote.js";
-import { parseEther } from "viem";
+import { Hex, parseEther } from "viem";
+import { hasIntegratorIdAppended } from "../../../src/utils/hex.js";
+import { mainnetTestClient } from "../../common/sdk.js";
 
 // Mainnet WETH
 const inputToken = {
@@ -67,5 +69,69 @@ describe("getSwapQuote", () => {
 
     assert(quote, "No swap quote returned for the provided parameters");
     assertType<SwapApprovalApiResponse>(quote);
+  });
+
+  test("swap approval calldata has integrator id appended", async () => {
+    const integratorId: Hex = "0xdead";
+
+    const quote = await getSwapQuote({
+      amount: parseEther(inputAmount),
+      route: {
+        originChainId: 1,
+        inputToken: inputToken.address,
+        destinationChainId: 10,
+        outputToken: outputToken.address,
+      },
+      depositor: testRecipient,
+      recipient: testRecipient,
+      integratorId,
+    });
+
+    assert(quote.swapTx, "swapTx missing in swap approval response");
+    let data: Hex;
+    if ("eip712" in quote.swapTx) {
+      data = quote.swapTx.swapTx.data as Hex;
+    } else {
+      const simple = quote.swapTx as { data: string };
+      data = simple.data as Hex;
+    }
+
+    assert(
+      hasIntegratorIdAppended(data, integratorId, {
+        isSwap: true,
+      }),
+      "Expected swap calldata to have integrator id suffix",
+    );
+  });
+
+  test("client injects integratorId when omitted", async () => {
+    const quote = await mainnetTestClient.getSwapQuote({
+      amount: parseEther(inputAmount),
+      route: {
+        originChainId: 1,
+        inputToken: inputToken.address,
+        destinationChainId: 10,
+        outputToken: outputToken.address,
+      },
+      depositor: testRecipient,
+      recipient: testRecipient,
+      // no integrator ID
+    });
+
+    assert(quote.swapTx, "swapTx missing in swap approval response");
+    let data: Hex;
+    if ("eip712" in quote.swapTx) {
+      data = quote.swapTx.swapTx.data as Hex;
+    } else {
+      const simple = quote.swapTx as { data: string };
+      data = simple.data as Hex;
+    }
+
+    // Client default integratorId is 0xdead when not configured explicitly
+    const expectedIntegratorId: Hex = "0xdead";
+    assert(
+      hasIntegratorIdAppended(data, expectedIntegratorId, { isSwap: true }),
+      "Expected swap calldata to include client's integrator id when omitted in params",
+    );
   });
 });

@@ -34,6 +34,11 @@ export type GetSwapQuoteParams = Omit<
   appFee?: number;
   actions?: Action[];
   /**
+   * [Optional] Integrator identifier to be forwarded to the swap API so it can
+   * append the integrator tag to the final deposit calldata when applicable.
+   */
+  integratorId?: string;
+  /**
    * [Optional] The logger to use.
    */
   logger?: LoggerT;
