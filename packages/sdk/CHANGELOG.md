@@ -1,5 +1,12 @@
 # @across-protocol/app-sdk
 
+## 0.4.2
+
+### Patch Changes
+
+- 50c805d: Update fork blocks in sdk tests
+- 28160c4: Add integratorId to getSwapQuote action
+
 ## 0.4.0
 
 ### Minor Changes
