@@ -7,5 +7,18 @@
   },
   "env": {
     "es2020": true
+  },
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/*"],
+            "message": "Use relative imports instead of path aliases in library code to avoid compilation issues"
+          }
+        ]
+      }
+    ]
   }
 }
