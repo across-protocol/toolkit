@@ -11,7 +11,7 @@ export type BuildMessageParams = {
 export function getMultiCallHandlerAddress(chainId: number): Address {
   const defaultAddress = "0x924a9f036260DdD5808007E1AA95f08eD08aA569";
   const deployments = multicallHandlerDeployments;
-  return deployments?.[chainId]?.address ?? defaultAddress;
+  return deployments?.[chainId] ?? defaultAddress;
 }
 
 export function buildMulticallHandlerMessage(params: BuildMessageParams) {
