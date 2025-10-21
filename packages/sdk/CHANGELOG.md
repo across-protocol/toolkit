@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.4.3
+
+### Patch Changes
+
+- 687be1b: Adds multicall handler contract address definitions
+
 ## 0.4.2
 
 ### Patch Changes
