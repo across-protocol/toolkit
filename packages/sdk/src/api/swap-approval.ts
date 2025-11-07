@@ -9,6 +9,12 @@ import {
   stringOrStringArray,
 } from "./validators.js";
 
+export enum FeeDetailsType {
+  TOTAL_BREAKDOWN = "total-breakdown",
+  MAX_TOTAL_BREAKDOWN = "max-total-breakdown",
+  ACROSS = "across",
+}
+
 // Request schema
 export const baseSwapQueryParamsSchema = z.object({
   amount: positiveIntString,
@@ -44,6 +50,21 @@ const feeComponentSchema = z.object({
   }),
 });
 
+const bridgeFeeDetailComponentSchema = z.object({
+  amount: bigNumberString,
+  pct: z.string(),
+  token: z
+    .object({
+      address: ethereumAddress,
+      symbol: z.string(),
+      decimals: positiveInteger,
+      chainId: positiveInteger,
+      name: z.string().optional(),
+    })
+    .optional(),
+  amountUsd: z.string().optional(),
+});
+
 const gasFeeSchema = z.object({
   amount: bigNumberString,
   amountUsd: z.string(),
@@ -53,10 +74,6 @@ const gasFeeSchema = z.object({
     decimals: positiveInteger,
     chainId: positiveInteger,
   }),
-});
-
-const gasFeeWithPctSchema = gasFeeSchema.extend({
-  pct: z.string(),
 });
 
 const swapStepSchema = z.object({
@@ -100,23 +117,25 @@ const bridgeStepSchema = z.object({
     name: z.string().optional(),
   }),
   fees: z.object({
-    totalRelay: z.object({
-      pct: z.string(),
-      total: bigNumberString,
+    amount: bigNumberString,
+    pct: z.string(),
+    token: z.object({
+      address: ethereumAddress,
+      symbol: z.string(),
+      decimals: positiveInteger,
+      chainId: positiveInteger,
+      name: z.string().optional(),
     }),
-    relayerCapital: z.object({
-      pct: z.string(),
-      total: bigNumberString,
-    }),
-    relayerGas: z.object({
-      pct: z.string(),
-      total: bigNumberString,
-    }),
-    lp: z.object({
-      pct: z.string(),
-      total: bigNumberString,
-    }),
+    details: z
+      .object({
+        type: z.nativeEnum(FeeDetailsType),
+        relayerCapital: bridgeFeeDetailComponentSchema.optional(),
+        destinationGas: bridgeFeeDetailComponentSchema.optional(),
+        lp: bridgeFeeDetailComponentSchema.optional(),
+      })
+      .optional(),
   }),
+  provider: z.string().optional(),
 });
 
 const allowanceCheckSchema = z.object({
@@ -210,15 +229,54 @@ export const swapApprovalResponseSchema = z.object({
     name: z.string().optional(),
   }),
   fees: z.object({
-    total: feeComponentSchema,
+    total: feeComponentSchema.extend({
+      details: z
+        .object({
+          type: z.nativeEnum(FeeDetailsType),
+          swapImpact: feeComponentSchema.optional(),
+          app: feeComponentSchema.optional(),
+          bridge: feeComponentSchema
+            .extend({
+              details: z
+                .object({
+                  type: z.nativeEnum(FeeDetailsType),
+                  lp: feeComponentSchema.optional(),
+                  destinationGas: feeComponentSchema.optional(),
+                  relayerCapital: feeComponentSchema.optional(),
+                })
+                .optional(),
+            })
+            .optional(),
+        })
+        .optional(),
+    }),
+    maxTotal: feeComponentSchema
+      .extend({
+        details: z
+          .object({
+            type: z.nativeEnum(FeeDetailsType),
+            maxSwapImpact: feeComponentSchema.optional(),
+            app: feeComponentSchema.optional(),
+            bridge: feeComponentSchema
+              .extend({
+                details: z
+                  .object({
+                    type: z.nativeEnum(FeeDetailsType),
+                    lp: feeComponentSchema.optional(),
+                    destinationGas: feeComponentSchema.optional(),
+                    relayerCapital: feeComponentSchema.optional(),
+                  })
+                  .optional(),
+              })
+              .optional(),
+          })
+          .optional(),
+      })
+      .optional(),
     originGas: gasFeeSchema,
-    destinationGas: gasFeeWithPctSchema,
-    relayerCapital: feeComponentSchema,
-    lpFee: feeComponentSchema,
-    relayerTotal: feeComponentSchema,
-    app: feeComponentSchema,
   }),
   inputAmount: bigNumberString,
+  maxInputAmount: bigNumberString.optional(),
   expectedOutputAmount: bigNumberString,
   minOutputAmount: bigNumberString,
   expectedFillTime: positiveInteger,
