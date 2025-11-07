@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.4.4
+
+### Patch Changes
+
+- 9e16a4b: Update fees response schema
+
 ## 0.4.3
 
 ### Patch Changes
