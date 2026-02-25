@@ -182,6 +182,37 @@ await client.executeSwapQuote({
 });
 ```
 
+## Authentication
+
+Some Across API features require authentication via an API key. You can provide the
+key at the client level or per-request.
+
+### Client-level API key
+
+```ts
+const client = createAcrossClient({
+  integratorId: "0xdead",
+  chains: [mainnet, optimism, arbitrum],
+  apiKey: "your-api-key",
+});
+
+// All authenticated requests will use this key automatically
+const quote = await client.getSwapQuote({ route, amount });
+```
+
+### Per-request API key
+
+```ts
+// Override or provide the key for a single request
+const quote = await client.getSwapQuote({
+  route,
+  amount,
+  apiKey: "per-request-key",
+});
+```
+
+The key is sent as a `Bearer` token in the `Authorization` header.
+
 ## Deposit details
 
 TODO
