@@ -1,5 +1,11 @@
 # @across-protocol/app-sdk
 
+## 0.5.0
+
+### Minor Changes
+
+- 41a4c36: Add API key option
+
 ## 0.4.4
 
 ### Patch Changes
