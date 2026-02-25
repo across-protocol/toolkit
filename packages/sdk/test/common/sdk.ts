@@ -8,7 +8,6 @@ import {
   linea,
   lisk,
   scroll,
-  redstone,
   zora,
   sepolia,
 } from "viem/chains";
@@ -24,7 +23,6 @@ export const MAINNET_SUPPORTED_CHAINS = [
   linea,
   lisk,
   scroll,
-  redstone,
   zora,
 ] as const;
 

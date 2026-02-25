@@ -64,11 +64,20 @@ function makeFetcher(
     params: Record<string, ParamBaseValue | Array<ParamBaseValue>>,
     logger?: LoggerT,
     body?: Record<string, unknown>,
+    apiKey?: string,
   ): Promise<ResBody> => {
     const searchParams = buildSearchParams(params);
     const url = `${apiUrl}?${searchParams}`;
 
     logger?.debug(`Fetching ${name}...`, url);
+
+    const headers: Record<string, string> = {};
+    if (method === "POST") {
+      headers["Content-Type"] = "application/json";
+    }
+    if (apiKey) {
+      headers["Authorization"] = `Bearer ${apiKey}`;
+    }
 
     const res = await fetch(url, {
       method,
@@ -78,12 +87,7 @@ function makeFetcher(
               typeof value === "bigint" ? value.toString() : value,
             )
           : undefined,
-      headers:
-        method === "POST"
-          ? {
-              "Content-Type": "application/json",
-            }
-          : undefined,
+      headers: Object.keys(headers).length > 0 ? headers : undefined,
     });
 
     // Try to parse the response as JSON. If it fails, parse it as text.

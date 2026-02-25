@@ -46,6 +46,11 @@ export type GetSwapQuoteParams = Omit<
    * [Optional] The Across API URL to use. Defaults to the mainnet API URL.
    */
   apiUrl?: string;
+  /**
+   * [Optional] An API key for accessing authenticated features. Will be sent
+   * as a Bearer token in the Authorization header.
+   */
+  apiKey?: string;
 };
 
 /**
@@ -57,7 +62,7 @@ export type GetSwapQuoteParams = Omit<
 export async function getSwapQuote(
   params: GetSwapQuoteParams,
 ): Promise<SwapApprovalApiResponse> {
-  const { logger, apiUrl = MAINNET_API_URL, ...otherParams } = params;
+  const { logger, apiUrl = MAINNET_API_URL, apiKey, ...otherParams } = params;
 
   logger?.debug("Getting swap quote with params:", otherParams);
 
@@ -83,12 +88,15 @@ export async function getSwapQuote(
           value: action.value?.toString() ?? "0",
         })),
       },
+      apiKey,
     );
   } else {
     data = await fetchAcrossApi<SwapApprovalApiResponse>(
       url,
       queryParams,
       logger,
+      undefined,
+      apiKey,
     );
   }
 

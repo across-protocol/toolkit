@@ -124,6 +124,11 @@ export type AcrossClientOptions = {
    */
   pollingInterval?: number;
   /**
+   * An API key for accessing authenticated Across API features. Will be sent as
+   * a Bearer token in the Authorization header.
+   */
+  apiKey?: string;
+  /**
    * Tenderly related options. Can be used for additional debugging support on Tenderly.
    * @see https://tenderly.co/transaction-simulator
    */
@@ -164,6 +169,7 @@ export class AcrossClient {
   private walletClient?: ConfiguredWalletClient;
   private apiUrl: string;
   private indexerUrl: string;
+  private apiKey?: string;
 
   logger: LoggerT;
 
@@ -197,6 +203,7 @@ export class AcrossClient {
     this.indexerUrl =
       args?.useTestnet === true ? TESTNET_INDEXER_API : MAINNET_INDEXER_API;
     this.apiUrl = args?.useTestnet === true ? TESTNET_API_URL : MAINNET_API_URL;
+    this.apiKey = args.apiKey;
     this.logger =
       args?.logger ??
       new DefaultLogger(args?.logLevel ?? CLIENT_DEFAULTS.logLevel);
@@ -655,7 +662,7 @@ export class AcrossClient {
    * @returns See {@link SwapApprovalApiResponse}.
    */
   async getSwapQuote(
-    params: MakeOptional<GetSwapQuoteParams, "logger" | "apiUrl">,
+    params: MakeOptional<GetSwapQuoteParams, "logger" | "apiUrl" | "apiKey">,
   ): Promise<SwapApprovalApiResponse> {
     try {
       const quote = await getSwapQuote({
@@ -664,6 +671,7 @@ export class AcrossClient {
         integratorId: params?.integratorId ?? this.integratorId,
         logger: params?.logger ?? this.logger,
         apiUrl: params?.apiUrl ?? this.apiUrl,
+        apiKey: params?.apiKey ?? this.apiKey,
       });
       return quote;
     } catch (e) {
