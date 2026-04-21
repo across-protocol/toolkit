@@ -19,6 +19,15 @@ export type Status = keyof typeof STATUS;
 
 export type Amount = string | bigint;
 
+/**
+ * Solana base58 address (32-44 chars, no 0/O/I/l).
+ * Branded to distinguish from plain strings at the type level.
+ */
+export type SolanaAddress = string & { readonly __brand: "SolanaAddress" };
+
+/** EVM (viem Address) or Solana address. */
+export type AnyChainAddress = Address | SolanaAddress;
+
 export type ConfiguredWalletClient = WalletClient<Transport, Chain, Account>;
 export type ConfiguredPublicClient = PublicClient<Transport, Chain>;
 

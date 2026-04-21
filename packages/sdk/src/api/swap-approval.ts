@@ -1,6 +1,6 @@
 import z from "zod";
 import {
-  ethereumAddress,
+  anyChainAddress,
   bigNumberString,
   positiveInteger,
   positiveIntString,
@@ -19,21 +19,21 @@ export enum FeeDetailsType {
 export const baseSwapQueryParamsSchema = z.object({
   amount: positiveIntString,
   tradeType: z.enum(["minOutput", "exactOutput", "exactInput"]).optional(),
-  inputToken: ethereumAddress,
-  outputToken: ethereumAddress,
+  inputToken: anyChainAddress,
+  outputToken: anyChainAddress,
   originChainId: positiveIntString,
   destinationChainId: positiveIntString,
-  depositor: ethereumAddress,
-  recipient: ethereumAddress.optional(),
+  depositor: anyChainAddress,
+  recipient: anyChainAddress.optional(),
   integratorId: z.string().optional(),
-  refundAddress: ethereumAddress.optional(),
+  refundAddress: anyChainAddress.optional(),
   refundOnOrigin: booleanString.optional(),
   slippage: positiveFloatString(0.5).optional(), // max. 50% slippage
   skipOriginTxEstimation: booleanString.optional(),
   excludeSources: stringOrStringArray.optional(),
   includeSources: stringOrStringArray.optional(),
   appFee: positiveFloatString(1).optional(),
-  appFeeRecipient: ethereumAddress.optional(),
+  appFeeRecipient: anyChainAddress.optional(),
   strictTradeType: booleanString.optional(),
 });
 
@@ -43,7 +43,7 @@ const feeComponentSchema = z.object({
   amountUsd: z.string(),
   pct: z.string(),
   token: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
@@ -55,7 +55,7 @@ const bridgeFeeDetailComponentSchema = z.object({
   pct: z.string(),
   token: z
     .object({
-      address: ethereumAddress,
+      address: anyChainAddress,
       symbol: z.string(),
       decimals: positiveInteger,
       chainId: positiveInteger,
@@ -69,7 +69,7 @@ const gasFeeSchema = z.object({
   amount: bigNumberString,
   amountUsd: z.string(),
   token: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
@@ -78,13 +78,13 @@ const gasFeeSchema = z.object({
 
 const swapStepSchema = z.object({
   tokenIn: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
   }),
   tokenOut: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
@@ -103,14 +103,14 @@ const bridgeStepSchema = z.object({
   inputAmount: bigNumberString,
   outputAmount: bigNumberString,
   tokenIn: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
     name: z.string().optional(),
   }),
   tokenOut: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
@@ -120,7 +120,7 @@ const bridgeStepSchema = z.object({
     amount: bigNumberString,
     pct: z.string(),
     token: z.object({
-      address: ethereumAddress,
+      address: anyChainAddress,
       symbol: z.string(),
       decimals: positiveInteger,
       chainId: positiveInteger,
@@ -139,14 +139,14 @@ const bridgeStepSchema = z.object({
 });
 
 const allowanceCheckSchema = z.object({
-  token: ethereumAddress,
-  spender: ethereumAddress,
+  token: anyChainAddress,
+  spender: anyChainAddress,
   actual: bigNumberString,
   expected: bigNumberString,
 });
 
 const balanceCheckSchema = z.object({
-  token: ethereumAddress,
+  token: anyChainAddress,
   actual: bigNumberString,
   expected: bigNumberString,
 });
@@ -154,7 +154,7 @@ const balanceCheckSchema = z.object({
 const swapTxSchema = z.object({
   simulationSuccess: z.boolean(),
   chainId: positiveInteger,
-  to: ethereumAddress,
+  to: anyChainAddress,
   data: z.string(),
   value: bigNumberString.optional(),
   gas: bigNumberString.optional(),
@@ -167,7 +167,7 @@ const eip712Schema = z.object({
     name: z.string(),
     version: z.string(),
     chainId: positiveInteger,
-    verifyingContract: ethereumAddress,
+    verifyingContract: anyChainAddress,
   }),
   types: z.record(
     z.array(
@@ -197,7 +197,7 @@ export const swapApprovalResponseSchema = z.object({
     .array(
       z.object({
         chainId: positiveInteger,
-        to: ethereumAddress,
+        to: anyChainAddress,
         data: z.string(),
       }),
     )
@@ -208,21 +208,21 @@ export const swapApprovalResponseSchema = z.object({
     destinationSwap: swapStepSchema.optional(),
   }),
   inputToken: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
     name: z.string().optional(),
   }),
   outputToken: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
     name: z.string().optional(),
   }),
   refundToken: z.object({
-    address: ethereumAddress,
+    address: anyChainAddress,
     symbol: z.string(),
     decimals: positiveInteger,
     chainId: positiveInteger,
