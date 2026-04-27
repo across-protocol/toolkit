@@ -5,8 +5,7 @@ import {
   SwapApprovalApiResponse,
   swapApprovalResponseSchema,
 } from "../api/swap-approval.js";
-import { Amount, Action } from "../types/index.js";
-import { Address } from "viem";
+import { Amount, Action, AnyChainAddress } from "../types/index.js";
 
 /**
  * Params for {@link getSwapQuote}.
@@ -25,9 +24,9 @@ export type GetSwapQuoteParams = Omit<
   amount: Amount;
   route: {
     originChainId: number;
-    inputToken: Address;
+    inputToken: AnyChainAddress;
     destinationChainId: number;
-    outputToken: Address;
+    outputToken: AnyChainAddress;
   };
   skipOriginTxEstimation?: boolean;
   slippage?: number;

@@ -19,6 +19,9 @@ export type Status = keyof typeof STATUS;
 
 export type Amount = string | bigint;
 
+/** EVM (viem Address) or Solana address. */
+export type AnyChainAddress = Address | string;
+
 export type ConfiguredWalletClient = WalletClient<Transport, Chain, Account>;
 export type ConfiguredPublicClient = PublicClient<Transport, Chain>;
 

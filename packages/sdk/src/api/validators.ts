@@ -7,6 +7,16 @@ export const ethereumAddress = z.string().regex(/^0x[a-fA-F0-9]{40}$/, {
   message: "Invalid Ethereum address format",
 });
 
+// Solana base58 address (32-44 chars)
+export const solanaAddress = z
+  .string()
+  .regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/, {
+    message: "Invalid Solana address format",
+  });
+
+// EVM or Solana address
+export const anyChainAddress = z.union([ethereumAddress, solanaAddress]);
+
 export const bigNumberString = z.string().regex(/^-?\d+$/, {
   message: "Invalid BigNumber string format",
 });
