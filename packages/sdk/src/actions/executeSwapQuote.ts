@@ -13,68 +13,68 @@ export type SwapExecutionProgress = SwapTransactionProgress;
 
 type SwapTransactionProgress =
   | {
-      step: "approve";
-      status: "idle";
-    }
+    step: "approve";
+    status: "idle";
+  }
   | {
-      step: "approve";
-      status: "simulationPending";
-    }
+    step: "approve";
+    status: "simulationPending";
+  }
   | {
-      step: "approve";
-      status: "simulationSuccess";
-    }
+    step: "approve";
+    status: "simulationSuccess";
+  }
   | {
-      step: "approve";
-      status: "txPending";
-      txHash: Hash;
-    }
+    step: "approve";
+    status: "txPending";
+    txHash: Hash;
+  }
   | {
-      step: "approve";
-      status: "txSuccess";
-      txReceipt: TransactionReceipt;
-    }
+    step: "approve";
+    status: "txSuccess";
+    txReceipt: TransactionReceipt;
+  }
   | {
-      step: "swap";
-      status: "idle";
-    }
+    step: "swap";
+    status: "idle";
+  }
   | {
-      step: "swap";
-      status: "simulationPending";
-    }
+    step: "swap";
+    status: "simulationPending";
+  }
   | {
-      step: "swap";
-      status: "simulationSuccess";
-    }
+    step: "swap";
+    status: "simulationSuccess";
+  }
   | {
-      step: "swap";
-      status: "txPending";
-      txHash: Hash;
-    }
+    step: "swap";
+    status: "txPending";
+    txHash: Hash;
+  }
   | {
-      step: "swap";
-      status: "txSuccess";
-      txReceipt: TransactionReceipt;
-      depositId: bigint;
-      depositLog: ReturnType<typeof parseDepositLogs>;
-    }
+    step: "swap";
+    status: "txSuccess";
+    txReceipt: TransactionReceipt;
+    depositId: bigint;
+    depositLog: ReturnType<typeof parseDepositLogs>;
+  }
   | {
-      step: "fill";
-      status: "txPending";
-    }
+    step: "fill";
+    status: "txPending";
+  }
   | {
-      step: "fill";
-      status: "txSuccess";
-      txReceipt: TransactionReceipt;
-      fillTxTimestamp: bigint;
-      actionSuccess: boolean | undefined;
-      fillLog: ReturnType<typeof parseFillLogs>;
-    }
+    step: "fill";
+    status: "txSuccess";
+    txReceipt: TransactionReceipt;
+    fillTxTimestamp: bigint;
+    actionSuccess: boolean | undefined;
+    fillLog: ReturnType<typeof parseFillLogs>;
+  }
   | {
-      step: "approve" | "swap" | "fill";
-      status: "txError" | "error" | "simulationError";
-      error: Error;
-    };
+    step: "approve" | "swap" | "fill";
+    status: "txError" | "error" | "simulationError";
+    error: Error;
+  };
 
 /**
  * Params for {@link executeSwapQuote}.
@@ -269,7 +269,7 @@ export async function executeSwapQuote(
       to: swapTx.to as Address,
       data: swapTx.data as Hex,
       value: swapTx.value ? BigInt(swapTx.value) : 0n,
-      gas: swapTx.gas ? BigInt(swapTx.gas) : undefined,
+      gas: swapTx.gas && BigInt(swapTx.gas) > 0n ? BigInt(swapTx.gas) : undefined,
       maxFeePerGas: swapTx.maxFeePerGas
         ? BigInt(swapTx.maxFeePerGas)
         : undefined,
