@@ -40,6 +40,9 @@
     "ci": "pnpm run build && pnpm run check-exports && pnpm run lint && pnpm run test",
     "typedoc": "typedoc --out docs src/index.ts"
   },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
   "devDependencies": {
     "@across-toolkit/eslint-config": "workspace:*",
     "@across-toolkit/typescript-config": "workspace:*",
@@ -54,8 +57,7 @@
     "typedoc-plugin-markdown": "^4.8.1",
     "typescript": "^5.3.3",
     "viem": "2.31.2",
-    "vitest": "^2.0.5",
-    "zod": "^3.24.2"
+    "vitest": "^2.0.5"
   },
   "publishConfig": {
     "access": "public"
