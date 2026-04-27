@@ -1,5 +1,16 @@
 # @across-protocol/app-sdk
 
+## 0.6.0
+
+### Minor Changes
+
+- 97c815a: fix: validate solana addresses for actions
+
+### Patch Changes
+
+- 9c84010: Fix `executeSwapQuote` passing `gas: 0n` to the simulation call when `swapTx.gas` is zero. Some RPC providers (e.g. Alchemy on testnets) reject `eth_call` with `gas: "0x0"` as `IntrinsicGasTooLowError`. Zero-ish gas values are now treated as unset.
+- 76a569d: Fix unresolved `zod` import at build time by moving it from `devDependencies` to `dependencies`. The SDK imports `zod` at runtime (in `api/` modules), so consumers without `zod` transitively in their tree previously failed to build.
+
 ## 0.5.0
 
 ### Minor Changes
