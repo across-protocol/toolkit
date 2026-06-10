@@ -201,11 +201,11 @@ export const swapApprovalResponseSchema = z.object({
         data: z.string(),
       }),
     )
-    .optional(),
+    .nullish(),
   steps: z.object({
-    originSwap: swapStepSchema.optional(),
+    originSwap: swapStepSchema.nullish(),
     bridge: bridgeStepSchema,
-    destinationSwap: swapStepSchema.optional(),
+    destinationSwap: swapStepSchema.nullish(),
   }),
   inputToken: z.object({
     address: anyChainAddress,
@@ -280,7 +280,7 @@ export const swapApprovalResponseSchema = z.object({
   expectedOutputAmount: bigNumberString,
   minOutputAmount: bigNumberString,
   expectedFillTime: positiveInteger,
-  swapTx: z.union([swapTxSchema, permitSwapTxSchema]).optional(),
+  swapTx: z.union([swapTxSchema, permitSwapTxSchema]).nullish(),
   id: z.string().optional(),
 });
 
