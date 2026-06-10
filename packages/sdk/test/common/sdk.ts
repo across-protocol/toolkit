@@ -7,7 +7,6 @@ import {
   polygon,
   linea,
   lisk,
-  scroll,
   zora,
   sepolia,
 } from "viem/chains";
@@ -22,7 +21,6 @@ export const MAINNET_SUPPORTED_CHAINS = [
   polygon,
   linea,
   lisk,
-  scroll,
   zora,
 ] as const;
 
