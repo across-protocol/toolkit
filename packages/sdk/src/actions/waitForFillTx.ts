@@ -161,6 +161,10 @@ export function parseFillLogs(
     depositId: bigint | number;
   }>,
 ) {
+  if (logs.length === 0) {
+    return undefined;
+  }
+
   const blockData = {
     depositTxHash: logs[0]!.blockHash!,
     depositTxBlock: logs[0]!.blockNumber!,
