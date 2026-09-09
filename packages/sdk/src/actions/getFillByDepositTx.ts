@@ -9,7 +9,7 @@ import {
   TransactionReceipt,
 } from "viem";
 import { MAINNET_INDEXER_API } from "../constants/index.js";
-import { NoFillLogError } from "../errors/index.js";
+import { NoFillLogError, WaitForFillTimeoutError } from "../errors/index.js";
 import { FillEventLog, IndexerStatusResponse } from "../types/index.js";
 import { parseFillLogs } from "./waitForFillTx.js";
 
@@ -127,26 +127,60 @@ export type FillStatus = {
   parsedFillEvent: FillEventLog;
 };
 
+// Default max wait for a fill before rejecting (5 minutes).
+export const DEFAULT_WAIT_FOR_FILL_TIMEOUT_MS = 300_000;
+
 export async function waitForFillByDepositTx(
   params: GetFillByDepositTxParams & {
     pollingInterval?: number;
+    timeout?: number;
   },
 ): ReturnType<typeof getFillByDepositTx> {
   const interval =
-    params?.pollingInterval ?? params.destinationChainClient.pollingInterval;
+    params.pollingInterval ?? params.destinationChainClient.pollingInterval;
+  const timeoutMs = params.timeout ?? DEFAULT_WAIT_FOR_FILL_TIMEOUT_MS;
+  const deadline = Date.now() + timeoutMs;
 
-  return new Promise((res) => {
+  return new Promise((resolve, reject) => {
     const poll = () => {
       getFillByDepositTx(params)
         .then((response) => {
           if (response.fillTxReceipt) {
-            res(response);
-          } else {
-            setTimeout(poll, interval);
+            resolve(response);
+            return;
           }
+
+          if (Date.now() >= deadline) {
+            reject(
+              new WaitForFillTimeoutError(
+                BigInt(params.deposit.depositId),
+                params.deposit.destinationChainId,
+                timeoutMs,
+                params.deposit.depositTxHash,
+              ),
+            );
+            return;
+          }
+
+          setTimeout(poll, interval);
         })
         .catch((error) => {
-          params?.logger ? params.logger.error(error) : console.log(error);
+          params.logger ? params.logger.error(error) : console.log(error);
+
+          if (Date.now() >= deadline) {
+            reject(
+              error instanceof NoFillLogError
+                ? new WaitForFillTimeoutError(
+                    BigInt(params.deposit.depositId),
+                    params.deposit.destinationChainId,
+                    timeoutMs,
+                    params.deposit.depositTxHash,
+                  )
+                : error,
+            );
+            return;
+          }
+
           setTimeout(poll, interval);
         });
     };

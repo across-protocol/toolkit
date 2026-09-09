@@ -136,3 +136,18 @@ export class NoFillLogError extends Error {
     this.name = "Fill Log Not Found";
   }
 }
+
+export class WaitForFillTimeoutError extends Error {
+  constructor(
+    depositId: bigint,
+    chainId: number,
+    timeoutMs: number,
+    depositTxHash?: Hash,
+  ) {
+    super(
+      `Timed out after ${timeoutMs}ms waiting for fill on chain ${chainId} for deposit id #${depositId.toString()}${depositTxHash ? ` with depositTxHash ${depositTxHash}` : "."}`,
+    );
+    this.name = "WaitForFillTimeout";
+  }
+}
+
