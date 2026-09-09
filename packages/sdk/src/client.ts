@@ -396,10 +396,12 @@ export class AcrossClient {
    * @example
    * ```ts
    * const quote = await client.getSwapQuote({
-   *   originChainId: 1,
-   *   destinationChainId: 10,
-   *   inputToken: "0x...",
-   *   outputToken: "0x...",
+   *   route: {
+   *     originChainId: 1,
+   *     destinationChainId: 10,
+   *     inputToken: "0x...",
+   *     outputToken: "0x...",
+   *   },
    *   amount: "10",
    *   depositor: "0x...",
    * });

@@ -101,8 +101,8 @@ await client.executeSwapQuote({
       // if approving an ERC20, you have access to the approval receipt
       const { txReceipt } = progress;
     }
-    if (progress.step === "deposit" && progress.status === "txSuccess") {
-      // once deposit is successful you have access to depositId and the receipt
+    if (progress.step === "swap" && progress.status === "txSuccess") {
+      // once swap is successful you have access to depositId and the receipt
       const { depositId, txReceipt } = progress;
     }
     if (progress.step === "fill" && progress.status === "txSuccess") {
