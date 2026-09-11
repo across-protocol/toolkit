@@ -8,11 +8,9 @@ export const ethereumAddress = z.string().regex(/^0x[a-fA-F0-9]{40}$/, {
 });
 
 // Solana base58 address (32-44 chars)
-export const solanaAddress = z
-  .string()
-  .regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/, {
-    message: "Invalid Solana address format",
-  });
+export const solanaAddress = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/, {
+  message: "Invalid Solana address format",
+});
 
 // EVM or Solana address
 export const anyChainAddress = z.union([ethereumAddress, solanaAddress]);
@@ -21,7 +19,7 @@ export const bigNumberString = z.string().regex(/^-?\d+$/, {
   message: "Invalid BigNumber string format",
 });
 
-export const percentageString = z.string().regex(/^\d+(\.\d+)?$/, {
+export const percentageString = z.string().regex(/^\d+$/, {
   message: "Invalid percentage string format",
 });
 
@@ -33,11 +31,15 @@ export const positiveIntString = z.string().regex(/^\d+$/, {
   message: "Invalid positive integer string format",
 });
 
-export const positiveFloatString = (max: number) => z.string().regex(/^\d+(\.\d+)?$/, {
-  message: "Invalid positive float string format",
-}).refine(val => parseFloat(val) <= max, {
-  message: `Value must be <= ${max}`,
-});
+export const positiveFloatString = (max: number) =>
+  z
+    .string()
+    .regex(/^\d+(\.\d+)?$/, {
+      message: "Invalid positive float string format",
+    })
+    .refine((val) => parseFloat(val) <= max, {
+      message: `Value must be <= ${max}`,
+    });
 
 export const booleanString = z.string().regex(/^(true|false)$/, {
   message: "Invalid boolean string format",

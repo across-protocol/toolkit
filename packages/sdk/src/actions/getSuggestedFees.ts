@@ -185,6 +185,10 @@ export async function getSuggestedFees({
   return parseSuggestedFees(data);
 }
 
+function toBigIntPct(value: string): bigint {
+  return BigInt(value.includes(".") ? value.split(".")[0] || "0" : value);
+}
+
 export function parseSuggestedFees(
   raw: SuggestedFeesApiResponse,
 ): GetSuggestedFeesReturnType {
@@ -209,19 +213,19 @@ export function parseSuggestedFees(
     destinationSpokePoolAddress: raw.destinationSpokePoolAddress as Address,
     fillDeadline: Number(raw.fillDeadline),
     totalRelayFee: {
-      pct: BigInt(raw.totalRelayFee.pct),
+      pct: toBigIntPct(raw.totalRelayFee.pct),
       total: BigInt(raw.totalRelayFee.total),
     },
     relayerCapitalFee: {
-      pct: BigInt(raw.relayerCapitalFee.pct),
+      pct: toBigIntPct(raw.relayerCapitalFee.pct),
       total: BigInt(raw.relayerCapitalFee.total),
     },
     relayerGasFee: {
-      pct: BigInt(raw.relayerGasFee.pct),
+      pct: toBigIntPct(raw.relayerGasFee.pct),
       total: BigInt(raw.relayerGasFee.total),
     },
     lpFee: {
-      pct: BigInt(raw.lpFee.pct),
+      pct: toBigIntPct(raw.lpFee.pct),
       total: BigInt(raw.lpFee.total),
     },
     limits: {
