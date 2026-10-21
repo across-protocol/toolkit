@@ -413,5 +413,5 @@ export async function getFillLogs(params: GetFillByDepositTxParams) {
     }),
   ]);
 
-  return v3Logs ?? v3_5Logs;
+  return v3Logs.length ? v3Logs : v3_5Logs;
 }
