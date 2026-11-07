@@ -38,7 +38,7 @@ export async function waitForAtomicTx(
     receipt,
   });
 
-  if (!depositLog || !depositLog.depositId) {
+  if (!depositLog || depositLog.depositId === undefined) {
     throw new NoDepositLogError(callId as Hash, originChainId);
   }
 

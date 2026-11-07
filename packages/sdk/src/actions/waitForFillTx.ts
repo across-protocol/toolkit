@@ -173,7 +173,7 @@ export function parseFillLogs(
     logs,
     args: {
       ...filter,
-      depositId: filter?.depositId ? BigInt(filter?.depositId) : undefined,
+      depositId: filter?.depositId !== undefined ? BigInt(filter.depositId) : undefined,
     },
   });
   const v3_5Log = parsedV3_5Logs?.[0];

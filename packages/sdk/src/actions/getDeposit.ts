@@ -47,7 +47,7 @@ export async function getDeposit(
   if (
     !(
       findBy.depositTxHash ||
-      (findBy.depositId && findBy.originSpokePoolAddress)
+      (findBy.depositId !== undefined && findBy.originSpokePoolAddress)
     )
   ) {
     throw new Error(
@@ -75,7 +75,7 @@ export async function getDeposit(
   }
 
   // Try to get deposit from logs by deposit id and spoke pool address on origin chain
-  else if (findBy.depositId && findBy.originSpokePoolAddress) {
+  else if (findBy.depositId !== undefined && findBy.originSpokePoolAddress) {
     const { depositId, originSpokePoolAddress } = findBy;
     const _depositId = BigInt(findBy.depositId);
 
