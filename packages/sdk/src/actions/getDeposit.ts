@@ -338,5 +338,5 @@ async function getDepositLogs({
     }),
   ]);
 
-  return v3Logs ?? v3_5Logs;
+  return v3Logs.length > 0 ? v3Logs : v3_5Logs;
 }
