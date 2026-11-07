@@ -176,15 +176,15 @@ export async function getQuote(params: GetQuoteParams): Promise<Quote> {
           if (updated?.callData) {
             _callData = updated.callData;
           }
-          if (updated?.value) {
-            _value = updated?.value;
+          if (updated?.value !== undefined) {
+            _value = updated.value;
           }
         } else {
           if (maybePromise?.callData) {
             _callData = maybePromise.callData;
           }
-          if (maybePromise?.value) {
-            _value = maybePromise?.value;
+          if (maybePromise?.value !== undefined) {
+            _value = maybePromise.value;
           }
         }
       }
